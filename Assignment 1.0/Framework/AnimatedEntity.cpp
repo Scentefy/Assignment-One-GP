@@ -72,12 +72,12 @@ bool
 AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 {
 
-	int r1 = animatedSprite->GetFrameHeight() / 2;
-	float x1 = GetPositionX();
-	float y1 = GetPositionY();
-	float x2 = e.GetPositionX();
-	float y2 = e.GetPositionY();
-	int r2 = e.animatedSprite->GetFrameHeight() / 2;
+	int r1 = animatedSprite->GetFrameWidth() / 2;
+	float x1 = GetPositionX() + (animatedSprite->GetFrameWidth() / 2);
+	float y1 = GetPositionY() + (animatedSprite->GetFrameHeight() / 2);
+	float x2 = e.GetPositionX() + (e.animatedSprite->GetFrameWidth() / 2);
+	float y2 = e.GetPositionY() + (e.animatedSprite->GetFrameHeight() / 2);
+	int r2 = e.animatedSprite->GetFrameWidth() / 2;
 	bool collide = false;
 	int r1f = static_cast<int>(r1);
 	int r2f = static_cast<int>(r2);
