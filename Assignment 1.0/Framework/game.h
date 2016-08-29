@@ -1,17 +1,18 @@
 // COMP710 GP 2D Framework
 #ifndef __GAME_H__
 #define __GAME_H__
-#include "PlayerShip.h"
 #include "Enemy.h"
 #include <vector>
 #include "Bullet.h"
 #include "AnimatedEntity.h"
+#include "SoundSys.h"
 
 // Forward Declarations
 class BackBuffer;
 class InputHandler;
 class Sprite;
 class AnimatedSprite;
+class SoundSys;
 
 class Game
 {
@@ -85,6 +86,10 @@ protected:
 
 	std::vector<AnimatedEntity*>::iterator iter;
 	std::vector <AnimatedEntity*>::iterator itere;
+
+	//FMO
+	SoundSys sound;
+	SoundClass soundBlood;
 
 private:
 

@@ -8,8 +8,7 @@
 #include "inputhandler.h"
 #include "logmanager.h"
 #include "sprite.h"
-#include "PlayerShip.h"
-#include "Enemy.h"
+#include "SoundSys.h"
 
 // Library includes:
 #include <cassert>
@@ -94,6 +93,9 @@ Game::Initialise()
 	backGround = m_pBackBuffer->CreateSprite("assets\\RPGScreenshot.png");
 	backGround->SetX(200);
 	backGround->SetY(150);
+
+
+	sound.createSound(&soundBlood, "assets\\blood.mp3");
 
 
 	// W02.1: Load the player ship sprite.
@@ -219,6 +221,7 @@ Game::Process(float deltaTime)
 				iter = enemyContainer.erase(iter);
 				SpawnExplosion(eneX, eneY);
 				hitEnemy = true;
+				sound.playSound(soundBlood, false);
 			}
 			else
 			{

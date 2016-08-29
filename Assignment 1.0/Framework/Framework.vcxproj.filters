@@ -57,6 +57,9 @@
     <ClInclude Include="AnimatedEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SoundSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="backbuffer.cpp">
@@ -102,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AnimatedEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
