@@ -441,13 +441,13 @@ Game::SpawnEnemy(float x, float y)
 void
 Game::SpawnExplosion(int x, int y)
 {
-	AnimatedSprite* pExplosiveSprite = m_pBackBuffer->CreateAnimSprite("assets\\explosion.png");
+	AnimatedSprite* pExplosiveSprite = m_pBackBuffer->CreateAnimSprite("assets\\bloodsprite.png");
 	pExplosive = new AnimatedEntity(pExplosiveSprite,x ,y);
 	pExplosive->Initialise(pExplosiveSprite);
 	pExplosiveSprite->SetFrameSpeed(0.4f);
 	pExplosiveSprite->SetFrameWidth(64);
 	pExplosiveSprite->SetFrameHeight(64);
-	pExplosiveSprite->SetNumOfFrames(4);
+	pExplosiveSprite->SetNumOfFrames(5);
 	pExplosiveSprite->SetYPos(0);
 	//pExplosiveSprite->SetX(static_cast<int>(x));
 	//pExplosiveSprite->SetY(static_cast<int>(y));
