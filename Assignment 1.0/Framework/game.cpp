@@ -69,7 +69,7 @@ Game::~Game()
 bool 
 Game::Initialise()
 {
-	const int width = 800;
+	const int width = 1000;
 	const int height = 600;
 
 	m_pBackBuffer = new BackBuffer();
@@ -118,12 +118,10 @@ Game::Initialise()
 
 	// W02.2: Spawn four rows of 14 alien enemies.
 	float x = 400.0f;
-	float y = 0.0f;
+	float y = 32.0f;
 
-	//SpawnEnemy(pPlayer->GetPositionX(), pPlayer->GetPositionY()+10);
-
-	for (float i = 1; i <= 4; i++) {
-		for (float j = 1; j <= 5; j++) {
+	for (float i = 1; i <= 32; i++) {
+		for (float j = 1; j <= 32; j++) {
 			SpawnEnemy(x, y);
 			x += 55;
 		}
@@ -249,15 +247,16 @@ Game::Process(float deltaTime)
 		else
 			IterationDeath++;
 	}
-
+	// Move Up
 	for (int i = 0; i < enemyContainer.size(); i++)
 	{
-		if (enemyContainer[i]->GetPositionY() > 500)
+		if (enemyContainer[i]->GetPositionY() > 600 - 33)
 		{
 			enemyContainer[i]->SetVerticalVelocity(-1.0f);
 			enemyContainer[i]->SetYPos(144);
 		}
-		else if (enemyContainer[i]->GetPositionY() < 30)
+		//Move Up
+		else if (enemyContainer[i]->GetPositionY() < 33)
 		{
 			enemyContainer[i]->SetVerticalVelocity(1.0f);
 			enemyContainer[i]->SetYPos(0);

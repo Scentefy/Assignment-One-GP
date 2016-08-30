@@ -26,22 +26,22 @@ AnimatedEntity::Process(float deltaTime)
 	animatedSprite->Process(deltaTime);
 	m_x += m_velocityX;
 	m_y += m_velocityY;
-		if (m_x > 800 - 32) 
+		if (m_x > 1000 - 32) 
 		{
-		m_x = 800 - 32;
+		m_x = 1000 - 32;
 		m_velocityX = 0;
 	}
-	else if (m_x < 0) {
-		m_x = 0;
+	else if (m_x < 0 + 32) {
+		m_x = 0 + 32;
 		m_velocityX = 0;
 	}
 
-	if (m_y > 600 - 50) {
-		m_y = 600 - 50;
+	if (m_y > 600 - 32) {
+		m_y = 600 - 32;
 		m_velocityY = 0;
 	}
-	else if (m_y < 0) {
-		m_y = 0;
+	else if (m_y < 0 + 32) {
+		m_y = 0 + 32;
 		m_velocityY = 0;
 	}
 
