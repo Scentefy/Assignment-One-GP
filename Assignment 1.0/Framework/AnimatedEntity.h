@@ -6,6 +6,7 @@ class AnimatedEntity : public Entity
 {
 public:
 	AnimatedEntity(AnimatedSprite* animatedSprite, int x, int y);
+	~AnimatedEntity();
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backBuffer);
 	bool Initialise(AnimatedSprite* animatedSprite);

@@ -26,13 +26,20 @@ public:
 	bool DoGameLoop();
 	void Quit();
 
-	void MovePlayer(std::string direction);
-	void StopSpaceShipMovement();
+	void MovePlayerUp();
+	void MovePlayerDown();
+	void MovePlayerLeft();
+	void MovePlayerRight();
+	void StopSpaceShipMovementHorizontal();
+	void StopSpaceShipMovementVertical();
 	void FireSpaceShipBullet();
 
 	void SpawnEnemy(float x, float y);
 	void SpawnExplosion(int x, int y);
 	void BatForm();
+	void CatForm();
+	void LionForm();
+	void BearForm();
 	void HumanForm();
 	
 protected:
@@ -65,7 +72,6 @@ protected:
 	bool m_drawDebugInfo;
 
 	// Game Entities:
-	enum Mask { None, Bat, Lion, Mouse, Seal, Chicken };
 	char mask;
 	//Background Sprite   
 	Sprite* backGround;
@@ -73,6 +79,9 @@ protected:
 	AnimatedSprite* playerSprite;
 	AnimatedSprite* enemySprite;
 	AnimatedSprite* pBatSprite;
+	AnimatedSprite* pCatSprite;
+	AnimatedSprite* pLionSprite;
+	AnimatedSprite* pBearSprite;
 	// W02.2: Add an alien enemy container field.
 	std::vector<AnimatedEntity*> enemyContainer;
 	// W02.3: Add a bullet container field.
@@ -84,8 +93,9 @@ protected:
 	AnimatedEntity* ene;
 	AnimatedEntity* exp;
 
-	std::vector<AnimatedEntity*>::iterator iter;
-	std::vector <AnimatedEntity*>::iterator itere;
+	//Deletion Iterators
+	std::vector<AnimatedEntity*>::iterator IterationEnemy;
+	std::vector <AnimatedEntity*>::iterator IterationDeath;
 
 	//FMO
 	SoundSys sound;

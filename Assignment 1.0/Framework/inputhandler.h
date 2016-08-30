@@ -31,7 +31,10 @@ protected:
 	SDL_Joystick* m_pGameController;
 
 private:
-
+	bool up;
+	bool down;
+	bool left;
+	bool right;
 };
 
 #endif // __INPUTHANDER_H__

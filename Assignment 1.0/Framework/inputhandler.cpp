@@ -30,7 +30,10 @@ InputHandler::Initialise()
 	int numControllesr = SDL_NumJoysticks();
 
 	m_pGameController = SDL_JoystickOpen(0);
-	//assert(m_pGameController);
+	up = false;
+	down = false;
+	left = false;
+	right = false;
 
 	return (true);
 }
@@ -38,10 +41,6 @@ InputHandler::Initialise()
 void
 InputHandler::ProcessInput(Game& game)
 {
-	bool up = false;
-	bool down = false;
-	bool left = false;
-	bool right = false;
 	// W02.1: Receive Input Events below...
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
@@ -77,6 +76,18 @@ InputHandler::ProcessInput(Game& game)
 			}
 			if (e.key.keysym.sym == SDLK_2)
 			{
+				game.CatForm();
+			}
+			if (e.key.keysym.sym == SDLK_3)
+			{
+				game.LionForm();
+			}
+			if (e.key.keysym.sym == SDLK_4)
+			{
+				game.BearForm();
+			}
+			if (e.key.keysym.sym == SDLK_7)
+			{
 				game.HumanForm();
 			}
 		}
@@ -87,22 +98,22 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_UP)
 			{
 				up = false;
-				game.StopSpaceShipMovement();
+				game.StopSpaceShipMovementVertical();
 			}
 			if (e.key.keysym.sym == SDLK_DOWN)
 			{
 				down = false;
-				game.StopSpaceShipMovement();
+				game.StopSpaceShipMovementVertical();
 			}
 			if (e.key.keysym.sym == SDLK_LEFT)
 			{
 				left = false;
-				game.StopSpaceShipMovement();
+				game.StopSpaceShipMovementHorizontal();
 			}
 			if (e.key.keysym.sym == SDLK_RIGHT)
 			{
 				right = false;
-				game.StopSpaceShipMovement();
+				game.StopSpaceShipMovementHorizontal();
 			}
 		}
 
@@ -110,22 +121,19 @@ InputHandler::ProcessInput(Game& game)
 
 		if (up == true)
 		{
-			game.MovePlayer("up");
+			game.MovePlayerUp();
 		}
-
 		if (down == true)
 		{
-			game.MovePlayer("down");
+			game.MovePlayerDown();
 		}
-
 		if (left == true)
 		{
-			game.MovePlayer("left");
+			game.MovePlayerLeft();
 		}
-
 		if (right == true)
 		{
-			game.MovePlayer("right");
+			game.MovePlayerRight();
 		}
 		//else if (e.type == SDL_KEYDOWN)
 		//{

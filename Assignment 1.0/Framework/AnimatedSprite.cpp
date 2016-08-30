@@ -79,6 +79,7 @@ AnimatedSprite::Process(float deltaTime)
 				Pause();
 		}
 	}
+
 }
 
 void

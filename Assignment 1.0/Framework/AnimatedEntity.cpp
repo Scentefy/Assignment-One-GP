@@ -13,6 +13,11 @@ AnimatedEntity::AnimatedEntity(AnimatedSprite* animatedSprite, int x, int y)
 	animatedSprite->SetY(y);
 }
 
+
+AnimatedEntity::~AnimatedEntity()
+{
+}
+
 void 
 AnimatedEntity::Process(float deltaTime)
 {
@@ -45,8 +50,8 @@ AnimatedEntity::Process(float deltaTime)
 void 
 AnimatedEntity::Draw(BackBuffer& backBuffer)
 {
-	animatedSprite->SetX(m_x);
-	animatedSprite->SetY(m_y);
+	animatedSprite->SetX(m_x - (animatedSprite->GetFrameWidth() / 2));
+	animatedSprite->SetY(m_y - (animatedSprite->GetFrameHeight() / 2));
 	animatedSprite->Draw(backBuffer);
 }
 
@@ -71,8 +76,9 @@ AnimatedEntity::SetExpDead()
 bool
 AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 {
-
 	int r1 = animatedSprite->GetFrameWidth() / 2;
+	if (this->IsDead())
+		r1 = 0;
 	float x1 = GetPositionX() + (animatedSprite->GetFrameWidth() / 2);
 	float y1 = GetPositionY() + (animatedSprite->GetFrameHeight() / 2);
 	float x2 = e.GetPositionX() + (e.animatedSprite->GetFrameWidth() / 2);

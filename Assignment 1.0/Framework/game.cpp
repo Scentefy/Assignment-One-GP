@@ -19,7 +19,7 @@
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
-AnimatedEntity* pPlayerShip = 0;
+AnimatedEntity* pPlayer = 0;
 AnimatedEntity* pEnemy = 0;
 Bullet* pBullet = 0;
 TextureManager* texture = 0;
@@ -101,8 +101,8 @@ Game::Initialise()
 	// W02.1: Load the player ship sprite.
 	playerSprite = m_pBackBuffer->CreateAnimSprite("assets\\steampunk.png");
 	// W02.1: Create the player ship instance.
-	pPlayerShip = new AnimatedEntity(playerSprite, 400.0f, 550.0f);
-	pPlayerShip->Initialise(playerSprite);
+	pPlayer = new AnimatedEntity(playerSprite, 400.0f, 550.0f);
+	pPlayer->Initialise(playerSprite);
 	playerSprite->SetFrameSpeed(0.4f);
 	playerSprite->SetFrameWidth(32);
 	playerSprite->SetFrameHeight(48);
@@ -110,18 +110,17 @@ Game::Initialise()
 	playerSprite->SetYPos(0);
 	mask = 'N';
 	playerSprite->SetLooping(true);
-	pPlayerShip->SetPositionX(400.0f);
-	pPlayerShip->SetPositionY(550.0f);
-	pPlayerShip->SetHorizontalVelocity(0.0f);
-	pPlayerShip->SetVerticalVelocity(0.0f);
-	pPlayerShip->SetDead(false);
-	Mask cMask;
+	pPlayer->SetPositionX(400.0f);
+	pPlayer->SetPositionY(550.0f);
+	pPlayer->SetHorizontalVelocity(0.0f);
+	pPlayer->SetVerticalVelocity(0.0f);
+	pPlayer->SetDead(false);
 
 	// W02.2: Spawn four rows of 14 alien enemies.
 	float x = 400.0f;
 	float y = 0.0f;
 
-	//SpawnEnemy(pPlayerShip->GetPositionX(), pPlayerShip->GetPositionY()+10);
+	//SpawnEnemy(pPlayer->GetPositionX(), pPlayer->GetPositionY()+10);
 
 	for (float i = 1; i <= 4; i++) {
 		for (float j = 1; j <= 5; j++) {
@@ -201,57 +200,54 @@ Game::Process(float deltaTime)
 	}
 	// W02.1: Update player...
 
-	pPlayerShip->Process(deltaTime);
+	pPlayer->Process(deltaTime);
 	// W02.3: Check for bullet vs alien enemy collisions...
 	// W02.3: For each bullet
 	// W02.3: For each alien enemy
 	// W02.3: Check collision between two entities.
 
-	bool hitEnemy = false;
-	//for (iterb = bulletContainer.begin(); iterb < bulletContainer.end();)
-	//{
-		for (iter = enemyContainer.begin(); iter < enemyContainer.end();)
+	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end();)
 		{
-			ene = *iter;
-			if (pPlayerShip->IsCollidingWithAnim(**iter)) {
-				LogManager::GetInstance().Log("HiT!");
-				int eneX = ene->GetPositionX()-15;
-				int eneY = ene->GetPositionY()-15;
-				delete *iter;
-				iter = enemyContainer.erase(iter);
-				SpawnExplosion(eneX, eneY);
-				hitEnemy = true;
-				sound.playSound(soundBlood, false);
+			ene = *IterationEnemy;
+			if (pPlayer->IsCollidingWithAnim(**IterationEnemy)) {
+				int eneX = ene->GetPositionX();
+				int eneY = ene->GetPositionY();
+				//if (mask == 'L')
+				//{
+					ene->SetDead(true);
+					delete *IterationEnemy;
+					IterationEnemy = enemyContainer.erase(IterationEnemy);
+					sound.playSound(soundBlood, false);
+				//}
+				//else if (ene->IsCollidingWithAnim(*pPlayer))
+				//{
+				//	pPlayer->SetDead(true);
+				///}
+				if (ene->IsDead())
+					SpawnExplosion(eneX, eneY);
+
 			}
 			else
 			{
-				iter++;
+				IterationEnemy++;
 			}
-		//}
-		//if (hitEnemy || bull->GetPositionY() < 0) {
-		//	delete *iterb;
-		//	iterb = bulletContainer.erase(iterb);
-		//	hitEnemy = false;
-		//}
-		//else
-		//	iterb++;
 	}
 	for (int i = 0; i < explosionContainer.size(); i++)
 	{
 		explosionContainer[i]->Process(deltaTime);
 	}
 
-	for (itere = explosionContainer.begin(); itere < explosionContainer.end();)
+	for (IterationDeath = explosionContainer.begin(); IterationDeath < explosionContainer.end();)
 	{
-		exp = *itere;
+		exp = *IterationDeath;
 		exp->SetExpDead();
 		if (exp->IsDead() == true)
 		{
-			delete *itere;
-			itere = explosionContainer.erase(itere);
+			delete *IterationDeath;
+			IterationDeath = explosionContainer.erase(IterationDeath);
 		}
 		else
-			itere++;
+			IterationDeath++;
 	}
 
 	for (int i = 0; i < enemyContainer.size(); i++)
@@ -269,7 +265,7 @@ Game::Process(float deltaTime)
 	}
 	//}
 	// W02.3: If collided, destory both and spawn explosion.
-	//for (itere = explosionContainer.begin(); itere < explosionContainer.end(); i++)
+	//for (IterationDeath = explosionContainer.begin(); IterationDeath < explosionContainer.end(); i++)
 	//{
 	//	if (explosionContainer[i]->IsDead())
 	//	{
@@ -295,7 +291,7 @@ Game::Draw(BackBuffer& backBuffer)
 	
 	// W02.2: Draw all enemy aliens in container...
 	int i = 0;
-	for (iter = enemyContainer.begin(); iter < enemyContainer.end(); iter++, i++)
+	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end(); IterationEnemy++, i++)
 	{
 		enemyContainer[i]->Draw(backBuffer);
 	}
@@ -309,7 +305,12 @@ Game::Draw(BackBuffer& backBuffer)
 	}
 
 	// W02.1: Draw the player ship...
-	pPlayerShip->Draw(backBuffer);
+	if (pPlayer->IsDead() == false)
+	pPlayer->Draw(backBuffer);
+	else
+	{
+		
+	}
 
 	backBuffer.Present();
 }
@@ -321,93 +322,133 @@ Game::Quit()
 }
 
 void
-Game::MovePlayer(std::string direction)
+Game::MovePlayerUp()
 {
 	float speed = 0.0f;
-
 	switch (mask)
 	{
 	case 'N' :
-	if (direction == "up")
-	{
-		pPlayerShip->SetVerticalVelocity(-2.5f - speed);
-			playerSprite->SetYPos(144);
-		//else if (bat == true)
-		//	batSprite->SetYPos(144);
-	}
-	else if (direction == "down")
-	{
-		pPlayerShip->SetVerticalVelocity(2.5f + speed);
-			playerSprite->SetYPos(0);
-		//else if (bat == true)
-		//	batSprite->SetYPos(0);
-	}
-	else if (direction == "left")
-	{
-		pPlayerShip->SetHorizontalVelocity(-2.5f - speed);
-			playerSprite->SetYPos(48);
-		//else if (bat == true)
-		//	batSprite->SetYPos(48);
-	}
-	else if (direction == "right")
-	{
-		pPlayerShip->SetHorizontalVelocity(2.5f + speed);
-			playerSprite->SetYPos(96);
-		//else if (bat == true)
-		//	batSprite->SetYPos(96);
-	}
-	break;
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		playerSprite->SetYPos(144);
+		break;
 	case 'B':
-		if (direction == "up")
-		{
-			pPlayerShip->SetVerticalVelocity(-2.5f - speed);
-				pBatSprite->SetYPos(144);
-		}
-		else if (direction == "down")
-		{
-			pPlayerShip->SetVerticalVelocity(2.5f + speed);
-				pBatSprite->SetYPos(0);
-		}
-		else if (direction == "left")
-		{
-			pPlayerShip->SetHorizontalVelocity(-2.5f - speed);
-				pBatSprite->SetYPos(48);
-		}
-		else if (direction == "right")
-		{
-			pPlayerShip->SetHorizontalVelocity(2.5f + speed);
-				pBatSprite->SetYPos(96);
-		}
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pBatSprite->SetYPos(144);
+		break;
+	case 'C':
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pCatSprite->SetYPos(96);
+		break;
+	case 'L':
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pLionSprite->SetYPos(162);
+		break;
+	case 'Y':
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pBearSprite->SetYPos(240);
+		break;
+	}
+}
+
+void
+Game::MovePlayerDown()
+{
+	float speed = 0.0f;
+	switch (mask)
+	{
+	case 'N' :
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		playerSprite->SetYPos(0);
+		break;
+	case 'B' :
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pBatSprite->SetYPos(0);
+		break;
+	case 'C':
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pCatSprite->SetYPos(0);
+		break;
+	case 'L':
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pLionSprite->SetYPos(0);
+		break;
+	case 'Y':
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pBearSprite->SetYPos(0);
+		break;
+	}
+}
+
+void
+Game::MovePlayerLeft()
+{
+	float speed = 0.0f;
+	switch (mask)
+	{
+	case 'N' :
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		playerSprite->SetYPos(48);
+		break;
+	case 'B' :
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pBatSprite->SetYPos(48);
+		break;
+	case 'C':
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pCatSprite->SetYPos(32);
+		break;
+	case 'L':
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pLionSprite->SetYPos(53);
+		break;
+	case 'Y':
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pBearSprite->SetYPos(80);
+		break;
+	}
+}
+
+void
+Game::MovePlayerRight()
+{
+	float speed = 0.0f;
+	switch (mask)
+	{
+	case 'N':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		playerSprite->SetYPos(96);
+		break;
+	case 'B':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pBatSprite->SetYPos(96);
+		break;
+	case 'C':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pCatSprite->SetYPos(64);
+		break;
+	case 'L':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pLionSprite->SetYPos(106);
+		break;
+	case 'Y':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pBearSprite->SetYPos(160);
+		break;
 	}
 }
 
 void 
-Game::StopSpaceShipMovement()
+Game::StopSpaceShipMovementHorizontal()
 {
-	pPlayerShip->SetHorizontalVelocity(0.0f);
-	pPlayerShip->SetVerticalVelocity(0.0f);
+	pPlayer->SetHorizontalVelocity(0.0f);
 	//playerSprite->Pause();
 }
 
-// W02.3: Space a Bullet in game.
-void 
-Game::FireSpaceShipBullet()
+void
+Game::StopSpaceShipMovementVertical()
 {
-	// W02.3: Load the player bullet sprite.  
-	Sprite* bulletSprite = m_pBackBuffer->CreateSprite("assets\\playerbullet.png");
-
-	// W02.3: Create a new bullet object.
-	pBullet = new Bullet();
-	pBullet->Initialise(bulletSprite);
-	pBullet->SetPositionX(pPlayerShip->GetPositionX()+8.0f);
-	pBullet->SetPositionY(pPlayerShip->GetPositionY());
-	pBullet->SetDead(false);
-
-	// W02.3: Set the bullets vertical velocity.
-	pBullet->SetVerticalVelocity(-10.0f);
-
-	// W02.3: Add the new bullet to the bullet container.
-	bulletContainer.push_back(pBullet);
+	pPlayer->SetVerticalVelocity(0.0f);
+	//playerSprite->Pause();
 }
 
 // W02.2: Spawn a Enemy in game.
@@ -449,8 +490,6 @@ Game::SpawnExplosion(int x, int y)
 	pExplosiveSprite->SetFrameHeight(64);
 	pExplosiveSprite->SetNumOfFrames(5);
 	pExplosiveSprite->SetYPos(0);
-	//pExplosiveSprite->SetX(static_cast<int>(x));
-	//pExplosiveSprite->SetY(static_cast<int>(y));
 	pExplosive->SetPositionX(x);
 	pExplosive->SetPositionY(y);
 	pExplosive->SetDead(false);
@@ -462,28 +501,75 @@ Game::BatForm()
 {
 	mask = 'B';
 	pBatSprite = m_pBackBuffer->CreateAnimSprite("assets\\pinkbat.png");
-	pPlayerShip->Initialise(pBatSprite);
+	pPlayer->Initialise(pBatSprite);
 	pBatSprite->SetFrameSpeed(0.4f);
 	pBatSprite->SetFrameWidth(32);
 	pBatSprite->SetFrameHeight(48);
 	pBatSprite->SetNumOfFrames(3);
 	pBatSprite->SetYPos(0);
 	pBatSprite->SetLooping(true);
-	pBatSprite->SetX(pPlayerShip->GetPositionX());
-	pBatSprite->SetY(pPlayerShip->GetPositionY());
+	pBatSprite->SetX(pPlayer->GetPositionX());
+	pBatSprite->SetY(pPlayer->GetPositionY());
+}
+
+void
+Game::CatForm()
+{
+	mask = 'C';
+	pCatSprite = m_pBackBuffer->CreateAnimSprite("assets\\cat.png");
+	pPlayer->Initialise(pCatSprite);
+	pCatSprite->SetFrameSpeed(0.4f);
+	pCatSprite->SetFrameWidth(32);
+	pCatSprite->SetFrameHeight(32);
+	pCatSprite->SetNumOfFrames(3);
+	pCatSprite->SetYPos(0);
+	pCatSprite->SetLooping(true);
+	pCatSprite->SetX(pPlayer->GetPositionX());
+	pCatSprite->SetY(pPlayer->GetPositionY());
+}
+
+void
+Game::LionForm()
+{
+	mask = 'L';
+	pLionSprite = m_pBackBuffer->CreateAnimSprite("assets\\Lion.png");
+	pPlayer->Initialise(pLionSprite);
+	pLionSprite->SetFrameSpeed(0.4f);
+	pLionSprite->SetFrameWidth(48);
+	pLionSprite->SetFrameHeight(53);
+	pLionSprite->SetNumOfFrames(3);
+	pLionSprite->SetYPos(0);
+	pLionSprite->SetLooping(true);
+	pLionSprite->SetX(pPlayer->GetPositionX());
+	pLionSprite->SetY(pPlayer->GetPositionY());
+}
+
+void
+Game::BearForm()
+{
+	mask = 'Y';
+	pBearSprite = m_pBackBuffer->CreateAnimSprite("assets\\bear.png");
+	pPlayer->Initialise(pBearSprite);
+	pBearSprite->SetFrameSpeed(0.4f);
+	pBearSprite->SetFrameWidth(80);
+	pBearSprite->SetFrameHeight(80);
+	pBearSprite->SetNumOfFrames(3);
+	pBearSprite->SetYPos(0);
+	pBearSprite->SetLooping(true);
+	pBearSprite->SetX(pPlayer->GetPositionX());
+	pBearSprite->SetY(pPlayer->GetPositionY());
 }
 
 void
 Game::HumanForm()
 {
 	mask = 'N';
-	pPlayerShip->Initialise(playerSprite);
+	pPlayer->Initialise(playerSprite);
 	playerSprite->SetFrameSpeed(0.4f);
 	playerSprite->SetFrameWidth(32);
 	playerSprite->SetFrameHeight(48);
 	playerSprite->SetNumOfFrames(3);
 	playerSprite->SetYPos(0);
 	playerSprite->SetLooping(true);
-
 }
 
