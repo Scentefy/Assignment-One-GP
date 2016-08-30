@@ -346,6 +346,10 @@ Game::MovePlayerUp()
 		pPlayer->SetVerticalVelocity(-2.5f - speed);
 		pBearSprite->SetYPos(240);
 		break;
+	case 'W':
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pWolfSprite->SetYPos(144);
+		break;
 	}
 }
 
@@ -374,6 +378,10 @@ Game::MovePlayerDown()
 	case 'Y':
 		pPlayer->SetVerticalVelocity(2.5f + speed);
 		pBearSprite->SetYPos(0);
+		break;
+	case 'W':
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pWolfSprite->SetYPos(0);
 		break;
 	}
 }
@@ -404,6 +412,10 @@ Game::MovePlayerLeft()
 		pPlayer->SetHorizontalVelocity(-2.5f - speed);
 		pBearSprite->SetYPos(80);
 		break;
+	case 'W':
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pWolfSprite->SetYPos(48);
+		break;
 	}
 }
 
@@ -433,6 +445,10 @@ Game::MovePlayerRight()
 		pPlayer->SetHorizontalVelocity(2.5f + speed);
 		pBearSprite->SetYPos(160);
 		break;
+	case 'W':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pWolfSprite->SetYPos(96);
+		break;
 	}
 }
 
@@ -460,7 +476,7 @@ Game::SpawnEnemy(float x, float y)
 	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\darkknight.png");
 	pEnemy = new AnimatedEntity(enemySprite,x,y);
 	pEnemy->Initialise(enemySprite);
-	enemySprite->SetFrameSpeed(0.4f);
+	enemySprite->SetFrameSpeed(0.3f);
 	enemySprite->SetFrameWidth(32);
 	enemySprite->SetFrameHeight(48);
 	enemySprite->SetNumOfFrames(3);
@@ -484,7 +500,7 @@ Game::SpawnExplosion(int x, int y)
 	AnimatedSprite* pExplosiveSprite = m_pBackBuffer->CreateAnimSprite("assets\\bloodsprite.png");
 	pExplosive = new AnimatedEntity(pExplosiveSprite,x ,y);
 	pExplosive->Initialise(pExplosiveSprite);
-	pExplosiveSprite->SetFrameSpeed(0.4f);
+	pExplosiveSprite->SetFrameSpeed(0.3f);
 	pExplosiveSprite->SetFrameWidth(64);
 	pExplosiveSprite->SetFrameHeight(64);
 	pExplosiveSprite->SetNumOfFrames(5);
@@ -501,7 +517,7 @@ Game::BatForm()
 	mask = 'B';
 	pBatSprite = m_pBackBuffer->CreateAnimSprite("assets\\pinkbat.png");
 	pPlayer->Initialise(pBatSprite);
-	pBatSprite->SetFrameSpeed(0.4f);
+	pBatSprite->SetFrameSpeed(0.1f);
 	pBatSprite->SetFrameWidth(32);
 	pBatSprite->SetFrameHeight(48);
 	pBatSprite->SetNumOfFrames(3);
@@ -517,7 +533,7 @@ Game::CatForm()
 	mask = 'C';
 	pCatSprite = m_pBackBuffer->CreateAnimSprite("assets\\cat.png");
 	pPlayer->Initialise(pCatSprite);
-	pCatSprite->SetFrameSpeed(0.4f);
+	pCatSprite->SetFrameSpeed(0.2f);
 	pCatSprite->SetFrameWidth(32);
 	pCatSprite->SetFrameHeight(32);
 	pCatSprite->SetNumOfFrames(3);
@@ -533,7 +549,7 @@ Game::LionForm()
 	mask = 'L';
 	pLionSprite = m_pBackBuffer->CreateAnimSprite("assets\\Lion.png");
 	pPlayer->Initialise(pLionSprite);
-	pLionSprite->SetFrameSpeed(0.4f);
+	pLionSprite->SetFrameSpeed(0.2f);
 	pLionSprite->SetFrameWidth(48);
 	pLionSprite->SetFrameHeight(53);
 	pLionSprite->SetNumOfFrames(3);
@@ -560,11 +576,27 @@ Game::BearForm()
 }
 
 void
+Game::WolfForm()
+{
+	mask = 'W';
+	pWolfSprite = m_pBackBuffer->CreateAnimSprite("assets\\wolf.png");
+	pPlayer->Initialise(pWolfSprite);
+	pWolfSprite->SetFrameSpeed(0.1f);
+	pWolfSprite->SetFrameWidth(48);
+	pWolfSprite->SetFrameHeight(48);
+	pWolfSprite->SetNumOfFrames(3);
+	pWolfSprite->SetYPos(0);
+	pWolfSprite->SetLooping(true);
+	pWolfSprite->SetX(pPlayer->GetPositionX());
+	pWolfSprite->SetY(pPlayer->GetPositionY());
+}
+
+void
 Game::HumanForm()
 {
 	mask = 'N';
 	pPlayer->Initialise(playerSprite);
-	playerSprite->SetFrameSpeed(0.4f);
+	playerSprite->SetFrameSpeed(0.25f);
 	playerSprite->SetFrameWidth(32);
 	playerSprite->SetFrameHeight(48);
 	playerSprite->SetNumOfFrames(3);

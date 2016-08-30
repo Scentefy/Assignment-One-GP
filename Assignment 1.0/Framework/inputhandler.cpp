@@ -86,6 +86,10 @@ InputHandler::ProcessInput(Game& game)
 			{
 				game.BearForm();
 			}
+			if (e.key.keysym.sym == SDLK_5)
+			{
+				game.WolfForm();
+			}
 			if (e.key.keysym.sym == SDLK_7)
 			{
 				game.HumanForm();
