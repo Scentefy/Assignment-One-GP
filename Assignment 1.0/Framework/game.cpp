@@ -350,6 +350,10 @@ Game::MovePlayerUp()
 		pPlayer->SetVerticalVelocity(-2.5f - speed);
 		pWolfSprite->SetYPos(144);
 		break;
+	case 'S':
+		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pSealSprite->SetYPos(144);
+		break;
 	}
 }
 
@@ -382,6 +386,10 @@ Game::MovePlayerDown()
 	case 'W':
 		pPlayer->SetVerticalVelocity(2.5f + speed);
 		pWolfSprite->SetYPos(0);
+		break;
+	case 'S':
+		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pSealSprite->SetYPos(0);
 		break;
 	}
 }
@@ -416,6 +424,10 @@ Game::MovePlayerLeft()
 		pPlayer->SetHorizontalVelocity(-2.5f - speed);
 		pWolfSprite->SetYPos(48);
 		break;
+	case 'S':
+		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pSealSprite->SetYPos(48);
+		break;
 	}
 }
 
@@ -448,6 +460,10 @@ Game::MovePlayerRight()
 	case 'W':
 		pPlayer->SetHorizontalVelocity(2.5f + speed);
 		pWolfSprite->SetYPos(96);
+		break;
+	case 'S':
+		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pSealSprite->SetYPos(96);
 		break;
 	}
 }
@@ -589,6 +605,22 @@ Game::WolfForm()
 	pWolfSprite->SetLooping(true);
 	pWolfSprite->SetX(pPlayer->GetPositionX());
 	pWolfSprite->SetY(pPlayer->GetPositionY());
+}
+
+void
+Game::SealForm()
+{
+	mask = 'S';
+	pSealSprite = m_pBackBuffer->CreateAnimSprite("assets\\seal.png");
+	pPlayer->Initialise(pSealSprite);
+	pSealSprite->SetFrameSpeed(0.3f);
+	pSealSprite->SetFrameWidth(48);
+	pSealSprite->SetFrameHeight(48);
+	pSealSprite->SetNumOfFrames(3);
+	pSealSprite->SetYPos(0);
+	pSealSprite->SetLooping(true);
+	pSealSprite->SetX(pPlayer->GetPositionX());
+	pSealSprite->SetY(pPlayer->GetPositionY());
 }
 
 void

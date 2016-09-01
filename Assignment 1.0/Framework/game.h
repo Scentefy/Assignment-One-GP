@@ -41,6 +41,7 @@ public:
 	void LionForm();
 	void BearForm();
 	void WolfForm();
+	void SealForm();
 	void HumanForm();
 	
 protected:
@@ -84,6 +85,7 @@ protected:
 	AnimatedSprite* pLionSprite;
 	AnimatedSprite* pBearSprite;
 	AnimatedSprite* pWolfSprite;
+	AnimatedSprite* pSealSprite;
 	// W02.2: Add an alien enemy container field.
 	std::vector<AnimatedEntity*> enemyContainer;
 	// W02.3: Add a bullet container field.
