@@ -60,8 +60,8 @@ void
 Entity::Draw(BackBuffer& backBuffer)
 {
 	assert(m_pSprite);
-	m_pSprite->SetX(m_x);
-	m_pSprite->SetY(m_y);
+	m_pSprite->SetX(m_x - (m_pSprite->GetWidth() / 2));
+	m_pSprite->SetY(m_y - (m_pSprite->GetHeight() / 2));
 	m_pSprite->Draw(backBuffer);
 }
 

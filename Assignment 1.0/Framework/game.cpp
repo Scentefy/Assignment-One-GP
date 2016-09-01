@@ -120,8 +120,8 @@ Game::Initialise()
 	float x = 400.0f;
 	float y = 32.0f;
 
-	for (float i = 1; i <= 32; i++) {
-		for (float j = 1; j <= 32; j++) {
+	for (float i = 1; i <= 5; i++) {
+		for (float j = 1; j <= 5; j++) {
 			SpawnEnemy(x, y);
 			x += 55;
 		}
@@ -210,17 +210,19 @@ Game::Process(float deltaTime)
 			if (pPlayer->IsCollidingWithAnim(**IterationEnemy)) {
 				int eneX = ene->GetPositionX();
 				int eneY = ene->GetPositionY();
-				//if (mask == 'L')
-				//{
+				if (mask == 'L')
+				{
 					ene->SetDead(true);
 					delete *IterationEnemy;
 					IterationEnemy = enemyContainer.erase(IterationEnemy);
 					sound.playSound(soundBlood, false);
-				//}
-				//else if (ene->IsCollidingWithAnim(*pPlayer))
-				//{
-				//	pPlayer->SetDead(true);
-				///}
+				}
+				else if (ene->IsCollidingWithAnim(*pPlayer))
+				{
+					pPlayer->SetPositionX(400);
+					pPlayer->SetPositionY(550);
+					pPlayer->SetDead(true);
+				}
 				if (ene->IsDead())
 					SpawnExplosion(eneX, eneY);
 

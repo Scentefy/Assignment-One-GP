@@ -78,16 +78,17 @@ AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 {
 	int r1 = animatedSprite->GetFrameWidth() / 2;
 	if (this->IsDead())
+	{
 		r1 = 0;
-	float x1 = GetPositionX() + (animatedSprite->GetFrameWidth() / 2);
-	float y1 = GetPositionY() + (animatedSprite->GetFrameHeight() / 2);
-	float x2 = e.GetPositionX() + (e.animatedSprite->GetFrameWidth() / 2);
-	float y2 = e.GetPositionY() + (e.animatedSprite->GetFrameHeight() / 2);
+		return false;
+	}
+	float x1 = GetPositionX();;
+	float y1 = GetPositionY();
+	float x2 = e.GetPositionX();
+	float y2 = e.GetPositionY();
 	int r2 = e.animatedSprite->GetFrameWidth() / 2;
 	bool collide = false;
-	int r1f = static_cast<int>(r1);
-	int r2f = static_cast<int>(r2);
-	float collision = r1f + r2f;
+	float collision = r1 + r2;
 	// W02.3: Generic Entity Collision routine.
 	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 	// W02.3: Does this object collide with the e object?
