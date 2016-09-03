@@ -1,41 +1,11 @@
-﻿Build started 1/09/2016 4:58:44 p.m..
+﻿Build started 3/09/2016 7:23:15 p.m..
      1>Project "C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\Framework\Framework.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\SDL\SDL2-2.0.3\include\\" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\SDL\SDL2_image-2.0.0\include" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\FMOD\inc\\" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AnimatedEntity.cpp game.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\SDL\SDL2-2.0.3\include\\" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\SDL\SDL2_image-2.0.0\include" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\FMOD\inc\\" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
          game.cpp
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(104): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(190): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(195): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(211): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(212): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(235): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(253): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(300): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(304): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(495): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(526): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(527): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(544): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(545): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(560): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(561): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(576): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(577): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(592): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(593): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(608): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(609): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(624): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\game.cpp(625): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-         AnimatedEntity.cpp
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\animatedentity.cpp(53): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\animatedentity.cpp(54): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\user\documents\github\assignment-one-gp\assignment 1.0\framework\animatedentity.cpp(91): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\Debug\Framework.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\SDL\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\SDL\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\\FMOD\lib\\" SDL2.lib SDL2main.lib SDL2_image.lib fmodl_vc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\Debug\Framework.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\Debug\Framework.lib" /MACHINE:X86 Debug\AnimatedSprite.obj
          Debug\backbuffer.obj
-         Debug\Bullet.obj
          Debug\Enemy.obj
          Debug\entity.obj
          Debug\AnimatedEntity.obj
@@ -43,15 +13,17 @@
          Debug\inputhandler.obj
          Debug\logmanager.obj
          Debug\main.obj
+         Debug\Player.obj
          Debug\PlayerShip.obj
          Debug\SoundSys.obj
          Debug\sprite.obj
          Debug\texture.obj
          Debug\texturemanager.obj
+         Debug\Tiles.obj
          Debug\Vector2D.obj
          Framework.vcxproj -> C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\Debug\Framework.exe
      1>Done Building Project "C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 1.0\Framework\Framework.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.88
+Time Elapsed 00:00:00.79

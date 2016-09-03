@@ -14,7 +14,6 @@
 
 Entity::Entity()
 : m_pSprite(0)
-, m_pAnimSprite(0)
 , m_x(0.0f)
 , m_y(0.0f)
 , m_velocityX(0.0f)

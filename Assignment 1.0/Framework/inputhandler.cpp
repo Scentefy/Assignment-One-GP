@@ -70,7 +70,7 @@ InputHandler::ProcessInput(Game& game)
 			{
 				right = true;
 			}
-			if (e.key.keysym.sym == SDLK_1) 
+			if (e.key.keysym.sym == SDLK_1)
 			{
 				game.BatForm();
 			}
@@ -143,65 +143,5 @@ InputHandler::ProcessInput(Game& game)
 		{
 			game.MovePlayerRight();
 		}
-		//else if (e.type == SDL_KEYDOWN)
-		//{
-		//	// W02.3: Tell the game to fire a player bullet...
-
-		//	if (e.key.keysym.sym == SDLK_LEFT) {
-		//		game.MovePlayer("left");
-		//	}
-		//	if (e.key.keysym.sym == SDLK_RIGHT) {
-		//		game.MovePlayer("right");
-		//	}
-		//	if (e.key.keysym.sym == SDLK_UP) {
-		//		game.MovePlayer("up");
-		//	}
-		//	if (e.key.keysym.sym == SDLK_DOWN) {
-		//		game.MovePlayer("down");
-		//	}
-		//}
-		//else if (e.type == SDL_KEYUP)
-		//{
-		//	if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_DOWN)
-		//	{
-		//		game.StopSpaceShipMovement();
-		//	}
-		//}
 	}
-	//	 W02.1: Receive Input Events below...
-	//	SDL_Event e;
-	//	while (SDL_PollEvent(&e) != 0)
-	//	{
-	//		if (e.type == SDL_QUIT)
-	//		{
-	//			game.Quit();
-	//		}
-	//		else if (e.type == SDL_JOYBUTTONDOWN)
-	//		{
-	//			 W02.3: Tell the game to fire a player bullet...
-	//			if (e.jbutton.button == 10)
-	//			{
-	//				game.FireSpaceShipBullet();
-	//			}
-	//
-	//			 W02.1: Tell the game to move the space ship left...
-	//			if (e.jbutton.button == 2)
-	//			{
-	//				game.MovePlayerLeft();
-	//			}
-	//
-	//			 W02.1: Tell the game to move the space ship right...
-	//			if (e.jbutton.button == 3)
-	//			{
-	//				game.MovePlayerRight();
-	//			}
-	//		}
-	//		else if (e.type == SDL_JOYBUTTONUP)
-	//		{
-	//			if (e.jbutton.button == 2 || e.jbutton.button == 3)
-	//			{
-	//				game.StopPlayerMovement();
-	//			}
-	//		}
-	//	}
 }

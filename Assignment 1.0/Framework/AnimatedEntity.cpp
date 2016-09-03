@@ -6,11 +6,11 @@
 #include <cassert>
 
 
-AnimatedEntity::AnimatedEntity(AnimatedSprite* animatedSprite, int x, int y)
+AnimatedEntity::AnimatedEntity()
+: m_pAnimSprite(0)
+, yPos(0)
 {
-	this->animatedSprite = animatedSprite;
-	animatedSprite->SetX(x);
-	animatedSprite->SetY(y);
+
 }
 
 
@@ -21,9 +21,9 @@ AnimatedEntity::~AnimatedEntity()
 void 
 AnimatedEntity::Process(float deltaTime)
 {
-	animatedSprite->SetX(static_cast<int>(m_x));
-	animatedSprite->SetY(static_cast<int>(m_y));
-	animatedSprite->Process(deltaTime);
+	m_pAnimSprite->SetX(static_cast<int>(m_x));
+	m_pAnimSprite->SetY(static_cast<int>(m_y));
+	m_pAnimSprite->Process(deltaTime);
 	m_x += m_velocityX;
 	m_y += m_velocityY;
 		if (m_x > 1000 - 32) 
@@ -50,16 +50,16 @@ AnimatedEntity::Process(float deltaTime)
 void 
 AnimatedEntity::Draw(BackBuffer& backBuffer)
 {
-	animatedSprite->SetX(m_x - (animatedSprite->GetFrameWidth() / 2));
-	animatedSprite->SetY(m_y - (animatedSprite->GetFrameHeight() / 2));
-	animatedSprite->Draw(backBuffer);
+	m_pAnimSprite->SetX(m_x - (m_pAnimSprite->GetFrameWidth() / 2));
+	m_pAnimSprite->SetY(m_y - (m_pAnimSprite->GetFrameHeight() / 2));
+	m_pAnimSprite->Draw(backBuffer);
 }
 
 bool 
 AnimatedEntity::Initialise(AnimatedSprite* animatedSprite)
 {
 	assert(animatedSprite);
-	this->animatedSprite = animatedSprite;
+	this->m_pAnimSprite = animatedSprite;
 
 	return (true);
 }
@@ -67,7 +67,7 @@ AnimatedEntity::Initialise(AnimatedSprite* animatedSprite)
 void 
 AnimatedEntity::SetExpDead()
 {
-	if (animatedSprite->IsPaused())
+	if (m_pAnimSprite->IsPaused())
 	{
 		m_dead = true;
 	}
@@ -76,7 +76,7 @@ AnimatedEntity::SetExpDead()
 bool
 AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 {
-	int r1 = animatedSprite->GetFrameWidth() / 2;
+	int r1 = m_pAnimSprite->GetFrameWidth() / 2;
 	if (this->IsDead())
 	{
 		r1 = 0;
@@ -86,7 +86,7 @@ AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 	float y1 = GetPositionY();
 	float x2 = e.GetPositionX();
 	float y2 = e.GetPositionY();
-	int r2 = e.animatedSprite->GetFrameWidth() / 2;
+	int r2 = e.m_pAnimSprite->GetFrameWidth() / 2;
 	bool collide = false;
 	float collision = r1 + r2;
 	// W02.3: Generic Entity Collision routine.
@@ -112,11 +112,11 @@ AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 int
 AnimatedEntity::GetYPos()
 {
-	return animatedSprite->GetYPos();
+	return m_pAnimSprite->GetYPos();
 }
 
 void
 AnimatedEntity::SetYPos(int y)
 {
-	animatedSprite->SetYPos(y);
+	m_pAnimSprite->SetYPos(y);
 }

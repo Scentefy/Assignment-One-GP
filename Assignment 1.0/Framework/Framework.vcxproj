@@ -82,24 +82,24 @@
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="backbuffer.h" />
-    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="AnimatedEntity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="SoundSys.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="texturemanager.h" />
+    <ClInclude Include="Tiles.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="backbuffer.cpp" />
-    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="AnimatedEntity.cpp" />
@@ -107,11 +107,13 @@
     <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="logmanager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="SoundSys.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="texturemanager.cpp" />
+    <ClCompile Include="Tiles.cpp" />
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

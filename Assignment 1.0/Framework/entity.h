@@ -53,7 +53,6 @@ public:
 
 protected:
 	Sprite* m_pSprite;
-	AnimatedSprite* m_pAnimSprite;
 
 	float m_x;
 	float m_y;

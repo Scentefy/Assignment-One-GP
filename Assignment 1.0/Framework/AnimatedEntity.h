@@ -5,7 +5,7 @@
 class AnimatedEntity : public Entity
 {
 public:
-	AnimatedEntity(AnimatedSprite* animatedSprite, int x, int y);
+	AnimatedEntity();
 	~AnimatedEntity();
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backBuffer);
@@ -13,12 +13,13 @@ public:
 	void SetExpDead();
 	bool IsCollidingWithAnim(AnimatedEntity& e);
 	int GetYPos();
-	void SetYPos(int y);
+	void SetYPos(int yPos);
 
 protected:
 private:
 public:
 protected:
-	AnimatedSprite* animatedSprite;
+	AnimatedSprite* m_pAnimSprite;
+	int yPos;
 };
 #endif

@@ -1,9 +1,7 @@
 // COMP710 GP 2D Framework
 #ifndef __GAME_H__
 #define __GAME_H__
-#include "Enemy.h"
 #include <vector>
-#include "Bullet.h"
 #include "AnimatedEntity.h"
 #include "SoundSys.h"
 
@@ -32,10 +30,9 @@ public:
 	void MovePlayerRight();
 	void StopSpaceShipMovementHorizontal();
 	void StopSpaceShipMovementVertical();
-	void FireSpaceShipBullet();
 
 	void SpawnEnemy(float x, float y);
-	void SpawnExplosion(int x, int y);
+	void SpawnExplosion(float x, float y);
 	void BatForm();
 	void CatForm();
 	void LionForm();
@@ -88,12 +85,9 @@ protected:
 	AnimatedSprite* pSealSprite;
 	// W02.2: Add an alien enemy container field.
 	std::vector<AnimatedEntity*> enemyContainer;
-	// W02.3: Add a bullet container field.
-	std::vector<Bullet*> bulletContainer;
 	
 	std::vector<AnimatedEntity*> explosionContainer;
 
-	Bullet* bull;
 	AnimatedEntity* ene;
 	AnimatedEntity* exp;
 

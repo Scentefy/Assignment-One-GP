@@ -14,14 +14,13 @@
 #include <cassert>
 #include <SDL.h>
 #include <vector>
-#include "Bullet.h"
 #include "Animatedsprite.h"
+#include "Player.h"
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
-AnimatedEntity* pPlayer = 0;
+Player* pPlayer = 0;
 AnimatedEntity* pEnemy = 0;
-Bullet* pBullet = 0;
 TextureManager* texture = 0;
 AnimatedEntity* pExplosive = 0;
 
@@ -101,7 +100,7 @@ Game::Initialise()
 	// W02.1: Load the player ship sprite.
 	playerSprite = m_pBackBuffer->CreateAnimSprite("assets\\steampunk.png");
 	// W02.1: Create the player ship instance.
-	pPlayer = new AnimatedEntity(playerSprite, 400.0f, 550.0f);
+	pPlayer = new Player();
 	pPlayer->Initialise(playerSprite);
 	playerSprite->SetFrameSpeed(0.4f);
 	playerSprite->SetFrameWidth(32);
@@ -110,6 +109,7 @@ Game::Initialise()
 	playerSprite->SetYPos(0);
 	mask = 'N';
 	playerSprite->SetLooping(true);
+	pPlayer->SetLives(3);
 	pPlayer->SetPositionX(400.0f);
 	pPlayer->SetPositionY(550.0f);
 	pPlayer->SetHorizontalVelocity(0.0f);
@@ -187,29 +187,21 @@ Game::Process(float deltaTime)
 	// Update the game world simulation:
 
 	// Ex003.5: Process each alien enemy in the container.
-	for (int i = 0; i < enemyContainer.size(); i++)
+	for (size_t i = 0; i < enemyContainer.size(); i++)
 	{
 		enemyContainer[i]->Process(deltaTime);
-	}
-	// W02.3: Process each bullet in the container.
-	for (int i = 0; i < bulletContainer.size(); i++)
-	{
-		bulletContainer[i]->Process(deltaTime);
 	}
 	// W02.1: Update player...
 
 	pPlayer->Process(deltaTime);
-	// W02.3: Check for bullet vs alien enemy collisions...
-	// W02.3: For each bullet
 	// W02.3: For each alien enemy
 	// W02.3: Check collision between two entities.
-
 	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end();)
 		{
 			ene = *IterationEnemy;
 			if (pPlayer->IsCollidingWithAnim(**IterationEnemy)) {
-				int eneX = ene->GetPositionX();
-				int eneY = ene->GetPositionY();
+				float eneX = ene->GetPositionX();
+				float eneY = ene->GetPositionY();
 				if (mask == 'L')
 				{
 					ene->SetDead(true);
@@ -221,7 +213,9 @@ Game::Process(float deltaTime)
 				{
 					pPlayer->SetPositionX(400);
 					pPlayer->SetPositionY(550);
-					pPlayer->SetDead(true);
+					pPlayer->SetLives(pPlayer->GetLives()-1);
+					if (pPlayer->GetLives() == 0)
+						pPlayer->SetDead(true);
 				}
 				if (ene->IsDead())
 					SpawnExplosion(eneX, eneY);
@@ -232,7 +226,7 @@ Game::Process(float deltaTime)
 				IterationEnemy++;
 			}
 	}
-	for (int i = 0; i < explosionContainer.size(); i++)
+	for (size_t i = 0; i < explosionContainer.size(); i++)
 	{
 		explosionContainer[i]->Process(deltaTime);
 	}
@@ -250,7 +244,7 @@ Game::Process(float deltaTime)
 			IterationDeath++;
 	}
 	// Move Up
-	for (int i = 0; i < enemyContainer.size(); i++)
+	for (size_t i = 0; i < enemyContainer.size(); i++)
 	{
 		if (enemyContainer[i]->GetPositionY() > 600 - 33)
 		{
@@ -264,16 +258,6 @@ Game::Process(float deltaTime)
 			enemyContainer[i]->SetYPos(0);
 		}
 	}
-	//}
-	// W02.3: If collided, destory both and spawn explosion.
-	//for (IterationDeath = explosionContainer.begin(); IterationDeath < explosionContainer.end(); i++)
-	//{
-	//	if (explosionContainer[i]->IsDead())
-	//	{
-	//		
-	//	}
-	//}
-	// W02.3: Remove any dead bullets from the container...
 
 	// W02.3: Remove any dead enemy aliens from the container...
 
@@ -296,12 +280,8 @@ Game::Draw(BackBuffer& backBuffer)
 	{
 		enemyContainer[i]->Draw(backBuffer);
 	}
-	// W02.3: Draw all bullets in container...
-	for (int i = 0; i < bulletContainer.size(); i++) {
-		bulletContainer[i]->Draw(backBuffer);
-	}
 	
-	for (int i = 0; i < explosionContainer.size(); i++) {
+	for (size_t i = 0; i < explosionContainer.size(); i++) {
 		explosionContainer[i]->Draw(backBuffer);
 	}
 
@@ -325,35 +305,34 @@ Game::Quit()
 void
 Game::MovePlayerUp()
 {
-	float speed = 0.0f;
 	switch (mask)
 	{
 	case 'N' :
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f);
 		playerSprite->SetYPos(144);
 		break;
 	case 'B':
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f);
 		pBatSprite->SetYPos(144);
 		break;
 	case 'C':
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f);
 		pCatSprite->SetYPos(96);
 		break;
 	case 'L':
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f);
 		pLionSprite->SetYPos(162);
 		break;
 	case 'Y':
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f);
 		pBearSprite->SetYPos(240);
 		break;
 	case 'W':
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f - 2.5f);
 		pWolfSprite->SetYPos(144);
 		break;
 	case 'S':
-		pPlayer->SetVerticalVelocity(-2.5f - speed);
+		pPlayer->SetVerticalVelocity(-2.5f);
 		pSealSprite->SetYPos(144);
 		break;
 	}
@@ -362,35 +341,34 @@ Game::MovePlayerUp()
 void
 Game::MovePlayerDown()
 {
-	float speed = 0.0f;
 	switch (mask)
 	{
 	case 'N' :
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f);
 		playerSprite->SetYPos(0);
 		break;
 	case 'B' :
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f);
 		pBatSprite->SetYPos(0);
 		break;
 	case 'C':
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f);
 		pCatSprite->SetYPos(0);
 		break;
 	case 'L':
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f);
 		pLionSprite->SetYPos(0);
 		break;
 	case 'Y':
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f);
 		pBearSprite->SetYPos(0);
 		break;
 	case 'W':
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f + 2.5f);
 		pWolfSprite->SetYPos(0);
 		break;
 	case 'S':
-		pPlayer->SetVerticalVelocity(2.5f + speed);
+		pPlayer->SetVerticalVelocity(2.5f);
 		pSealSprite->SetYPos(0);
 		break;
 	}
@@ -399,35 +377,34 @@ Game::MovePlayerDown()
 void
 Game::MovePlayerLeft()
 {
-	float speed = 0.0f;
 	switch (mask)
 	{
 	case 'N' :
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f);
 		playerSprite->SetYPos(48);
 		break;
 	case 'B' :
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f);
 		pBatSprite->SetYPos(48);
 		break;
 	case 'C':
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f);
 		pCatSprite->SetYPos(32);
 		break;
 	case 'L':
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f);
 		pLionSprite->SetYPos(53);
 		break;
 	case 'Y':
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f);
 		pBearSprite->SetYPos(80);
 		break;
 	case 'W':
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f - 2.5f);
 		pWolfSprite->SetYPos(48);
 		break;
 	case 'S':
-		pPlayer->SetHorizontalVelocity(-2.5f - speed);
+		pPlayer->SetHorizontalVelocity(-2.5f);
 		pSealSprite->SetYPos(48);
 		break;
 	}
@@ -436,35 +413,34 @@ Game::MovePlayerLeft()
 void
 Game::MovePlayerRight()
 {
-	float speed = 0.0f;
 	switch (mask)
 	{
 	case 'N':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f);
 		playerSprite->SetYPos(96);
 		break;
 	case 'B':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f);
 		pBatSprite->SetYPos(96);
 		break;
 	case 'C':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f);
 		pCatSprite->SetYPos(64);
 		break;
 	case 'L':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f);
 		pLionSprite->SetYPos(106);
 		break;
 	case 'Y':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f);
 		pBearSprite->SetYPos(160);
 		break;
 	case 'W':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f + 2.5f);
 		pWolfSprite->SetYPos(96);
 		break;
 	case 'S':
-		pPlayer->SetHorizontalVelocity(2.5f + speed);
+		pPlayer->SetHorizontalVelocity(2.5f );
 		pSealSprite->SetYPos(96);
 		break;
 	}
@@ -488,11 +464,9 @@ Game::StopSpaceShipMovementVertical()
 void 
 Game::SpawnEnemy(float x, float y)
 {
-	int xi = static_cast<int>(x);
-	int yi = static_cast<int>(y);
 	// W02.2: Load the alien enemy sprite file.
 	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\darkknight.png");
-	pEnemy = new AnimatedEntity(enemySprite,x,y);
+	pEnemy = new AnimatedEntity();
 	pEnemy->Initialise(enemySprite);
 	enemySprite->SetFrameSpeed(0.3f);
 	enemySprite->SetFrameWidth(32);
@@ -502,8 +476,6 @@ Game::SpawnEnemy(float x, float y)
 	enemySprite->SetLooping(true);
 	pEnemy->SetPositionX(x);
 	pEnemy->SetPositionY(y);
-	enemySprite->SetX(xi);
-	enemySprite->SetY(yi);
 	pEnemy->SetHorizontalVelocity(0.0f);
 	pEnemy->SetVerticalVelocity(1.0f);
 	pEnemy->SetDead(false);
@@ -513,10 +485,10 @@ Game::SpawnEnemy(float x, float y)
 }
 
 void
-Game::SpawnExplosion(int x, int y)
+Game::SpawnExplosion(float x, float y)
 {
 	AnimatedSprite* pExplosiveSprite = m_pBackBuffer->CreateAnimSprite("assets\\bloodsprite.png");
-	pExplosive = new AnimatedEntity(pExplosiveSprite,x ,y);
+	pExplosive = new AnimatedEntity();
 	pExplosive->Initialise(pExplosiveSprite);
 	pExplosiveSprite->SetFrameSpeed(0.3f);
 	pExplosiveSprite->SetFrameWidth(64);
@@ -541,8 +513,8 @@ Game::BatForm()
 	pBatSprite->SetNumOfFrames(3);
 	pBatSprite->SetYPos(0);
 	pBatSprite->SetLooping(true);
-	pBatSprite->SetX(pPlayer->GetPositionX());
-	pBatSprite->SetY(pPlayer->GetPositionY());
+	pBatSprite->SetX((int)pPlayer->GetPositionX());
+	pBatSprite->SetY((int)pPlayer->GetPositionY());
 }
 
 void
@@ -557,8 +529,8 @@ Game::CatForm()
 	pCatSprite->SetNumOfFrames(3);
 	pCatSprite->SetYPos(0);
 	pCatSprite->SetLooping(true);
-	pCatSprite->SetX(pPlayer->GetPositionX());
-	pCatSprite->SetY(pPlayer->GetPositionY());
+	pCatSprite->SetX((int)pPlayer->GetPositionX());
+	pCatSprite->SetY((int)pPlayer->GetPositionY());
 }
 
 void
@@ -573,8 +545,8 @@ Game::LionForm()
 	pLionSprite->SetNumOfFrames(3);
 	pLionSprite->SetYPos(0);
 	pLionSprite->SetLooping(true);
-	pLionSprite->SetX(pPlayer->GetPositionX());
-	pLionSprite->SetY(pPlayer->GetPositionY());
+	pLionSprite->SetX((int)pPlayer->GetPositionX());
+	pLionSprite->SetY((int)pPlayer->GetPositionY());
 }
 
 void
@@ -589,8 +561,8 @@ Game::BearForm()
 	pBearSprite->SetNumOfFrames(3);
 	pBearSprite->SetYPos(0);
 	pBearSprite->SetLooping(true);
-	pBearSprite->SetX(pPlayer->GetPositionX());
-	pBearSprite->SetY(pPlayer->GetPositionY());
+	pBearSprite->SetX((int)pPlayer->GetPositionX());
+	pBearSprite->SetY((int)pPlayer->GetPositionY());
 }
 
 void
@@ -605,8 +577,8 @@ Game::WolfForm()
 	pWolfSprite->SetNumOfFrames(3);
 	pWolfSprite->SetYPos(0);
 	pWolfSprite->SetLooping(true);
-	pWolfSprite->SetX(pPlayer->GetPositionX());
-	pWolfSprite->SetY(pPlayer->GetPositionY());
+	pWolfSprite->SetX((int)pPlayer->GetPositionX());
+	pWolfSprite->SetY((int)pPlayer->GetPositionY());
 }
 
 void
@@ -621,8 +593,8 @@ Game::SealForm()
 	pSealSprite->SetNumOfFrames(3);
 	pSealSprite->SetYPos(0);
 	pSealSprite->SetLooping(true);
-	pSealSprite->SetX(pPlayer->GetPositionX());
-	pSealSprite->SetY(pPlayer->GetPositionY());
+	pSealSprite->SetX((int)pPlayer->GetPositionX());
+	pSealSprite->SetY((int)pPlayer->GetPositionY());
 }
 
 void
