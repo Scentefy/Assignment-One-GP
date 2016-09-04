@@ -29,7 +29,7 @@ public:
 	void SetNumOfFrames(int n);
 	int GetNumOfFrames();
 
-	void Pause();
+	void Pause(bool tf);
 	bool IsPaused();
 
 	bool IsAnimating();

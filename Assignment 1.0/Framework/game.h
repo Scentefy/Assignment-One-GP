@@ -4,6 +4,8 @@
 #include <vector>
 #include "AnimatedEntity.h"
 #include "SoundSys.h"
+#include "Enemy.h"
+#include "Blood.h"
 
 // Forward Declarations
 class BackBuffer;
@@ -30,6 +32,7 @@ public:
 	void MovePlayerRight();
 	void StopSpaceShipMovementHorizontal();
 	void StopSpaceShipMovementVertical();
+	void PauseAnimation();
 
 	void SpawnEnemy(float x, float y);
 	void SpawnExplosion(float x, float y);
@@ -84,16 +87,16 @@ protected:
 	AnimatedSprite* pWolfSprite;
 	AnimatedSprite* pSealSprite;
 	// W02.2: Add an alien enemy container field.
-	std::vector<AnimatedEntity*> enemyContainer;
+	std::vector<Enemy*> enemyContainer;
 	
-	std::vector<AnimatedEntity*> explosionContainer;
+	std::vector<Blood*> explosionContainer;
 
-	AnimatedEntity* ene;
-	AnimatedEntity* exp;
+	Enemy* ene;
+	Blood* exp;
 
 	//Deletion Iterators
-	std::vector<AnimatedEntity*>::iterator IterationEnemy;
-	std::vector <AnimatedEntity*>::iterator IterationDeath;
+	std::vector<Enemy*>::iterator IterationEnemy;
+	std::vector <Blood*>::iterator IterationDeath;
 
 	//FMO
 	SoundSys sound;

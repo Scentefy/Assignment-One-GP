@@ -16,13 +16,14 @@
 #include <vector>
 #include "Animatedsprite.h"
 #include "Player.h"
+#include "Enemy.h"
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
 Player* pPlayer = 0;
-AnimatedEntity* pEnemy = 0;
+Enemy* pEnemy = 0;
 TextureManager* texture = 0;
-AnimatedEntity* pExplosive = 0;
+Blood* pExplosive = 0;
 
 Game&
 Game::GetInstance()
@@ -102,6 +103,7 @@ Game::Initialise()
 	// W02.1: Create the player ship instance.
 	pPlayer = new Player();
 	pPlayer->Initialise(playerSprite);
+	pPlayer->PauseAnimatedSprite();
 	playerSprite->SetFrameSpeed(0.4f);
 	playerSprite->SetFrameWidth(32);
 	playerSprite->SetFrameHeight(48);
@@ -211,6 +213,8 @@ Game::Process(float deltaTime)
 				}
 				else if (ene->IsCollidingWithAnim(*pPlayer))
 				{
+					SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+					sound.playSound(soundBlood, false);
 					pPlayer->SetPositionX(400);
 					pPlayer->SetPositionY(550);
 					pPlayer->SetLives(pPlayer->GetLives()-1);
@@ -305,6 +309,7 @@ Game::Quit()
 void
 Game::MovePlayerUp()
 {
+	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N' :
@@ -341,6 +346,7 @@ Game::MovePlayerUp()
 void
 Game::MovePlayerDown()
 {
+	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N' :
@@ -377,6 +383,7 @@ Game::MovePlayerDown()
 void
 Game::MovePlayerLeft()
 {
+	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N' :
@@ -413,6 +420,7 @@ Game::MovePlayerLeft()
 void
 Game::MovePlayerRight()
 {
+	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N':
@@ -450,14 +458,23 @@ void
 Game::StopSpaceShipMovementHorizontal()
 {
 	pPlayer->SetHorizontalVelocity(0.0f);
-	//playerSprite->Pause();
+	PauseAnimation();
 }
 
 void
 Game::StopSpaceShipMovementVertical()
 {
 	pPlayer->SetVerticalVelocity(0.0f);
-	//playerSprite->Pause();
+	PauseAnimation();
+}
+
+void
+Game::PauseAnimation()
+{
+	if (pPlayer->GetHorizontalVelocity() == 0.0f && pPlayer->GetVerticalVelocity() == 0.0f)
+	{
+		pPlayer->PauseAnimatedSprite();
+	}
 }
 
 // W02.2: Spawn a Enemy in game.
@@ -466,7 +483,7 @@ Game::SpawnEnemy(float x, float y)
 {
 	// W02.2: Load the alien enemy sprite file.
 	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\darkknight.png");
-	pEnemy = new AnimatedEntity();
+	pEnemy = new Enemy();
 	pEnemy->Initialise(enemySprite);
 	enemySprite->SetFrameSpeed(0.3f);
 	enemySprite->SetFrameWidth(32);
@@ -488,7 +505,7 @@ void
 Game::SpawnExplosion(float x, float y)
 {
 	AnimatedSprite* pExplosiveSprite = m_pBackBuffer->CreateAnimSprite("assets\\bloodsprite.png");
-	pExplosive = new AnimatedEntity();
+	pExplosive = new Blood();
 	pExplosive->Initialise(pExplosiveSprite);
 	pExplosiveSprite->SetFrameSpeed(0.3f);
 	pExplosiveSprite->SetFrameWidth(64);
@@ -507,6 +524,7 @@ Game::BatForm()
 	mask = 'B';
 	pBatSprite = m_pBackBuffer->CreateAnimSprite("assets\\pinkbat.png");
 	pPlayer->Initialise(pBatSprite);
+	pPlayer->PauseAnimatedSprite();
 	pBatSprite->SetFrameSpeed(0.1f);
 	pBatSprite->SetFrameWidth(32);
 	pBatSprite->SetFrameHeight(48);
@@ -523,6 +541,7 @@ Game::CatForm()
 	mask = 'C';
 	pCatSprite = m_pBackBuffer->CreateAnimSprite("assets\\cat.png");
 	pPlayer->Initialise(pCatSprite);
+	pPlayer->PauseAnimatedSprite();
 	pCatSprite->SetFrameSpeed(0.2f);
 	pCatSprite->SetFrameWidth(32);
 	pCatSprite->SetFrameHeight(32);
@@ -539,6 +558,7 @@ Game::LionForm()
 	mask = 'L';
 	pLionSprite = m_pBackBuffer->CreateAnimSprite("assets\\Lion.png");
 	pPlayer->Initialise(pLionSprite);
+	pPlayer->PauseAnimatedSprite();
 	pLionSprite->SetFrameSpeed(0.2f);
 	pLionSprite->SetFrameWidth(48);
 	pLionSprite->SetFrameHeight(53);
@@ -555,6 +575,7 @@ Game::BearForm()
 	mask = 'Y';
 	pBearSprite = m_pBackBuffer->CreateAnimSprite("assets\\bear.png");
 	pPlayer->Initialise(pBearSprite);
+	pEnemy->PauseAnimatedSprite();
 	pBearSprite->SetFrameSpeed(0.4f);
 	pBearSprite->SetFrameWidth(80);
 	pBearSprite->SetFrameHeight(80);
@@ -571,6 +592,7 @@ Game::WolfForm()
 	mask = 'W';
 	pWolfSprite = m_pBackBuffer->CreateAnimSprite("assets\\wolf.png");
 	pPlayer->Initialise(pWolfSprite);
+	pPlayer->PauseAnimatedSprite();
 	pWolfSprite->SetFrameSpeed(0.1f);
 	pWolfSprite->SetFrameWidth(48);
 	pWolfSprite->SetFrameHeight(48);
@@ -587,6 +609,7 @@ Game::SealForm()
 	mask = 'S';
 	pSealSprite = m_pBackBuffer->CreateAnimSprite("assets\\seal.png");
 	pPlayer->Initialise(pSealSprite);
+	pPlayer->PauseAnimatedSprite();
 	pSealSprite->SetFrameSpeed(0.3f);
 	pSealSprite->SetFrameWidth(48);
 	pSealSprite->SetFrameHeight(48);
@@ -602,6 +625,7 @@ Game::HumanForm()
 {
 	mask = 'N';
 	pPlayer->Initialise(playerSprite);
+	pPlayer->PauseAnimatedSprite();
 	playerSprite->SetFrameSpeed(0.25f);
 	playerSprite->SetFrameWidth(32);
 	playerSprite->SetFrameHeight(48);

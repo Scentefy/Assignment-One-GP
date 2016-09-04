@@ -14,7 +14,8 @@ public:
 	bool IsCollidingWithAnim(AnimatedEntity& e);
 	int GetYPos();
 	void SetYPos(int yPos);
-
+	void PauseAnimatedSprite();
+	void StartAnimation();
 protected:
 private:
 public:

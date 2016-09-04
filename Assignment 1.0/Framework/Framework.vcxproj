@@ -82,12 +82,14 @@
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="backbuffer.h" />
+    <ClInclude Include="Blood.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="AnimatedEntity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
+    <ClInclude Include="Mask.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="SoundSys.h" />
@@ -100,6 +102,7 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="backbuffer.cpp" />
+    <ClCompile Include="Blood.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="AnimatedEntity.cpp" />

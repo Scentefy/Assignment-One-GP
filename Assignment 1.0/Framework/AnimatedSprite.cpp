@@ -54,7 +54,7 @@ void
 AnimatedSprite::Process(float deltaTime)
 {
 	// W02.4: If not paused...
-	if (!m_paused)
+	if (m_paused == false)
 	{
 		// W02.4: Count the time elapsed.
 		m_timeElapsed += deltaTime;
@@ -76,7 +76,7 @@ AnimatedSprite::Process(float deltaTime)
 				m_currentFrame = 0;
 			// W02.4: Stop the animation if it is not looping...
 			else
-				Pause();
+				Pause(true);
 		}
 	}
 
@@ -151,9 +151,9 @@ int AnimatedSprite::GetFrameHeight()
 }
 
 void
-AnimatedSprite::Pause()
+AnimatedSprite::Pause(bool tf)
 {
-	m_paused = !m_paused;
+	m_paused = tf;
 }
 
 bool

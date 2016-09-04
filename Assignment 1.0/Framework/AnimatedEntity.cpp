@@ -120,3 +120,17 @@ AnimatedEntity::SetYPos(int y)
 {
 	m_pAnimSprite->SetYPos(y);
 }
+
+void
+AnimatedEntity::PauseAnimatedSprite()
+{
+	m_pAnimSprite->Pause(true);
+	m_pAnimSprite->SetCurrentFrame(0);
+}
+
+void
+AnimatedEntity::StartAnimation()
+{
+	m_pAnimSprite->Pause(false);
+}
+
