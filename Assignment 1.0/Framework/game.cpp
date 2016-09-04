@@ -24,6 +24,19 @@ Player* pPlayer = 0;
 Enemy* pEnemy = 0;
 TextureManager* texture = 0;
 Blood* pExplosive = 0;
+Tiles* pTile = 0;
+
+//Sprites
+AnimatedSprite* playerSprite;
+AnimatedSprite* enemySprite;
+AnimatedSprite* pBatSprite;
+AnimatedSprite* pCatSprite;
+AnimatedSprite* pLionSprite;
+AnimatedSprite* pBearSprite;
+AnimatedSprite* pWolfSprite;
+AnimatedSprite* pSealSprite;
+
+Sprite* pTileSprite;
 
 Game&
 Game::GetInstance()
@@ -91,8 +104,8 @@ Game::Initialise()
 	}
 
 	backGround = m_pBackBuffer->CreateSprite("assets\\RPGScreenshot.png");
-	backGround->SetX(200);
-	backGround->SetY(150);
+	backGround->SetX(300);
+	backGround->SetY(100);
 
 
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
@@ -129,6 +142,17 @@ Game::Initialise()
 		}
 		y += 50.0f;
 		x = 20.0f;
+	}
+
+	auto x2 = 0.0f;
+	auto y2 = 9.0f;
+	for (float i = 1; i <= 19; i++) {
+		for (float j = 1; j <= 32; j++) {
+			CreateTile(x2, y2);
+			x2 += 32;
+		}
+		y2 += 32.0f;
+		x2 = 0.0f;
 	}
 
 	m_lastTime = SDL_GetTicks();
@@ -192,6 +216,11 @@ Game::Process(float deltaTime)
 	for (size_t i = 0; i < enemyContainer.size(); i++)
 	{
 		enemyContainer[i]->Process(deltaTime);
+	}
+
+	for (size_t i = 0; i < tileContainer.size(); i++)
+	{
+		tileContainer[i]->Process(deltaTime);
 	}
 	// W02.1: Update player...
 
@@ -275,9 +304,15 @@ Game::Draw(BackBuffer& backBuffer)
 	
 	//backBuffer.SetClearColour(255, 0, 0);
 	backBuffer.Clear();
+
+	int j = 0;
+	for (IterationTile = tileContainer.begin(); IterationTile < tileContainer.end(); IterationTile++, j++)
+	{
+		tileContainer[j]->Draw(backBuffer);
+	}
 	
 	backGround->Draw(backBuffer);
-	
+
 	// W02.2: Draw all enemy aliens in container...
 	int i = 0;
 	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end(); IterationEnemy++, i++)
@@ -634,3 +669,19 @@ Game::HumanForm()
 	playerSprite->SetLooping(true);
 }
 
+void
+Game::CreateTile(float x, float y)
+{
+	// W02.2: Load the alien enemy sprite file.
+	pTileSprite = m_pBackBuffer->CreateSprite("assets\\Sand.png");
+	pTile = new Tiles();
+	pTile->Initialise(pTileSprite);
+	pTile->SetPositionX(x);
+	pTile->SetPositionY(y);
+	pTile->SetHorizontalVelocity(0.0f);
+	pTile->SetVerticalVelocity(0.0f);
+	pTile->SetDead(false);
+
+	// W02.2: Add the new Enemy to the enemy container.
+	tileContainer.push_back(pTile);
+}

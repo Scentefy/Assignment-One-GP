@@ -6,6 +6,7 @@
 #include "SoundSys.h"
 #include "Enemy.h"
 #include "Blood.h"
+#include "Tiles.h"
 
 // Forward Declarations
 class BackBuffer;
@@ -43,6 +44,8 @@ public:
 	void WolfForm();
 	void SealForm();
 	void HumanForm();
+
+	void CreateTile(float x, float y);
 	
 protected:
 	void Process(float deltaTime);
@@ -77,19 +80,12 @@ protected:
 	char mask;
 	//Background Sprite   
 	Sprite* backGround;
-	//Sprites
-	AnimatedSprite* playerSprite;
-	AnimatedSprite* enemySprite;
-	AnimatedSprite* pBatSprite;
-	AnimatedSprite* pCatSprite;
-	AnimatedSprite* pLionSprite;
-	AnimatedSprite* pBearSprite;
-	AnimatedSprite* pWolfSprite;
-	AnimatedSprite* pSealSprite;
+
 	// W02.2: Add an alien enemy container field.
 	std::vector<Enemy*> enemyContainer;
 	
 	std::vector<Blood*> explosionContainer;
+	std::vector<Tiles*> tileContainer;
 
 	Enemy* ene;
 	Blood* exp;
@@ -97,6 +93,7 @@ protected:
 	//Deletion Iterators
 	std::vector<Enemy*>::iterator IterationEnemy;
 	std::vector <Blood*>::iterator IterationDeath;
+	std::vector <Tiles*>::iterator IterationTile;
 
 	//FMO
 	SoundSys sound;

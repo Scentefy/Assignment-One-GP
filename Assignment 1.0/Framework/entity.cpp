@@ -45,14 +45,14 @@ Entity::Process(float deltaTime)
 	m_x += m_velocityX;
 	m_y += m_velocityY;
 	// W02.1: Boundary checking and position capping. 
-	if (m_x > 800 - 32) {
-		m_x = 800 - 32;
-		m_velocityX = 0;
-	}
-	else if (m_x < 0) {
-		m_x = 0;
-		m_velocityX = 0;
-	}
+	//if (m_x > 800 - 32) {
+	//	m_x = 800 - 32;
+	//	m_velocityX = 0;
+	//}
+	//else if (m_x < 0) {
+	//	m_x = 0;
+	//	m_velocityX = 0;
+	//}
 }
 
 void 
