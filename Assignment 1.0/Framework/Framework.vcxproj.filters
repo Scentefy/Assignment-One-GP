@@ -66,9 +66,6 @@
     <ClInclude Include="Blood.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="backbuffer.cpp">

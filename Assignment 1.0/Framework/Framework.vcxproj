@@ -89,7 +89,6 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
-    <ClInclude Include="Mask.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="SoundSys.h" />
