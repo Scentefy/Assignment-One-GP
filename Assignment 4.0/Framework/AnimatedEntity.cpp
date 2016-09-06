@@ -43,7 +43,6 @@ AnimatedEntity::Process(float deltaTime)
 		m_y = 0 + 32;
 		m_velocityY = 0;
 	}
-
 }
 
 void 
@@ -120,7 +119,6 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 	}
 	if (this->GetMask() == 'S')
 	{
-		r1 = 0;
 		return false;
 	}
 	float x1 = GetPositionX();;
