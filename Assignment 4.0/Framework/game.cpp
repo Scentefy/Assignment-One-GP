@@ -26,6 +26,7 @@ TextureManager* texture = 0;
 Blood* pExplosive = 0;
 Tiles* pTile = 0;
 WaterTile* pWaterTile = 0;
+Tiles* pWall = 0;
 
 //Sprites
 AnimatedSprite* playerSprite;
@@ -39,6 +40,7 @@ AnimatedSprite* pSealSprite;
 
 Sprite* pTileSprite;
 Sprite* pTileWaterSprite;
+Sprite* pWallSprite;
 
 Game&
 Game::GetInstance()
@@ -169,6 +171,17 @@ Game::Initialise()
 		x3 = 0.0f;
 	}
 
+	auto x4 = 500.0f;
+	auto y4 = 300.0f;
+	for (float i = 1; i <= 2; i++) {
+		for (float j = 1; j <= 2; j++) {
+			CreateWall(x4, y4);
+			x4 += 32;
+		}
+		y4 += 32.0f;
+		x4 = 500.0f;
+	}
+
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
 
@@ -224,9 +237,16 @@ Game::Process(float deltaTime)
 		m_frameCount = 0;
 	}
 
-	// Update the game world simulation:
+	float oldPositionX = 0;
+	float oldPositionY = 0;
+	if (deltaTime - oldDelta > 50)
+		oldDelta = deltaTime;
+	if (oldPositionX != pPlayer->GetPositionX() && oldPositionY != pPlayer->GetPositionY())
+	{
+		oldPositionX = pPlayer->GetPositionX();
+		oldPositionY = pPlayer->GetPositionY();
+	}
 
-	// Ex003.5: Process each alien enemy in the container.
 	for (size_t i = 0; i < enemyContainer.size(); i++)
 	{
 		enemyContainer[i]->Process(deltaTime);
@@ -241,11 +261,16 @@ Game::Process(float deltaTime)
 	{
 		waterTileContainer[i]->Process(deltaTime);
 	}
-	// W02.1: Update player...
 
+	for (size_t i = 0; i < wallContainer.size(); i++)
+	{
+		wallContainer[i]->Process(deltaTime);
+	}
+
+	//Player Process
 	pPlayer->Process(deltaTime);
-	// W02.3: For each alien enemy
-	// W02.3: Check collision between two entities.
+
+	//Collision with Enemy
 	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end();)
 	{
 		ene = *IterationEnemy;
@@ -278,11 +303,12 @@ Game::Process(float deltaTime)
 		}
 	}
 			
-			//test collision
+			//Collision with Water
 			for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end();)
 			{
 				wat = *IterationWaterTile;
-				if (pPlayer->IsCollidingWithEnt(**IterationWaterTile)) {
+				if (pPlayer->IsCollidingWithEnt(**IterationWaterTile)) 
+				{
 					float eneX = ene->GetPositionX();
 					float eneY = ene->GetPositionY();
 					if (mask == 'S')
@@ -299,12 +325,28 @@ Game::Process(float deltaTime)
 						if (pPlayer->GetLives() == 0)
 							pPlayer->SetDead(true);
 					}
+					
 				}
 				else
 				{
 					IterationWaterTile++;
 				}
+			}
+			//Collision with wall
+			for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end();)
+			{
+				wal = *IterationWall;
+				if (pPlayer->IsCollidingWithEnt(**IterationWall))
+				{
+
+						pPlayer->SetPositionX(oldPositionX);
+						pPlayer->SetPositionY(oldPositionY);
 				}
+				else
+				{
+					IterationWall++;
+				}
+			}
 
 	for (size_t i = 0; i < explosionContainer.size(); i++)
 	{
@@ -338,7 +380,6 @@ Game::Process(float deltaTime)
 			enemyContainer[i]->SetYPos(0);
 		}
 	}
-
 	// W02.3: Remove any dead enemy aliens from the container...
 
 	// W02.3: Remove any dead explosions from the container...
@@ -364,6 +405,12 @@ Game::Draw(BackBuffer& backBuffer)
 	for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end(); IterationWaterTile++, x++)
 	{
 		waterTileContainer[x]->Draw(backBuffer);
+	}
+
+	int w = 0;
+	for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end(); IterationWall++, w++)
+	{
+		wallContainer[w]->Draw(backBuffer);
 	}
 
 	// W02.2: Draw all enemy aliens in container...
@@ -761,4 +808,20 @@ Game::CreateWaterTile(float x, float y)
 	pWaterTile->SetDead(false);
 
 	waterTileContainer.push_back(pWaterTile);
+}
+
+void
+Game::CreateWall(float x, float y)
+{
+	tile = 'B';
+	pWallSprite = m_pBackBuffer->CreateSprite("assets\\Tree.png");
+	pWall = new Tiles();
+	pWall->Initialise(pWallSprite);
+	pWall->SetPositionX(x);
+	pWall->SetPositionY(y);
+	pWall->SetHorizontalVelocity(0.0f);
+	pWall->SetVerticalVelocity(0.0f);
+	pWall->SetDead(false);
+
+	wallContainer.push_back(pWall);
 }

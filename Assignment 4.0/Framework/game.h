@@ -48,6 +48,7 @@ public:
 
 	void CreateTile(float x, float y);
 	void CreateWaterTile(float x, float y);
+	void CreateWall(float x, float y);
 	
 protected:
 	void Process(float deltaTime);
@@ -70,6 +71,7 @@ protected:
 
 	// Simulation Counters:
 	float m_elapsedSeconds;
+	float oldDelta;
 	float m_lag;
 	float m_executionTime;
 	int m_lastTime;
@@ -89,16 +91,19 @@ protected:
 	std::vector<Blood*> explosionContainer;
 	std::vector<Tiles*> tileContainer;
 	std::vector<WaterTile*> waterTileContainer;
+	std::vector<Tiles*> wallContainer;
 
 	Enemy* ene;
 	Blood* exp;
 	WaterTile* wat;
+	Tiles* wal;
 
 	//Deletion Iterators
 	std::vector<Enemy*>::iterator IterationEnemy;
 	std::vector <Blood*>::iterator IterationDeath;
 	std::vector <Tiles*>::iterator IterationTile;
 	std::vector <WaterTile*>::iterator IterationWaterTile;
+	std::vector <Tiles*>::iterator IterationWall;
 
 	//FMO
 	SoundSys sound;
