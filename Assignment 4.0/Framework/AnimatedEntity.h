@@ -13,8 +13,19 @@ public:
 	void SetExpDead();
 	bool IsCollidingWithAnim(AnimatedEntity& e);
 	bool IsCollidingWithEnt(Entity& e);
+
 	int GetYPos();
 	void SetYPos(int yPos);
+
+	bool GetWalkableWater();
+	void SetWalkableWater(bool w);
+
+	bool GetWalkableNarrow();
+	void SetWalkableNarrow(bool n);
+
+	bool GetWalkableLow();
+	void SetWalkableLow(bool l);
+
 	void PauseAnimatedSprite();
 	void StartAnimation();
 protected:
@@ -23,5 +34,6 @@ public:
 protected:
 	AnimatedSprite* m_pAnimSprite;
 	int yPos;
+	bool walkableWater, walkableNarrow, walkableLow;
 };
 #endif

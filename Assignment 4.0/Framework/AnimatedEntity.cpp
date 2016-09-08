@@ -119,7 +119,24 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 	}
 	if (this->GetMask() == 'S')
 	{
-		return false;
+		if (walkableWater == true)
+		{
+			return false;
+		}
+	}
+	if (this->GetMask() == 'C')
+	{
+		if (walkableNarrow == true)
+		{
+			return false;
+		}
+	}
+	if (this->GetMask() == 'B')
+	{
+		if (walkableLow == true)
+		{
+			return false;
+		}
 	}
 	float x1 = GetPositionX();;
 	float y1 = GetPositionY();
@@ -158,6 +175,42 @@ void
 AnimatedEntity::SetYPos(int y)
 {
 	m_pAnimSprite->SetYPos(y);
+}
+
+bool
+AnimatedEntity::GetWalkableWater()
+{
+	return walkableWater;
+}
+
+void
+AnimatedEntity::SetWalkableWater(bool w)
+{
+	walkableWater = w;
+}
+
+bool
+AnimatedEntity::GetWalkableNarrow()
+{
+	return walkableNarrow;
+}
+
+void
+AnimatedEntity::SetWalkableNarrow(bool n)
+{
+	walkableNarrow = n;
+}
+
+bool
+AnimatedEntity::GetWalkableLow()
+{
+	return walkableLow;
+}
+
+void
+AnimatedEntity::SetWalkableLow(bool l)
+{
+	walkableLow = l;
 }
 
 void

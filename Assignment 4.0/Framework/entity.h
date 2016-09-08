@@ -40,9 +40,6 @@ public:
 	float GetVerticalVelocity();
 	void SetVerticalVelocity(float y);
 
-
-
-
 protected:
 
 private:

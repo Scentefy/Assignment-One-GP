@@ -68,7 +68,6 @@ Entity::Draw(BackBuffer& backBuffer)
 bool
 Entity::IsCollidingWith(Entity& e)
 {
-
 	int r1 = m_pSprite->GetHeight()/2;
 	float x1 = GetPositionX();
 	float y1 = GetPositionY();

@@ -89,9 +89,11 @@
     <ClInclude Include="AnimatedEntity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputhandler.h" />
+    <ClInclude Include="Lava.h" />
     <ClInclude Include="logmanager.h" />
+    <ClInclude Include="LowWall.h" />
+    <ClInclude Include="Narrow.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="SoundSys.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="texture.h" />
@@ -109,10 +111,12 @@
     <ClCompile Include="AnimatedEntity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputhandler.cpp" />
+    <ClCompile Include="LavaTile.cpp" />
     <ClCompile Include="logmanager.cpp" />
+    <ClCompile Include="LowWall.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Narrow.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="SoundSys.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />

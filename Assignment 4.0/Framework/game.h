@@ -8,6 +8,9 @@
 #include "Blood.h"
 #include "Tiles.h"
 #include "WaterTile.h"
+#include "Lava.h"
+#include "Narrow.h"
+#include "LowWall.h"
 
 // Forward Declarations
 class BackBuffer;
@@ -49,6 +52,9 @@ public:
 	void CreateTile(float x, float y);
 	void CreateWaterTile(float x, float y);
 	void CreateWall(float x, float y);
+	void CreateLavaTile(float x, float y);
+	void CreateNarrow(float x, float y);
+	void CreateLowWall(float x, float y);
 	
 protected:
 	void Process(float deltaTime);
@@ -92,18 +98,17 @@ protected:
 	std::vector<Tiles*> tileContainer;
 	std::vector<WaterTile*> waterTileContainer;
 	std::vector<Tiles*> wallContainer;
+	std::vector<LavaTile*> lavaTileContainer;
+	std::vector<Narrow*> NarrowTileContainer;
+	std::vector<LowWall*> LowWallTileContainer;
 
 	Enemy* ene;
 	Blood* exp;
 	WaterTile* wat;
 	Tiles* wal;
-
-	//Deletion Iterators
-	std::vector<Enemy*>::iterator IterationEnemy;
-	std::vector <Blood*>::iterator IterationDeath;
-	std::vector <Tiles*>::iterator IterationTile;
-	std::vector <WaterTile*>::iterator IterationWaterTile;
-	std::vector <Tiles*>::iterator IterationWall;
+	LavaTile* lav;
+	Narrow* nar;
+	LowWall* low;
 
 	//FMO
 	SoundSys sound;

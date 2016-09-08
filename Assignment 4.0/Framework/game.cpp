@@ -17,6 +17,7 @@
 #include "Animatedsprite.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Narrow.h"
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -27,6 +28,9 @@ Blood* pExplosive = 0;
 Tiles* pTile = 0;
 WaterTile* pWaterTile = 0;
 Tiles* pWall = 0;
+LavaTile* pLava = 0;
+Narrow* pNarrow = 0;
+LowWall* pLow = 0;
 
 //Sprites
 AnimatedSprite* playerSprite;
@@ -41,6 +45,19 @@ AnimatedSprite* pSealSprite;
 Sprite* pTileSprite;
 Sprite* pTileWaterSprite;
 Sprite* pWallSprite;
+Sprite* pLavaSprite;
+Sprite* pNarrowSprite;
+Sprite* pLowWallSprite;
+
+//Deletion Iterators
+std::vector<Enemy*>::iterator IterationEnemy;
+std::vector <Blood*>::iterator IterationDeath;
+std::vector <Tiles*>::iterator IterationTile;
+std::vector <WaterTile*>::iterator IterationWaterTile;
+std::vector <Tiles*>::iterator IterationWall;
+std::vector <LavaTile*>::iterator IterationLavaTile;
+std::vector <Narrow*>::iterator IterationNarrow;
+std::vector <LowWall*>::iterator IterationLowWall;
 
 Game&
 Game::GetInstance()
@@ -107,11 +124,6 @@ Game::Initialise()
 
 	}
 
-	backGround = m_pBackBuffer->CreateSprite("assets\\RPGScreenshot.png");
-	backGround->SetX(300);
-	backGround->SetY(100);
-
-
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
 
 
@@ -137,49 +149,82 @@ Game::Initialise()
 	pPlayer->SetDead(false);
 
 	// W02.2: Spawn four rows of 14 alien enemies.
-	float x = 400.0f;
-	float y = 32.0f;
+	float enemyX = 400.0f;
+	float enemyY = 32.0f;
 
 	for (float i = 1; i <= 5; i++) {
 		for (float j = 1; j <= 5; j++) {
-			SpawnEnemy(x, y);
-			x += 55;
+			SpawnEnemy(enemyX, enemyY);
+			enemyX += 55;
 		}
-		y += 50.0f;
-		x = 20.0f;
+		enemyY += 50.0f;
+		enemyX = 20.0f;
 	}
 
-	auto x2 = 0.0f;
-	auto y2 = 9.0f;
+	auto tileX = 0.0f;
+	auto tileY = 9.0f;
 	for (float i = 1; i <= 19; i++) {
 		for (float j = 1; j <= 32; j++) {
-			CreateTile(x2, y2);
-			x2 += 32;
+			CreateTile(tileX, tileY);
+			tileX += 32;
 		}
-		y2 += 32.0f;
-		x2 = 0.0f;
+		tileY += 32.0f;
+		tileX = 0.0f;
 	}
 
-	auto x3 = 0.0f;
-	auto y3 = 9.0f;
+	auto waterX = 0.0f;
+	auto waterY = 9.0f;
 	for (float i = 1; i <= 5; i++) {
 		for (float j = 1; j <= 5; j++) {
-			CreateWaterTile(x3, y3);
-			x3 += 32;
+			CreateWaterTile(waterX, waterY);
+			waterX += 32;
 		}
-		y3 += 32.0f;
-		x3 = 0.0f;
+		waterY += 32.0f;
+		waterX = 0.0f;
 	}
 
-	auto x4 = 500.0f;
-	auto y4 = 300.0f;
+	auto wallX = 500.0f+32;
+	auto WallY = 300.0f;
 	for (float i = 1; i <= 2; i++) {
 		for (float j = 1; j <= 2; j++) {
-			CreateWall(x4, y4);
-			x4 += 32;
+			CreateWall(wallX, WallY);
+			wallX += 32;
 		}
-		y4 += 32.0f;
-		x4 = 500.0f;
+		WallY += 32.0f;
+		wallX = 500.0f+32;
+	}
+
+	auto lavaX = 700.0f;
+	auto lavaY = 500.0f;
+	for (float i = 1; i <= 2; i++) {
+		for (float j = 1; j <= 2; j++) {
+			CreateLavaTile(lavaX, lavaY);
+			lavaX += 32;
+		}
+		lavaY += 32.0f;
+		lavaX = 700.0f;
+	}
+
+	auto narrowX = 300.0f;
+	auto narrowY = 300.0f;
+	for (float i = 1; i <= 2; i++) {
+		for (float j = 1; j <= 2; j++) {
+			CreateNarrow(narrowX, narrowY);
+			narrowX += 32;
+		}
+		narrowY += 32.0f;
+		narrowX = 300.0f;
+	}
+
+	auto lowWallX = 200.0f;
+	auto lowWallY = 200.0f;
+	for (float i = 1; i <= 2; i++) {
+		for (float j = 1; j <= 2; j++) {
+			CreateLowWall(lowWallX, lowWallY);
+			lowWallX += 32;
+		}
+		lowWallY += 32.0f;
+		lowWallX = 300.0f;
 	}
 
 	m_lastTime = SDL_GetTicks();
@@ -267,6 +312,21 @@ Game::Process(float deltaTime)
 		wallContainer[i]->Process(deltaTime);
 	}
 
+	for (size_t i = 0; i < NarrowTileContainer.size(); i++)
+	{
+		NarrowTileContainer[i]->Process(deltaTime);
+	}
+
+	for (size_t i = 0; i < LowWallTileContainer.size(); i++)
+	{
+		LowWallTileContainer[i]->Process(deltaTime);
+	}
+
+	for (size_t i = 0; i < lavaTileContainer.size(); i++)
+	{
+		lavaTileContainer[i]->Process(deltaTime);
+	}
+
 	//Player Process
 	pPlayer->Process(deltaTime);
 
@@ -311,7 +371,8 @@ Game::Process(float deltaTime)
 				{
 					float eneX = ene->GetPositionX();
 					float eneY = ene->GetPositionY();
-					if (mask == 'S')
+					pPlayer->SetWalkableWater(true);
+					if (mask == 'S' && pPlayer->GetWalkableWater())
 					{
 
 					}
@@ -325,20 +386,45 @@ Game::Process(float deltaTime)
 						if (pPlayer->GetLives() == 0)
 							pPlayer->SetDead(true);
 					}
-					
 				}
 				else
 				{
 					IterationWaterTile++;
 				}
 			}
+			pPlayer->SetWalkableWater(false);
+
+			//Collision with Lava
+			for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end();)
+			{
+				lav = *IterationLavaTile;
+				if (pPlayer->IsCollidingWithEnt(**IterationLavaTile))
+				{
+					float eneX = ene->GetPositionX();
+					float eneY = ene->GetPositionY();
+					if (pPlayer->IsCollidingWithEnt(**IterationLavaTile))
+					{
+						SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+						sound.playSound(soundBlood, false);
+						pPlayer->SetPositionX(400);
+						pPlayer->SetPositionY(550);
+						pPlayer->SetLives(pPlayer->GetLives() - 1);
+						if (pPlayer->GetLives() == 0)
+							pPlayer->SetDead(true);
+					}
+				}
+				else
+				{
+					IterationLavaTile++;
+				}
+			}
+
 			//Collision with wall
 			for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end();)
 			{
 				wal = *IterationWall;
 				if (pPlayer->IsCollidingWithEnt(**IterationWall))
 				{
-
 						pPlayer->SetPositionX(oldPositionX);
 						pPlayer->SetPositionY(oldPositionY);
 				}
@@ -347,6 +433,57 @@ Game::Process(float deltaTime)
 					IterationWall++;
 				}
 			}
+
+			//Collision with NarrowWall
+			for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end();)
+			{
+				nar = *IterationNarrow;
+				if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
+				{
+
+					pPlayer->SetWalkableNarrow(true);
+					if (mask == 'C' && pPlayer->GetWalkableNarrow())
+					{
+
+					}
+					else if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
+					{
+						pPlayer->SetPositionX(oldPositionX);
+						pPlayer->SetPositionY(oldPositionY);
+					}
+				}
+				else
+				{
+					IterationNarrow++;
+				}
+			}
+			pPlayer->SetWalkableNarrow(false);
+
+			//Collision with Low Wall
+			for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end();)
+			{
+				low = *IterationLowWall;
+				if (pPlayer->IsCollidingWithEnt(**IterationLowWall))
+				{
+
+					pPlayer->SetWalkableLow(true);
+					if (mask == 'B' && pPlayer->GetWalkableLow())
+					{
+
+					}
+					else if (pPlayer->IsCollidingWithEnt(**IterationLowWall))
+					{
+						pPlayer->SetPositionX(oldPositionX);
+						pPlayer->SetPositionY(oldPositionY);
+					}
+				}
+				else
+				{
+					IterationLowWall++;
+				}
+			}
+			pPlayer->SetWalkableLow(false);
+
 
 	for (size_t i = 0; i < explosionContainer.size(); i++)
 	{
@@ -365,7 +502,9 @@ Game::Process(float deltaTime)
 		else
 			IterationDeath++;
 	}
-	// Move Up
+
+
+	//Enemies Move Down
 	for (size_t i = 0; i < enemyContainer.size(); i++)
 	{
 		if (enemyContainer[i]->GetPositionY() > 600 - 33)
@@ -373,7 +512,7 @@ Game::Process(float deltaTime)
 			enemyContainer[i]->SetVerticalVelocity(-1.0f);
 			enemyContainer[i]->SetYPos(144);
 		}
-		//Move Up
+		//Enemies Move Up
 		else if (enemyContainer[i]->GetPositionY() < 33)
 		{
 			enemyContainer[i]->SetVerticalVelocity(1.0f);
@@ -399,18 +538,34 @@ Game::Draw(BackBuffer& backBuffer)
 		tileContainer[j]->Draw(backBuffer);
 	}
 
-	backGround->Draw(backBuffer);
-
 	int x = 0;
 	for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end(); IterationWaterTile++, x++)
 	{
 		waterTileContainer[x]->Draw(backBuffer);
 	}
 
+	int l = 0;
+	for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end(); IterationLavaTile++, l++)
+	{
+		lavaTileContainer[l]->Draw(backBuffer);
+	}
+
 	int w = 0;
 	for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end(); IterationWall++, w++)
 	{
 		wallContainer[w]->Draw(backBuffer);
+	}
+
+	int n = 0;
+	for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end(); IterationNarrow++, n++)
+	{
+		NarrowTileContainer[n]->Draw(backBuffer);
+	}
+
+	int z = 0;
+	for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end(); IterationLowWall++, z++)
+	{
+		LowWallTileContainer[z]->Draw(backBuffer);
 	}
 
 	// W02.2: Draw all enemy aliens in container...
@@ -781,7 +936,7 @@ Game::CreateTile(float x, float y)
 {
 	// W02.2: Load the alien enemy sprite file.
 	tile = 'N';
-	pTileSprite = m_pBackBuffer->CreateSprite("assets\\Sand.png");
+	pTileSprite = m_pBackBuffer->CreateSprite("assets\\Grass.png");
 	pTile = new Tiles();
 	pTile->Initialise(pTileSprite);
 	pTile->SetPositionX(x);
@@ -824,4 +979,52 @@ Game::CreateWall(float x, float y)
 	pWall->SetDead(false);
 
 	wallContainer.push_back(pWall);
+}
+
+void
+Game::CreateLavaTile(float x, float y)
+{
+	tile = 'L';
+	pLavaSprite = m_pBackBuffer->CreateSprite("assets\\Lava.png");
+	pLava = new LavaTile();
+	pLava->Initialise(pLavaSprite);
+	pLava->SetPositionX(x);
+	pLava->SetPositionY(y);
+	pLava->SetHorizontalVelocity(0.0f);
+	pLava->SetVerticalVelocity(0.0f);
+	pLava->SetDead(false);
+
+	lavaTileContainer.push_back(pLava);
+}
+
+void
+Game::CreateNarrow(float x, float y)
+{
+	tile = 'P';
+	pNarrowSprite = m_pBackBuffer->CreateSprite("assets\\Narrow.png");
+	pNarrow = new Narrow();
+	pNarrow->Initialise(pNarrowSprite);
+	pNarrow->SetPositionX(x);
+	pNarrow->SetPositionY(y);
+	pNarrow->SetHorizontalVelocity(0.0f);
+	pNarrow->SetVerticalVelocity(0.0f);
+	pNarrow->SetDead(false);
+
+	NarrowTileContainer.push_back(pNarrow);
+}
+
+void
+Game::CreateLowWall(float x, float y)
+{
+	tile = 'Z';
+	pLowWallSprite = m_pBackBuffer->CreateSprite("assets\\low.png");
+	pLow = new LowWall();
+	pLow->Initialise(pLowWallSprite);
+	pLow->SetPositionX(x);
+	pLow->SetPositionY(y);
+	pLow->SetHorizontalVelocity(0.0f);
+	pLow->SetVerticalVelocity(0.0f);
+	pLow->SetDead(false);
+
+	LowWallTileContainer.push_back(pLow);
 }

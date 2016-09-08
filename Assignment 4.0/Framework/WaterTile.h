@@ -1,6 +1,6 @@
 #ifndef WATER_H
 #define WATER_H
-#include "entity.h"
+#include "Tiles.h"
 
 class WaterTile : public Entity
 {
