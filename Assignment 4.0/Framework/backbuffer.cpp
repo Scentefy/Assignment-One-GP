@@ -14,6 +14,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <cassert>
+#include <SDL_ttf.h>
 
 BackBuffer::BackBuffer()
 : m_pTextureManager(0)
@@ -37,6 +38,7 @@ BackBuffer::~BackBuffer()
 	m_pWindow = 0;
 
 	IMG_Quit();
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -81,6 +83,8 @@ BackBuffer::Initialise(int width, int height)
 			}
 		}
 	}
+
+	TTF_Init();
 
 	m_pTextureManager = new TextureManager();
 	assert(m_pTextureManager);
@@ -157,6 +161,28 @@ BackBuffer::DrawRectangle(int x1, int y1, int x2, int y2)
 	fillRect.h = y2 - y1;
 
 	SDL_RenderFillRect(m_pRenderer, &fillRect);
+}
+
+void
+BackBuffer::DrawText(SDL_Color colour, std::string fontPath, const char* text, int fontSize, int x, int y) 
+{
+	TTF_Font* font = TTF_OpenFont(fontPath.c_str(), fontSize);
+	SDL_Surface* surface = TTF_RenderText_Solid(font, text, colour);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_pRenderer, surface);
+
+	int tW;
+	int tH;
+	SDL_QueryTexture(texture, NULL, NULL, &tW, &tH);	
+
+	SDL_Rect dest;
+	dest.x = x;
+	dest.y = y;
+	dest.w = tW;
+	dest.h = tH;
+
+	SDL_RenderCopy(m_pRenderer, texture, 0, &dest);
+	SDL_FreeSurface(surface); 
+	SDL_DestroyTexture(texture);
 }
 
 void

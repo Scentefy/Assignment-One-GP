@@ -9,15 +9,18 @@
 #include "logmanager.h"
 #include "sprite.h"
 #include "SoundSys.h"
+#include "Animatedsprite.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "Narrow.h"
+#include "SDL_ttf.h"
 
 // Library includes:
 #include <cassert>
 #include <SDL.h>
 #include <vector>
-#include "Animatedsprite.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Narrow.h"
+
+
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -125,7 +128,6 @@ Game::Initialise()
 	}
 
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
-
 
 	// W02.1: Load the player ship sprite.
 	playerSprite = m_pBackBuffer->CreateAnimSprite("assets\\steampunk.png");
@@ -579,13 +581,17 @@ Game::Draw(BackBuffer& backBuffer)
 		explosionContainer[i]->Draw(backBuffer);
 	}
 
+	//SDL_Color colour = { 0, 0, 0, 255 };
+	//m_pBackBuffer->DrawText(colour, "Sansation_Regular.ttf", "Game Over", 24, 500, 500);
+
 	// W02.1: Draw the player ship...
 	if (pPlayer->IsDead() == false)
 	pPlayer->Draw(backBuffer);
 	else
 	{
-		
+
 	}
+	
 
 	backBuffer.Present();
 }

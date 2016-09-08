@@ -1,6 +1,6 @@
 #ifndef NARROW_H
 #define NARROW_H
-#include "Tiles.h"
+#include "AnimatedEntity.h"
 
 class Narrow : public Entity
 {
