@@ -1,6 +1,8 @@
 // COMP710 GP 2D Framework
 #ifndef __BACKBUFFER_H__
 #define __BACKBUFFER_H__
+#include <SDL.h>
+#include <string>
 
 // Forward Declarations:
 class TextureManager;
@@ -30,6 +32,7 @@ public:
 	void DrawRectangle(int x1, int y1, int x2, int y2);
 	void DrawLine(int x1, int y1, int x2, int y2);
 	void DrawAnimSprite(AnimatedSprite& sprite);
+	void DrawText(SDL_Color colour, std::string font, const char* text, int size, int x, int y);
 
 	Sprite* CreateSprite(const char* pcFilename);
 	AnimatedSprite* CreateAnimSprite(const char* pcFilename);
