@@ -155,7 +155,7 @@ BackBuffer::DrawText(SDL_Color colour, std::string font, const char* text, int s
 	TTF_Font* fontTTF = TTF_OpenFont(font.c_str(), size);
 	SDL_Surface* surface = TTF_RenderText_Solid(fontTTF, text, colour);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_pRenderer, surface);
-	
+
 	int textWidth;
 	int textHeight;
 	SDL_QueryTexture(texture, NULL, NULL, &textWidth, &textHeight);

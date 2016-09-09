@@ -53,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\SDL\SDL2-2.0.3\include\;$(SolutionDir)\SDL\SDL2_image-2.0.0\include;$(SolutionDir)\FMOD\inc;$(SolutionDir)\SDL2_ttf-2.0.14\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\SDL\SDL2-2.0.3\include\;$(SolutionDir)\SDL\SDL2_image-2.0.0\include;$(SolutionDir)\FMOD\inc\;$(SolutionDir)\SDL2_ttf-2.0.14\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

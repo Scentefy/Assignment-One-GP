@@ -585,8 +585,7 @@ Game::Draw(BackBuffer& backBuffer)
 	else
 	{
 		SDL_Color colour = { 255, 0, 0, 255 };
-		m_pBackBuffer->DrawText(colour, "AmaticSC-Regular.ttf", "Game Over", 200, 250, 150);
-
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Game Over", 100, 350,250);
 	}
 
 	backBuffer.Present();
