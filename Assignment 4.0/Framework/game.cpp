@@ -39,7 +39,6 @@ AnimatedSprite* playerSprite;
 AnimatedSprite* enemySprite;
 AnimatedSprite* pBatSprite;
 AnimatedSprite* pCatSprite;
-AnimatedSprite* pLionSprite;
 AnimatedSprite* pWolfSprite;
 AnimatedSprite* pSealSprite;
 
@@ -149,85 +148,79 @@ Game::Initialise()
 	pPlayer->SetVerticalVelocity(playerData["VerticalVelo"].GetFloat());
 	pPlayer->SetDead(playerData["Dead"].GetBool());
 
+	const Value& mapData = Parser::GetInstance().document["map"];
+	string map = mapData["mapcreation"].GetString();
+	std::vector<char> data(map.begin(), map.end()); 
+
+	float x = 32.0f;
+	float y = 41.0f;
+	int tile = 0;
+
+	for (int i = 0; i < data.size(); i++)
+	{
+		//Normal Tile
+		if (data[i] == 'N')
+		{
+			CreateTile(x,y);
+			tile++;
+		}
+		else if (data[i] == 'W')
+		{
+			CreateWall(x, y);
+			tile++;
+		}
+		else if (data[i] == 'L')
+		{
+			CreateNarrow(x, y);
+			tile++;
+		}
+		else if (data[i] == 'E')
+		{
+			CreateLavaTile(x, y);
+			tile++;
+		}
+		else if (data[i] == 'K')
+		{
+			CreateLowWall(x, y);
+			tile++;
+		}
+		else if (data[i] == 'U')
+		{
+			CreateWaterTile(x, y);
+			tile++;
+		}
+		x += 32.0f;
+		if (tile == 30)
+		{
+			tile = 0;
+			y += 32.0f;
+			x = 32.0f;
+		}
+	}
 
 	// W02.2: Spawn four rows of 14 alien enemies.
-	float enemyX = 400.0f;
-	float enemyY = 32.0f;
+	//float enemyX = 400.0f;
+	//float enemyY = 32.0f;
 
-	for (float i = 1; i <= 5; i++) {
-		for (float j = 1; j <= 5; j++) {
-			SpawnEnemy(enemyX, enemyY);
-			enemyX += 55;
-		}
-		enemyY += 50.0f;
-		enemyX = 20.0f;
-	}
+	//for (float i = 1; i <= 5; i++) {
+	//	for (float j = 1; j <= 5; j++) {
+	//		SpawnEnemy(enemyX, enemyY);
+	//		enemyX += 55;
+	//	}
+	//	enemyY += 50.0f;
+	//	enemyX = 20.0f;
+	//}
 
-	auto tileX = 0.0f;
-	auto tileY = 9.0f;
-	for (float i = 1; i <= 19; i++) {
-		for (float j = 1; j <= 32; j++) {
-			CreateTile(tileX, tileY);
-			tileX += 32;
-		}
-		tileY += 32.0f;
-		tileX = 0.0f;
-	}
-
-	auto waterX = 32.0f;
-	auto waterY = 41.0f;
-	for (float i = 1; i <= 5; i++) {
-		for (float j = 1; j <= 5; j++) {
-			CreateWaterTile(waterX, waterY);
-			waterX += 32;
-		}
-		waterY += 32.0f;
-		waterX = 32.0f;
-	}
-
-	auto wallX = 500.0f+32;
-	auto WallY = 300.0f;
-	for (float i = 1; i <= 2; i++) {
-		for (float j = 1; j <= 2; j++) {
-			CreateWall(wallX, WallY);
-			wallX += 32;
-		}
-		WallY += 32.0f;
-		wallX = 500.0f+32;
-	}
-
-	auto lavaX = 700.0f;
-	auto lavaY = 500.0f;
-	for (float i = 1; i <= 2; i++) {
-		for (float j = 1; j <= 2; j++) {
-			CreateLavaTile(lavaX, lavaY);
-			lavaX += 32;
-		}
-		lavaY += 32.0f;
-		lavaX = 700.0f;
-	}
-
-	auto narrowX = 300.0f;
-	auto narrowY = 300.0f;
-	for (float i = 1; i <= 2; i++) {
-		for (float j = 1; j <= 2; j++) {
-			CreateNarrow(narrowX, narrowY);
-			narrowX += 32;
-		}
-		narrowY += 32.0f;
-		narrowX = 300.0f;
-	}
-
-	auto lowWallX = 200.0f;
-	auto lowWallY = 200.0f;
-	for (float i = 1; i <= 2; i++) {
-		for (float j = 1; j <= 2; j++) {
-			CreateLowWall(lowWallX, lowWallY);
-			lowWallX += 32;
-		}
-		lowWallY += 32.0f;
-		lowWallX = 300.0f;
-	}
+	//auto tileX = 0.0f;
+	//auto tileY = 9.0f;
+	//for (float i = 1; i <= 19; i++) {
+	//	for (float j = 1; j <= 32; j++) {
+	//		CreateTile(tileX, tileY);
+	//		tileX += 32;
+	//	}
+	//	tileY += 32.0f;
+	//	tileX = 0.0f;
+	//}
 
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
@@ -286,7 +279,7 @@ Game::Process(float deltaTime)
 
 	float oldPositionX = 0;
 	float oldPositionY = 0;
-	if (deltaTime - oldDelta > 1000)
+	if (deltaTime - oldDelta > 50)
 		oldDelta = deltaTime;
 	if (oldPositionX != pPlayer->GetPositionX() && oldPositionY != pPlayer->GetPositionY())
 	{
@@ -339,19 +332,12 @@ Game::Process(float deltaTime)
 		if (pPlayer->IsCollidingWithAnim(**IterationEnemy)) {
 			float eneX = ene->GetPositionX();
 			float eneY = ene->GetPositionY();
-			if (mask == 'L')
-			{
-				ene->SetDead(true);
-				delete *IterationEnemy;
-				IterationEnemy = enemyContainer.erase(IterationEnemy);
-				sound.playSound(soundBlood, false);
-			}
-			else if (ene->IsCollidingWithAnim(*pPlayer))
+			if (ene->IsCollidingWithAnim(*pPlayer))
 			{
 				SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
 				sound.playSound(soundBlood, false);
-				pPlayer->SetPositionX(400);
-				pPlayer->SetPositionY(550);
+				pPlayer->SetPositionX(32.0f);
+				pPlayer->SetPositionY(41.0f);
 				pPlayer->SetLives(pPlayer->GetLives() - 1);
 				if (pPlayer->GetLives() == 0)
 					pPlayer->SetDead(true);
@@ -371,8 +357,6 @@ Game::Process(float deltaTime)
 				wat = *IterationWaterTile;
 				if (pPlayer->IsCollidingWithEnt(**IterationWaterTile)) 
 				{
-					float eneX = ene->GetPositionX();
-					float eneY = ene->GetPositionY();
 					pPlayer->SetWalkableWater(true);
 					if (mask == 'S' && pPlayer->GetWalkableWater())
 					{
@@ -382,8 +366,8 @@ Game::Process(float deltaTime)
 					{
 						SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
 						sound.playSound(soundBlood, false);
-						pPlayer->SetPositionX(400);
-						pPlayer->SetPositionY(550);
+						pPlayer->SetPositionX(32.0f);
+						pPlayer->SetPositionY(41.0f);
 						pPlayer->SetLives(pPlayer->GetLives() - 1);
 						if (pPlayer->GetLives() == 0)
 							pPlayer->SetDead(true);
@@ -408,8 +392,8 @@ Game::Process(float deltaTime)
 					{
 						SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
 						sound.playSound(soundBlood, false);
-						pPlayer->SetPositionX(400);
-						pPlayer->SetPositionY(550);
+						pPlayer->SetPositionX(32.0f);
+						pPlayer->SetPositionY(41.0f);;
 						pPlayer->SetLives(pPlayer->GetLives() - 1);
 						if (pPlayer->GetLives() == 0)
 							pPlayer->SetDead(true);
@@ -642,32 +626,29 @@ Game::Quit()
 void
 Game::MovePlayerUp(char u)
 {
+	const Value& YPosData = Parser::GetInstance().document["YPos"];
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N' :
-		pPlayer->SetVerticalVelocity(-2.5f);
-		playerSprite->SetYPos(144);
+		pPlayer->SetVerticalVelocity(-(YPosData["speed"].GetFloat()));
+		playerSprite->SetYPos(YPosData["normalUp"].GetFloat());
 		break;
 	case 'B':
-		pPlayer->SetVerticalVelocity(-2.5f);
+		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
 		pBatSprite->SetYPos(144);
 		break;
 	case 'C':
-		pPlayer->SetVerticalVelocity(-2.5f);
+		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
 		pCatSprite->SetYPos(96);
 		break;
-	case 'L':
-		pPlayer->SetVerticalVelocity(-2.5f);
-		pLionSprite->SetYPos(162);
-		break;
 	case 'W':
-		pPlayer->SetVerticalVelocity(-2.5f - 2.5f);
+		pPlayer->SetVerticalVelocity(-YPosData["wolfspeed"].GetFloat());
 		pWolfSprite->SetYPos(144);
 		break;
 	case 'S':
-		pPlayer->SetVerticalVelocity(-2.5f);
-		pSealSprite->SetYPos(144);
+		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealUp"].GetFloat());
 		break;
 	}
 	direction = u;
@@ -676,32 +657,29 @@ Game::MovePlayerUp(char u)
 void
 Game::MovePlayerDown(char u)
 {
+	const Value& YPosData = Parser::GetInstance().document["YPos"];
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N' :
-		pPlayer->SetVerticalVelocity(2.5f);
-		playerSprite->SetYPos(0);
+		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
+		playerSprite->SetYPos(YPosData["normalDown"].GetFloat());
 		break;
 	case 'B' :
-		pPlayer->SetVerticalVelocity(2.5f);
+		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
 		pBatSprite->SetYPos(0);
 		break;
 	case 'C':
-		pPlayer->SetVerticalVelocity(2.5f);
+		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
 		pCatSprite->SetYPos(0);
 		break;
-	case 'L':
-		pPlayer->SetVerticalVelocity(2.5f);
-		pLionSprite->SetYPos(0);
-		break;
 	case 'W':
-		pPlayer->SetVerticalVelocity(2.5f + 2.5f);
+		pPlayer->SetVerticalVelocity(YPosData["wolfspeed"].GetFloat());
 		pWolfSprite->SetYPos(0);
 		break;
 	case 'S':
-		pPlayer->SetVerticalVelocity(2.5f);
-		pSealSprite->SetYPos(0);
+		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealDown"].GetFloat());
 		break;
 	}
 	direction = u;
@@ -710,32 +688,29 @@ Game::MovePlayerDown(char u)
 void
 Game::MovePlayerLeft(char u)
 {
+	const Value& YPosData = Parser::GetInstance().document["YPos"];
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N' :
-		pPlayer->SetHorizontalVelocity(-2.5f);
-		playerSprite->SetYPos(48);
+		pPlayer->SetHorizontalVelocity(-(YPosData["speed"].GetFloat()));
+		playerSprite->SetYPos(YPosData["normalLeft"].GetFloat());
 		break;
 	case 'B' :
-		pPlayer->SetHorizontalVelocity(-2.5f);
+		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
 		pBatSprite->SetYPos(48);
 		break;
 	case 'C':
-		pPlayer->SetHorizontalVelocity(-2.5f);
+		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
 		pCatSprite->SetYPos(32);
 		break;
-	case 'L':
-		pPlayer->SetHorizontalVelocity(-2.5f);
-		pLionSprite->SetYPos(53);
-		break;
 	case 'W':
-		pPlayer->SetHorizontalVelocity(-2.5f - 2.5f);
+		pPlayer->SetHorizontalVelocity(-YPosData["wolfspeed"].GetFloat());
 		pWolfSprite->SetYPos(48);
 		break;
 	case 'S':
-		pPlayer->SetHorizontalVelocity(-2.5f);
-		pSealSprite->SetYPos(48);
+		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealLeft"].GetFloat());
 		break;
 	}
 	direction = u;
@@ -744,32 +719,29 @@ Game::MovePlayerLeft(char u)
 void
 Game::MovePlayerRight(char u)
 {
+	const Value& YPosData = Parser::GetInstance().document["YPos"];
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
 	case 'N':
-		pPlayer->SetHorizontalVelocity(2.5f);
-		playerSprite->SetYPos(96);
+		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
+		playerSprite->SetYPos(YPosData["normalRight"].GetFloat());
 		break;
 	case 'B':
-		pPlayer->SetHorizontalVelocity(2.5f);
+		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
 		pBatSprite->SetYPos(96);
 		break;
 	case 'C':
-		pPlayer->SetHorizontalVelocity(2.5f);
+		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
 		pCatSprite->SetYPos(64);
 		break;
-	case 'L':
-		pPlayer->SetHorizontalVelocity(2.5f);
-		pLionSprite->SetYPos(106);
-		break;
 	case 'W':
-		pPlayer->SetHorizontalVelocity(2.5f + 2.5f);
+		pPlayer->SetHorizontalVelocity(YPosData["wolfspeed"].GetFloat());
 		pWolfSprite->SetYPos(96);
 		break;
 	case 'S':
-		pPlayer->SetHorizontalVelocity(2.5f );
-		pSealSprite->SetYPos(96);
+		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealRight"].GetFloat());
 		break;
 	}
 	direction = u;
@@ -876,24 +848,6 @@ Game::CatForm()
 }
 
 void
-Game::LionForm()
-{
-	pPlayer->SetMask('L');
-	mask = 'L';
-	pLionSprite = m_pBackBuffer->CreateAnimSprite("assets\\Lion.png");
-	pPlayer->Initialise(pLionSprite);
-	pPlayer->PauseAnimatedSprite();
-	pLionSprite->SetFrameSpeed(0.2f);
-	pLionSprite->SetFrameWidth(48);
-	pLionSprite->SetFrameHeight(53);
-	pLionSprite->SetNumOfFrames(3);
-	pLionSprite->SetYPos(0);
-	pLionSprite->SetLooping(true);
-	pLionSprite->SetX(pPlayer->GetPositionX());
-	pLionSprite->SetY(pPlayer->GetPositionY());
-}
-
-void
 Game::WolfForm()
 {
 	pPlayer->SetMask('W');
@@ -914,34 +868,33 @@ Game::WolfForm()
 void
 Game::SealForm()
 {
-	pPlayer->SetMask('S');
-	mask = 'S';
-	pSealSprite = m_pBackBuffer->CreateAnimSprite("assets\\seal.png");
+	const Value& sealData = Parser::GetInstance().document["seal"];
+	pSealSprite = m_pBackBuffer->CreateAnimSprite(sealData["sprite_location"].GetString());
+	pPlayer->SetMask(toChar(sealData["Mask"].GetString()));
 	pPlayer->Initialise(pSealSprite);
 	pPlayer->PauseAnimatedSprite();
-	pSealSprite->SetFrameSpeed(0.3f);
-	pSealSprite->SetFrameWidth(48);
-	pSealSprite->SetFrameHeight(48);
-	pSealSprite->SetNumOfFrames(3);
-	pSealSprite->SetYPos(0);
-	pSealSprite->SetLooping(true);
-	pSealSprite->SetX(pPlayer->GetPositionX());
-	pSealSprite->SetY(pPlayer->GetPositionY());
+	pSealSprite->SetFrameSpeed(sealData["frame_speed"].GetFloat());
+	pSealSprite->SetFrameWidth(sealData["frame_width"].GetInt());
+	pSealSprite->SetFrameHeight(sealData["frame_height"].GetInt());
+	pSealSprite->SetNumOfFrames(sealData["num_frames"].GetInt());
+	pSealSprite->SetYPos(sealData["YPosition"].GetInt());
+	mask = toChar(sealData["Mask"].GetString());
+	pSealSprite->SetLooping(sealData["looping"].GetBool());
 }
 
 void
 Game::HumanForm()
 {
-	pPlayer->SetMask('N');
-	mask = 'N';
+	const Value& playerData = Parser::GetInstance().document["player"];
+	pPlayer->SetMask(toChar(playerData["Mask"].GetString()));
 	pPlayer->Initialise(playerSprite);
 	pPlayer->PauseAnimatedSprite();
-	playerSprite->SetFrameSpeed(0.25f);
-	playerSprite->SetFrameWidth(32);
-	playerSprite->SetFrameHeight(48);
-	playerSprite->SetNumOfFrames(3);
-	playerSprite->SetYPos(0);
-	playerSprite->SetLooping(true);
+	playerSprite->SetFrameSpeed(playerData["frame_speed"].GetFloat());
+	playerSprite->SetFrameWidth(playerData["frame_width"].GetInt());
+	playerSprite->SetFrameHeight(playerData["frame_height"].GetInt());
+	playerSprite->SetNumOfFrames(playerData["num_frames"].GetInt());
+	playerSprite->SetYPos(playerData["YPosition"].GetInt());
+	mask = toChar(playerData["Mask"].GetString());
 }
 
 void
@@ -1042,12 +995,6 @@ Game::CreateLowWall(float x, float y)
 	pLow->SetDead(false);
 
 	LowWallTileContainer.push_back(pLow);
-}
-
-bool
-Game::getCollide()
-{
-	return pPlayer->GetCollide();
 }
 
 char

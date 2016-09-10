@@ -80,21 +80,16 @@ InputHandler::ProcessInput(Game& game)
 				}
 				if (e.key.keysym.sym == SDLK_3)
 				{
-					game.LionForm();
+					game.WolfForm();
 				}
 				if (e.key.keysym.sym == SDLK_4)
 				{
-					game.WolfForm();
+					game.SealForm();
 				}
 				if (e.key.keysym.sym == SDLK_5)
 				{
-					game.SealForm();
-				}
-				if (e.key.keysym.sym == SDLK_6)
-				{
 					game.HumanForm();
 				}
-			
 		}
 
 		//****************************************************

@@ -43,7 +43,6 @@ public:
 	void SpawnExplosion(float x, float y);
 	void BatForm();
 	void CatForm();
-	void LionForm();
 	void WolfForm();
 	void SealForm();
 	void HumanForm();
@@ -55,7 +54,6 @@ public:
 	void CreateNarrow(float x, float y);
 	void CreateLowWall(float x, float y);
 
-	bool getCollide();
 	char toChar(std::string temp);
 	
 protected:
@@ -92,8 +90,6 @@ protected:
 	char mask;
 	char tile;
 	char direction;
-	//Background Sprite   
-	Sprite* backGround;
 
 	//Containers
 	std::vector<Enemy*> enemyContainer;
