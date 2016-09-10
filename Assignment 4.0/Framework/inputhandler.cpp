@@ -70,8 +70,6 @@ InputHandler::ProcessInput(Game& game)
 			{
 				right = true;
 			}
-			if (game.getCollide() == false)
-			{
 				if (e.key.keysym.sym == SDLK_1)
 				{
 					game.BatForm();
@@ -96,7 +94,7 @@ InputHandler::ProcessInput(Game& game)
 				{
 					game.HumanForm();
 				}
-			}
+			
 		}
 
 		//****************************************************
@@ -128,19 +126,19 @@ InputHandler::ProcessInput(Game& game)
 
 		if (up == true)
 		{
-			game.MovePlayerUp();
+			game.MovePlayerUp('U');
 		}
 		if (down == true)
 		{
-			game.MovePlayerDown();
+			game.MovePlayerDown('D');
 		}
 		if (left == true)
 		{
-			game.MovePlayerLeft();
+			game.MovePlayerLeft('L');
 		}
 		if (right == true)
 		{
-			game.MovePlayerRight();
+			game.MovePlayerRight('R');
 		}
 	}
 }

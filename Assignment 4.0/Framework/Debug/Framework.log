@@ -1,9 +1,10 @@
-﻿Build started 10/09/2016 2:13:16 p.m..
+﻿Build started 10/09/2016 4:34:49 p.m..
      1>Project "C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Framework\Framework.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Broken.vcxproj, Framework.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2-2.0.3\include\\" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2_image-2.0.0\include" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\FMOD\inc\\" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL2_ttf-2.0.14\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
          game.cpp
+     1>c:\users\user\documents\github\assignment-one-gp\assignment 4.0\framework\game.cpp(1046): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Debug\Spirit Animal.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\FMOD\lib\\" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL2_ttf-2.0.14\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib fmodl_vc.lib SDL2_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Debug\Spirit Animal.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Debug\Spirit Animal.lib" /MACHINE:X86 Debug\AnimatedSprite.obj
          Debug\backbuffer.obj
@@ -31,4 +32,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.13
+Time Elapsed 00:00:01.09

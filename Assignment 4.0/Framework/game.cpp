@@ -125,7 +125,6 @@ Game::Initialise()
 
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
 
-
 	// W02.1: Load the player ship sprite.
 	playerSprite = m_pBackBuffer->CreateAnimSprite("assets\\steampunk.png");
 	// W02.1: Create the player ship instance.
@@ -439,7 +438,6 @@ Game::Process(float deltaTime)
 				nar = *IterationNarrow;
 				if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
 				{
-
 					pPlayer->SetWalkableNarrow(true);
 					if (mask == 'C' && pPlayer->GetWalkableNarrow())
 					{
@@ -447,8 +445,26 @@ Game::Process(float deltaTime)
 					}
 					else if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
 					{
-						pPlayer->SetPositionX(oldPositionX);
-						pPlayer->SetPositionY(oldPositionY);
+						if (direction == 'U')
+						{
+							pPlayer->SetPositionX(oldPositionX);
+							pPlayer->SetPositionY(pPlayer->GetPositionY() + pPlayer->GetCollide());
+						}
+						if (direction == 'D')
+						{
+							pPlayer->SetPositionX(oldPositionX);
+							pPlayer->SetPositionY(pPlayer->GetPositionY() - pPlayer->GetCollide());
+						}
+						if (direction == 'R')
+						{
+							pPlayer->SetPositionX(oldPositionX - pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY());
+						}
+						if (direction == 'L')
+						{
+							pPlayer->SetPositionX(oldPositionX + pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY());
+						}
 					}
 				}
 				else
@@ -477,8 +493,26 @@ Game::Process(float deltaTime)
 					}
 					else
 					{
-						pPlayer->SetPositionX(oldPositionX);
-						pPlayer->SetPositionY(oldPositionY);
+						if (direction == 'U')
+						{
+							pPlayer->SetPositionX(oldPositionX);
+							pPlayer->SetPositionY(pPlayer->GetPositionY() + pPlayer->GetCollide());
+						}
+						if (direction == 'D')
+						{
+							pPlayer->SetPositionX(oldPositionX);
+							pPlayer->SetPositionY(pPlayer->GetPositionY() - pPlayer->GetCollide());
+						}
+						if (direction == 'R')
+						{
+							pPlayer->SetPositionX(oldPositionX - pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY());
+						}
+						if (direction == 'L')
+						{
+							pPlayer->SetPositionX(oldPositionX + pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY());
+						}
 					}
 				}
 				else
@@ -602,7 +636,7 @@ Game::Quit()
 }
 
 void
-Game::MovePlayerUp()
+Game::MovePlayerUp(char u)
 {
 	pPlayer->StartAnimation();
 	switch (mask)
@@ -632,10 +666,11 @@ Game::MovePlayerUp()
 		pSealSprite->SetYPos(144);
 		break;
 	}
+	direction = u;
 }
 
 void
-Game::MovePlayerDown()
+Game::MovePlayerDown(char u)
 {
 	pPlayer->StartAnimation();
 	switch (mask)
@@ -665,10 +700,11 @@ Game::MovePlayerDown()
 		pSealSprite->SetYPos(0);
 		break;
 	}
+	direction = u;
 }
 
 void
-Game::MovePlayerLeft()
+Game::MovePlayerLeft(char u)
 {
 	pPlayer->StartAnimation();
 	switch (mask)
@@ -698,10 +734,11 @@ Game::MovePlayerLeft()
 		pSealSprite->SetYPos(48);
 		break;
 	}
+	direction = u;
 }
 
 void
-Game::MovePlayerRight()
+Game::MovePlayerRight(char u)
 {
 	pPlayer->StartAnimation();
 	switch (mask)
@@ -731,6 +768,7 @@ Game::MovePlayerRight()
 		pSealSprite->SetYPos(96);
 		break;
 	}
+	direction = u;
 }
 
 void 

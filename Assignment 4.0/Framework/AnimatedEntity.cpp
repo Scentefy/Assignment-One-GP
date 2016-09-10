@@ -117,13 +117,16 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 		r1 = 0;
 		return false;
 	}
+	int r12nd = m_pAnimSprite->GetFrameWidth();
 	float x1 = GetPositionX();
 	float y1 = GetPositionY();
 	float x2 = e.GetPositionX();
 	float y2 = e.GetPositionY();
 	auto r2 = e.GetSpriteWidth() / 2;
 	collide = false;
+	fakeCollide = r12nd + r2;
 	auto collision = r1 + r2;
+	auto collisionbig = r12nd + r2;
 	// W02.3: Generic Entity Collision routine.
 	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 	// W02.3: Does this object collide with the e object?
@@ -232,8 +235,8 @@ AnimatedEntity::StartAnimation()
 	m_pAnimSprite->Pause(false);
 }
 
-bool
+int
 AnimatedEntity::GetCollide()
 {
-	return collide;
+	return fakeCollide;
 }

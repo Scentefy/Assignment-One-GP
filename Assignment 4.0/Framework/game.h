@@ -31,10 +31,10 @@ public:
 	bool DoGameLoop();
 	void Quit();
 
-	void MovePlayerUp();
-	void MovePlayerDown();
-	void MovePlayerLeft();
-	void MovePlayerRight();
+	void MovePlayerUp(char u);
+	void MovePlayerDown(char u);
+	void MovePlayerLeft(char u);
+	void MovePlayerRight(char u);
 	void StopHorizontalMovement();
 	void StopVerticalMovement();
 	void PauseAnimation();
@@ -93,6 +93,7 @@ protected:
 	// Game Entities:
 	char mask;
 	char tile;
+	char direction;
 	//Background Sprite   
 	Sprite* backGround;
 
