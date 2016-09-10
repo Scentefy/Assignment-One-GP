@@ -30,13 +30,13 @@ AnimatedEntity::Process(float deltaTime)
 		m_x = 1000 - 32;
 		m_velocityX = 0;
 	}
-	else if (m_x < 0 + 32) {
-		m_x = 0 + 32;
+	else if (m_x < 0 + 28) {
+		m_x = 0 + 28;
 		m_velocityX = 0;
 	}
 
-	if (m_y > 600 - 32) {
-		m_y = 600 - 32;
+	if (m_y > 600 - 20) {
+		m_y = 600 - 20;
 		m_velocityY = 0;
 	}
 	else if (m_y < 0 + 32) {
@@ -94,11 +94,6 @@ AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 	{
 		collide = true;
 	}
-	// W02.3: Create a circle for each entity (this and e).
-	// W02.3: Check for intersection.
-	// W02.3: Using circle-vs-circle collision detection.
-
-	// W02.3: Return result of collision.
 	if (collide == true)
 	{
 		return(collide);
@@ -156,16 +151,6 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 			return false;
 		}
 	}
-	//if (e.GetTileType() == 'N')
-	//{
-	//	collide = false;
-	//	return collide;
-	//}
-	// W02.3: Create a circle for each entity (this and e).
-	// W02.3: Check for intersection.
-	// W02.3: Using circle-vs-circle collision detection.
-
-	// W02.3: Return result of collision.
 	if (collide == true)
 	{
 		return(collide);

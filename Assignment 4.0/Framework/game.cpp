@@ -174,15 +174,15 @@ Game::Initialise()
 		tileX = 0.0f;
 	}
 
-	auto waterX = 0.0f;
-	auto waterY = 9.0f;
+	auto waterX = 32.0f;
+	auto waterY = 41.0f;
 	for (float i = 1; i <= 5; i++) {
 		for (float j = 1; j <= 5; j++) {
 			CreateWaterTile(waterX, waterY);
 			waterX += 32;
 		}
 		waterY += 32.0f;
-		waterX = 0.0f;
+		waterX = 32.0f;
 	}
 
 	auto wallX = 500.0f+32;
@@ -1018,7 +1018,7 @@ Game::CreateNarrow(float x, float y)
 	pNarrowSprite = m_pBackBuffer->CreateSprite("assets\\Narrow.png");
 	pNarrow = new Narrow();
 	pNarrow->Initialise(pNarrowSprite);
-	pNarrow->SetCharType('N');
+	pNarrow->SetCharType('L');
 	pNarrow->SetPositionX(x);
 	pNarrow->SetPositionY(y);
 	pNarrow->SetHorizontalVelocity(0.0f);
