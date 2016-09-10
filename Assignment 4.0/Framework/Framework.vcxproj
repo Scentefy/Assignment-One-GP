@@ -93,6 +93,7 @@
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="LowWall.h" />
     <ClInclude Include="Narrow.h" />
+    <ClInclude Include="parser.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SoundSys.h" />
     <ClInclude Include="sprite.h" />
@@ -116,6 +117,7 @@
     <ClCompile Include="LowWall.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Narrow.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SoundSys.cpp" />
     <ClCompile Include="sprite.cpp" />

@@ -143,6 +143,7 @@ BackBuffer::DrawAnimSprite(AnimatedSprite& sprite)
     source.x = (sprite.GetCurrentFrame() * sprite.GetFrameWidth());
 	source.y = sprite.GetYPos();
 	source.w = sprite.GetFrameWidth();
+	source.w = sprite.GetFrameWidth();
 	source.h = sprite.GetFrameHeight();
 
 	SDL_RenderCopy(m_pRenderer, sprite.GetTexture()->GetTexture(), &source, &dest);

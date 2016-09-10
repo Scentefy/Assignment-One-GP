@@ -14,10 +14,12 @@
 #include <cassert>
 #include <SDL.h>
 #include <vector>
+#include <string>
 #include "Animatedsprite.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Narrow.h"
+#include "Parser.h"
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -102,6 +104,7 @@ Game::~Game()
 bool 
 Game::Initialise()
 {
+	Parser::GetInstance().loadInFile("data.ini");
 	const int width = 1000;
 	const int height = 600;
 
@@ -125,26 +128,27 @@ Game::Initialise()
 
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
 
+	const Value& playerData = Parser::GetInstance().document["player"];
 	// W02.1: Load the player ship sprite.
-	playerSprite = m_pBackBuffer->CreateAnimSprite("assets\\steampunk.png");
-	// W02.1: Create the player ship instance.
+	playerSprite = m_pBackBuffer->CreateAnimSprite(playerData["sprite_location"].GetString());
 	pPlayer = new Player();
 	pPlayer->Initialise(playerSprite);
 	pPlayer->PauseAnimatedSprite();
-	playerSprite->SetFrameSpeed(0.4f);
-	playerSprite->SetFrameWidth(32);
-	playerSprite->SetFrameHeight(48);
-	playerSprite->SetNumOfFrames(3);
-	playerSprite->SetYPos(0);
-	pPlayer->SetMask('N');
-	mask = 'N';
-	playerSprite->SetLooping(true);
-	pPlayer->SetLives(3);
-	pPlayer->SetPositionX(400.0f);
-	pPlayer->SetPositionY(550.0f);
-	pPlayer->SetHorizontalVelocity(0.0f);
-	pPlayer->SetVerticalVelocity(0.0f);
-	pPlayer->SetDead(false);
+	playerSprite->SetFrameSpeed(playerData["frame_speed"].GetFloat());
+	playerSprite->SetFrameWidth(playerData["frame_width"].GetInt());
+	playerSprite->SetFrameHeight(playerData["frame_height"].GetInt());
+	playerSprite->SetNumOfFrames(playerData["num_frames"].GetInt());
+	playerSprite->SetYPos(playerData["YPosition"].GetInt());
+	pPlayer->SetMask(toChar(playerData["Mask"].GetString()));
+	mask = toChar(playerData["Mask"].GetString());
+	playerSprite->SetLooping(playerData["looping"].GetBool());
+	pPlayer->SetLives(playerData["Lives"].GetInt());
+	pPlayer->SetPositionX(playerData["PositionX"].GetFloat());
+	pPlayer->SetPositionY(playerData["PositionY"].GetFloat());
+	pPlayer->SetHorizontalVelocity(playerData["HorizontalVelo"].GetFloat());
+	pPlayer->SetVerticalVelocity(playerData["VerticalVelo"].GetFloat());
+	pPlayer->SetDead(playerData["Dead"].GetBool());
+
 
 	// W02.2: Spawn four rows of 14 alien enemies.
 	float enemyX = 400.0f;
@@ -1044,4 +1048,10 @@ bool
 Game::getCollide()
 {
 	return pPlayer->GetCollide();
+}
+
+char
+Game::toChar(string temp)
+{
+		return temp.at(0);
 }

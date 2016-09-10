@@ -55,10 +55,8 @@ public:
 	void CreateNarrow(float x, float y);
 	void CreateLowWall(float x, float y);
 
-	bool getWalkableWater();
-	bool getWalkableLow();
-	bool getWalkableNarrow();
 	bool getCollide();
+	char toChar(std::string temp);
 	
 protected:
 	void Process(float deltaTime);
