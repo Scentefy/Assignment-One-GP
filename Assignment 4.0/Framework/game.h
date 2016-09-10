@@ -35,8 +35,8 @@ public:
 	void MovePlayerDown();
 	void MovePlayerLeft();
 	void MovePlayerRight();
-	void StopSpaceShipMovementHorizontal();
-	void StopSpaceShipMovementVertical();
+	void StopHorizontalMovement();
+	void StopVerticalMovement();
 	void PauseAnimation();
 
 	void SpawnEnemy(float x, float y);
@@ -44,7 +44,6 @@ public:
 	void BatForm();
 	void CatForm();
 	void LionForm();
-	void BearForm();
 	void WolfForm();
 	void SealForm();
 	void HumanForm();
@@ -55,6 +54,11 @@ public:
 	void CreateLavaTile(float x, float y);
 	void CreateNarrow(float x, float y);
 	void CreateLowWall(float x, float y);
+
+	bool getWalkableWater();
+	bool getWalkableLow();
+	bool getWalkableNarrow();
+	bool getCollide();
 	
 protected:
 	void Process(float deltaTime);

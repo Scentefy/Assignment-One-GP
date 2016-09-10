@@ -70,33 +70,32 @@ InputHandler::ProcessInput(Game& game)
 			{
 				right = true;
 			}
-			if (e.key.keysym.sym == SDLK_1)
+			if (game.getCollide() == false)
 			{
-				game.BatForm();
-			}
-			if (e.key.keysym.sym == SDLK_2)
-			{
-				game.CatForm();
-			}
-			if (e.key.keysym.sym == SDLK_3)
-			{
-				game.LionForm();
-			}
-			if (e.key.keysym.sym == SDLK_4)
-			{
-				game.BearForm();
-			}
-			if (e.key.keysym.sym == SDLK_5)
-			{
-				game.WolfForm();
-			}
-			if (e.key.keysym.sym == SDLK_6)
-			{
-				game.SealForm();
-			}
-			if (e.key.keysym.sym == SDLK_7)
-			{
-				game.HumanForm();
+				if (e.key.keysym.sym == SDLK_1)
+				{
+					game.BatForm();
+				}
+				if (e.key.keysym.sym == SDLK_2)
+				{
+					game.CatForm();
+				}
+				if (e.key.keysym.sym == SDLK_3)
+				{
+					game.LionForm();
+				}
+				if (e.key.keysym.sym == SDLK_4)
+				{
+					game.WolfForm();
+				}
+				if (e.key.keysym.sym == SDLK_5)
+				{
+					game.SealForm();
+				}
+				if (e.key.keysym.sym == SDLK_6)
+				{
+					game.HumanForm();
+				}
 			}
 		}
 
@@ -106,22 +105,22 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_UP)
 			{
 				up = false;
-				game.StopSpaceShipMovementVertical();
+				game.StopVerticalMovement();
 			}
 			if (e.key.keysym.sym == SDLK_DOWN)
 			{
 				down = false;
-				game.StopSpaceShipMovementVertical();
+				game.StopVerticalMovement();
 			}
 			if (e.key.keysym.sym == SDLK_LEFT)
 			{
 				left = false;
-				game.StopSpaceShipMovementHorizontal();
+				game.StopHorizontalMovement();
 			}
 			if (e.key.keysym.sym == SDLK_RIGHT)
 			{
 				right = false;
-				game.StopSpaceShipMovementHorizontal();
+				game.StopHorizontalMovement();
 			}
 		}
 

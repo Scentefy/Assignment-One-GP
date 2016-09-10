@@ -38,7 +38,6 @@ AnimatedSprite* enemySprite;
 AnimatedSprite* pBatSprite;
 AnimatedSprite* pCatSprite;
 AnimatedSprite* pLionSprite;
-AnimatedSprite* pBearSprite;
 AnimatedSprite* pWolfSprite;
 AnimatedSprite* pSealSprite;
 
@@ -284,7 +283,7 @@ Game::Process(float deltaTime)
 
 	float oldPositionX = 0;
 	float oldPositionY = 0;
-	if (deltaTime - oldDelta > 50)
+	if (deltaTime - oldDelta > 1000)
 		oldDelta = deltaTime;
 	if (oldPositionX != pPlayer->GetPositionX() && oldPositionY != pPlayer->GetPositionY())
 	{
@@ -467,11 +466,16 @@ Game::Process(float deltaTime)
 				{
 
 					pPlayer->SetWalkableLow(true);
+					if (pPlayer->GetWalkableLow())
+					{
+						float oldoldX = oldPositionX;
+						float oldoldY = oldPositionY;
+					}
 					if (mask == 'B' && pPlayer->GetWalkableLow())
 					{
 
 					}
-					else if (pPlayer->IsCollidingWithEnt(**IterationLowWall))
+					else
 					{
 						pPlayer->SetPositionX(oldPositionX);
 						pPlayer->SetPositionY(oldPositionY);
@@ -619,10 +623,6 @@ Game::MovePlayerUp()
 		pPlayer->SetVerticalVelocity(-2.5f);
 		pLionSprite->SetYPos(162);
 		break;
-	case 'Y':
-		pPlayer->SetVerticalVelocity(-2.5f);
-		pBearSprite->SetYPos(240);
-		break;
 	case 'W':
 		pPlayer->SetVerticalVelocity(-2.5f - 2.5f);
 		pWolfSprite->SetYPos(144);
@@ -655,10 +655,6 @@ Game::MovePlayerDown()
 	case 'L':
 		pPlayer->SetVerticalVelocity(2.5f);
 		pLionSprite->SetYPos(0);
-		break;
-	case 'Y':
-		pPlayer->SetVerticalVelocity(2.5f);
-		pBearSprite->SetYPos(0);
 		break;
 	case 'W':
 		pPlayer->SetVerticalVelocity(2.5f + 2.5f);
@@ -693,10 +689,6 @@ Game::MovePlayerLeft()
 		pPlayer->SetHorizontalVelocity(-2.5f);
 		pLionSprite->SetYPos(53);
 		break;
-	case 'Y':
-		pPlayer->SetHorizontalVelocity(-2.5f);
-		pBearSprite->SetYPos(80);
-		break;
 	case 'W':
 		pPlayer->SetHorizontalVelocity(-2.5f - 2.5f);
 		pWolfSprite->SetYPos(48);
@@ -730,10 +722,6 @@ Game::MovePlayerRight()
 		pPlayer->SetHorizontalVelocity(2.5f);
 		pLionSprite->SetYPos(106);
 		break;
-	case 'Y':
-		pPlayer->SetHorizontalVelocity(2.5f);
-		pBearSprite->SetYPos(160);
-		break;
 	case 'W':
 		pPlayer->SetHorizontalVelocity(2.5f + 2.5f);
 		pWolfSprite->SetYPos(96);
@@ -746,14 +734,14 @@ Game::MovePlayerRight()
 }
 
 void 
-Game::StopSpaceShipMovementHorizontal()
+Game::StopHorizontalMovement()
 {
 	pPlayer->SetHorizontalVelocity(0.0f);
 	PauseAnimation();
 }
 
 void
-Game::StopSpaceShipMovementVertical()
+Game::StopVerticalMovement()
 {
 	pPlayer->SetVerticalVelocity(0.0f);
 	PauseAnimation();
@@ -823,8 +811,8 @@ Game::BatForm()
 	pBatSprite->SetNumOfFrames(3);
 	pBatSprite->SetYPos(0);
 	pBatSprite->SetLooping(true);
-	pBatSprite->SetX((int)pPlayer->GetPositionX());
-	pBatSprite->SetY((int)pPlayer->GetPositionY());
+	pBatSprite->SetX(pPlayer->GetPositionX());
+	pBatSprite->SetY(pPlayer->GetPositionY());
 }
 
 void
@@ -841,8 +829,8 @@ Game::CatForm()
 	pCatSprite->SetNumOfFrames(3);
 	pCatSprite->SetYPos(0);
 	pCatSprite->SetLooping(true);
-	pCatSprite->SetX((int)pPlayer->GetPositionX());
-	pCatSprite->SetY((int)pPlayer->GetPositionY());
+	pCatSprite->SetX(pPlayer->GetPositionX());
+	pCatSprite->SetY(pPlayer->GetPositionY());
 }
 
 void
@@ -859,26 +847,8 @@ Game::LionForm()
 	pLionSprite->SetNumOfFrames(3);
 	pLionSprite->SetYPos(0);
 	pLionSprite->SetLooping(true);
-	pLionSprite->SetX((int)pPlayer->GetPositionX());
-	pLionSprite->SetY((int)pPlayer->GetPositionY());
-}
-
-void
-Game::BearForm()
-{
-	pPlayer->SetMask('Y');
-	mask = 'Y';
-	pBearSprite = m_pBackBuffer->CreateAnimSprite("assets\\bear.png");
-	pPlayer->Initialise(pBearSprite);
-	pPlayer->PauseAnimatedSprite();
-	pBearSprite->SetFrameSpeed(0.4f);
-	pBearSprite->SetFrameWidth(80);
-	pBearSprite->SetFrameHeight(80);
-	pBearSprite->SetNumOfFrames(3);
-	pBearSprite->SetYPos(0);
-	pBearSprite->SetLooping(true);
-	pBearSprite->SetX((int)pPlayer->GetPositionX());
-	pBearSprite->SetY((int)pPlayer->GetPositionY());
+	pLionSprite->SetX(pPlayer->GetPositionX());
+	pLionSprite->SetY(pPlayer->GetPositionY());
 }
 
 void
@@ -895,8 +865,8 @@ Game::WolfForm()
 	pWolfSprite->SetNumOfFrames(3);
 	pWolfSprite->SetYPos(0);
 	pWolfSprite->SetLooping(true);
-	pWolfSprite->SetX((int)pPlayer->GetPositionX());
-	pWolfSprite->SetY((int)pPlayer->GetPositionY());
+	pWolfSprite->SetX(pPlayer->GetPositionX());
+	pWolfSprite->SetY(pPlayer->GetPositionY());
 }
 
 void
@@ -913,8 +883,8 @@ Game::SealForm()
 	pSealSprite->SetNumOfFrames(3);
 	pSealSprite->SetYPos(0);
 	pSealSprite->SetLooping(true);
-	pSealSprite->SetX((int)pPlayer->GetPositionX());
-	pSealSprite->SetY((int)pPlayer->GetPositionY());
+	pSealSprite->SetX(pPlayer->GetPositionX());
+	pSealSprite->SetY(pPlayer->GetPositionY());
 }
 
 void
@@ -936,10 +906,10 @@ void
 Game::CreateTile(float x, float y)
 {
 	// W02.2: Load the alien enemy sprite file.
-	tile = 'N';
 	pTileSprite = m_pBackBuffer->CreateSprite("assets\\Grass.png");
 	pTile = new Tiles();
 	pTile->Initialise(pTileSprite);
+	pTile->SetCharType('N');
 	pTile->SetPositionX(x);
 	pTile->SetPositionY(y);
 	pTile->SetHorizontalVelocity(0.0f);
@@ -953,10 +923,10 @@ Game::CreateTile(float x, float y)
 void
 Game::CreateWaterTile(float x, float y)
 {
-	tile = 'W';
 	pTileWaterSprite = m_pBackBuffer->CreateSprite("assets\\Water.png");
 	pWaterTile = new WaterTile();
 	pWaterTile->Initialise(pTileWaterSprite);
+	pWaterTile->SetCharType('W');
 	pWaterTile->SetPositionX(x);
 	pWaterTile->SetPositionY(y);
 	pWaterTile->SetHorizontalVelocity(0.0f);
@@ -969,10 +939,10 @@ Game::CreateWaterTile(float x, float y)
 void
 Game::CreateWall(float x, float y)
 {
-	tile = 'B';
 	pWallSprite = m_pBackBuffer->CreateSprite("assets\\Tree.png");
 	pWall = new Tiles();
 	pWall->Initialise(pWallSprite);
+	pWall->SetCharType('B');
 	pWall->SetPositionX(x);
 	pWall->SetPositionY(y);
 	pWall->SetHorizontalVelocity(0.0f);
@@ -985,10 +955,11 @@ Game::CreateWall(float x, float y)
 void
 Game::CreateLavaTile(float x, float y)
 {
-	tile = 'L';
+
 	pLavaSprite = m_pBackBuffer->CreateSprite("assets\\Lava.png");
 	pLava = new LavaTile();
 	pLava->Initialise(pLavaSprite);
+	pLava->SetCharType('L');
 	pLava->SetPositionX(x);
 	pLava->SetPositionY(y);
 	pLava->SetHorizontalVelocity(0.0f);
@@ -1001,10 +972,11 @@ Game::CreateLavaTile(float x, float y)
 void
 Game::CreateNarrow(float x, float y)
 {
-	tile = 'P';
+
 	pNarrowSprite = m_pBackBuffer->CreateSprite("assets\\Narrow.png");
 	pNarrow = new Narrow();
 	pNarrow->Initialise(pNarrowSprite);
+	pNarrow->SetCharType('N');
 	pNarrow->SetPositionX(x);
 	pNarrow->SetPositionY(y);
 	pNarrow->SetHorizontalVelocity(0.0f);
@@ -1017,10 +989,10 @@ Game::CreateNarrow(float x, float y)
 void
 Game::CreateLowWall(float x, float y)
 {
-	tile = 'Z';
 	pLowWallSprite = m_pBackBuffer->CreateSprite("assets\\low.png");
 	pLow = new LowWall();
 	pLow->Initialise(pLowWallSprite);
+	pLow->SetCharType('Z');
 	pLow->SetPositionX(x);
 	pLow->SetPositionY(y);
 	pLow->SetHorizontalVelocity(0.0f);
@@ -1028,4 +1000,10 @@ Game::CreateLowWall(float x, float y)
 	pLow->SetDead(false);
 
 	LowWallTileContainer.push_back(pLow);
+}
+
+bool
+Game::getCollide()
+{
+	return pPlayer->GetCollide();
 }

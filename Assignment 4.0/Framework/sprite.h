@@ -18,8 +18,8 @@ public:
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backbuffer);
 
-	void SetX(int x);
-	void SetY(int y);
+	void SetX(float x);
+	void SetY(float y);
 
 	int GetX() const;
 	int GetY() const;

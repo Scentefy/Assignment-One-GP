@@ -20,6 +20,7 @@ Entity::Entity()
 , m_velocityX(0.0f)
 , m_velocityY(0.0f)
 , m_mask(0)
+, m_type(0)
 , m_dead(false)
 {
 
@@ -47,8 +48,8 @@ int Entity::GetSpriteWidth()
 void 
 Entity::Process(float deltaTime)
 {
-	m_pSprite->SetX(static_cast<int>(m_x));
-	m_pSprite->SetY(static_cast<int>(m_y));
+	m_pSprite->SetX(m_x);
+	m_pSprite->SetY(m_y);
 	// W02.1: Generic position update, based upon velocity (and time).
 	m_x += m_velocityX;
 	m_y += m_velocityY;
@@ -77,7 +78,7 @@ Entity::IsCollidingWith(Entity& e)
 	bool collide = false;
 	int r1f = static_cast<int>(r1);
 	int r2f = static_cast<int>(r2);
-	float collision = r1f + r2f;
+	auto collision = r1f + r2f;
 	// W02.3: Generic Entity Collision routine.
 	float actualdistance = sqrt(pow((x2 - x1),2) + pow((y2 - y1),2));
 	// W02.3: Does this object collide with the e object?
@@ -168,4 +169,16 @@ void
 Entity::SetVerticalVelocity(float y)
 {
 	m_velocityY = y;
+}
+
+char
+Entity::GetTileType()
+{
+	return m_type;
+}
+
+void 
+Entity::SetCharType(char t)
+{
+	m_type = t;
 }

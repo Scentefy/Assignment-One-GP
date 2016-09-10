@@ -86,7 +86,7 @@ AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 	float y2 = e.GetPositionY();
 	int r2 = e.m_pAnimSprite->GetFrameWidth() / 2;
 	bool collide = false;
-	float collision = r1 + r2;
+	auto collision = r1 + r2;
 	// W02.3: Generic Entity Collision routine.
 	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 	// W02.3: Does this object collide with the e object?
@@ -117,6 +117,21 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 		r1 = 0;
 		return false;
 	}
+	float x1 = GetPositionX();
+	float y1 = GetPositionY();
+	float x2 = e.GetPositionX();
+	float y2 = e.GetPositionY();
+	auto r2 = e.GetSpriteWidth() / 2;
+	collide = false;
+	auto collision = r1 + r2;
+	// W02.3: Generic Entity Collision routine.
+	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
+	// W02.3: Does this object collide with the e object?
+	if (actualdistance < collision)
+	{
+		collide = true;
+	}
+
 	if (this->GetMask() == 'S')
 	{
 		if (walkableWater == true)
@@ -138,20 +153,11 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 			return false;
 		}
 	}
-	float x1 = GetPositionX();;
-	float y1 = GetPositionY();
-	float x2 = e.GetPositionX();
-	float y2 = e.GetPositionY();
-	auto r2 = e.GetSpriteWidth() / 2;
-	bool collide = false;
-	auto collision = r1 + r2;
-	// W02.3: Generic Entity Collision routine.
-	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
-	// W02.3: Does this object collide with the e object?
-	if (actualdistance < collision)
-	{
-		collide = true;
-	}
+	//if (e.GetTileType() == 'N')
+	//{
+	//	collide = false;
+	//	return collide;
+	//}
 	// W02.3: Create a circle for each entity (this and e).
 	// W02.3: Check for intersection.
 	// W02.3: Using circle-vs-circle collision detection.
@@ -226,3 +232,8 @@ AnimatedEntity::StartAnimation()
 	m_pAnimSprite->Pause(false);
 }
 
+bool
+AnimatedEntity::GetCollide()
+{
+	return collide;
+}

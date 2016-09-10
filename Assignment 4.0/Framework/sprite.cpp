@@ -49,13 +49,13 @@ Sprite::Draw(BackBuffer& backbuffer)
 }
 
 void 
-Sprite::SetX(int x)
+Sprite::SetX(float x)
 {
 	m_x = x;
 }
 
 void 
-Sprite::SetY(int y)
+Sprite::SetY(float y)
 {
 	m_y = y;
 }

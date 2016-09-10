@@ -28,6 +28,8 @@ public:
 
 	void PauseAnimatedSprite();
 	void StartAnimation();
+
+	bool GetCollide();
 protected:
 private:
 public:
@@ -35,5 +37,6 @@ protected:
 	AnimatedSprite* m_pAnimSprite;
 	int yPos;
 	bool walkableWater, walkableNarrow, walkableLow;
+	bool collide;
 };
 #endif

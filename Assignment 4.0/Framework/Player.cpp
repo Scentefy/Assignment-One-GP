@@ -17,4 +17,3 @@ Player::SetLives(int l)
 {
 	lives = l;
 }
-
