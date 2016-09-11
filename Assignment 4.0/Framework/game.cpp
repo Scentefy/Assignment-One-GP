@@ -384,10 +384,6 @@ Game::Process(float deltaTime)
 			for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end();)
 			{
 				lav = *IterationLavaTile;
-				if (pPlayer->IsCollidingWithEnt(**IterationLavaTile))
-				{
-					float eneX = ene->GetPositionX();
-					float eneY = ene->GetPositionY();
 					if (pPlayer->IsCollidingWithEnt(**IterationLavaTile))
 					{
 						SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
@@ -398,7 +394,6 @@ Game::Process(float deltaTime)
 						if (pPlayer->GetLives() == 0)
 							pPlayer->SetDead(true);
 					}
-				}
 				else
 				{
 					IterationLavaTile++;
@@ -436,22 +431,32 @@ Game::Process(float deltaTime)
 						if (direction == 'U')
 						{
 							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() + pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY() + nar->GetSpriteWidth() / 2 - 15);
 						}
 						if (direction == 'D')
 						{
 							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() - pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY() - nar->GetSpriteWidth() / 2 + 15);
 						}
 						if (direction == 'R')
 						{
-							pPlayer->SetPositionX(oldPositionX - pPlayer->GetCollide());
+							pPlayer->SetPositionX(oldPositionX - nar->GetSpriteWidth() / 2 + 15);
 							pPlayer->SetPositionY(pPlayer->GetPositionY());
 						}
 						if (direction == 'L')
 						{
-							pPlayer->SetPositionX(oldPositionX + pPlayer->GetCollide());
+							pPlayer->SetPositionX(oldPositionX + nar->GetSpriteWidth() / 2 - 15);
 							pPlayer->SetPositionY(pPlayer->GetPositionY());
+						}
+						else if (pPlayer->GetCollide() < -1.0f && pPlayer->GetMask() != 'C')
+						{
+							SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+							sound.playSound(soundBlood, false);
+							pPlayer->SetPositionX(32.0f);
+							pPlayer->SetPositionY(41.0f);
+							pPlayer->SetLives(pPlayer->GetLives() - 1);
+							if (pPlayer->GetLives() == 0)
+								pPlayer->SetDead(true);
 						}
 					}
 				}
@@ -484,24 +489,35 @@ Game::Process(float deltaTime)
 						if (direction == 'U')
 						{
 							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() + pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY() + low->GetSpriteWidth() / 2 - 15);
 						}
 						if (direction == 'D')
 						{
 							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() - pPlayer->GetCollide());
+							pPlayer->SetPositionY(pPlayer->GetPositionY() - low->GetSpriteWidth() / 2 + 15);
 						}
 						if (direction == 'R')
 						{
-							pPlayer->SetPositionX(oldPositionX - pPlayer->GetCollide());
+							pPlayer->SetPositionX(oldPositionX - low->GetSpriteWidth() / 2 + 15);
 							pPlayer->SetPositionY(pPlayer->GetPositionY());
 						}
 						if (direction == 'L')
 						{
-							pPlayer->SetPositionX(oldPositionX + pPlayer->GetCollide());
+							pPlayer->SetPositionX(oldPositionX + low->GetSpriteWidth()/2 -15);
 							pPlayer->SetPositionY(pPlayer->GetPositionY());
 						}
+						else if (pPlayer->GetCollide() < -1.0f && pPlayer->GetMask() != 'B')
+						{
+							SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+							sound.playSound(soundBlood, false);
+							pPlayer->SetPositionX(32.0f);
+							pPlayer->SetPositionY(41.0f);
+							pPlayer->SetLives(pPlayer->GetLives() - 1);
+							if (pPlayer->GetLives() == 0)
+								pPlayer->SetDead(true);
+						}
 					}
+
 				}
 				else
 				{
@@ -605,6 +621,12 @@ Game::Draw(BackBuffer& backBuffer)
 		explosionContainer[i]->Draw(backBuffer);
 	}
 
+	SDL_Color colour = { 255, 0, 0, 255 };
+	char fps[5];
+	sprintf(fps, "%d", m_FPS);
+	m_pBackBuffer->DrawText(colour, "Chiller.ttf", "FPS :", 25, 920, 5);
+	m_pBackBuffer->DrawText(colour, "Chiller.ttf", fps , 25, 960, 5);
+
 	// W02.1: Draw the player ship...
 	if (pPlayer->IsDead() == false)
 	pPlayer->Draw(backBuffer);
@@ -632,23 +654,23 @@ Game::MovePlayerUp(char u)
 	{
 	case 'N' :
 		pPlayer->SetVerticalVelocity(-(YPosData["speed"].GetFloat()));
-		playerSprite->SetYPos(YPosData["normalUp"].GetFloat());
+		playerSprite->SetYPos(YPosData["normalUp"].GetInt());
 		break;
 	case 'B':
 		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
-		pBatSprite->SetYPos(144);
+		pBatSprite->SetYPos(YPosData["batUp"].GetInt());
 		break;
 	case 'C':
 		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
-		pCatSprite->SetYPos(96);
+		pCatSprite->SetYPos(YPosData["catUp"].GetInt());
 		break;
 	case 'W':
 		pPlayer->SetVerticalVelocity(-YPosData["wolfspeed"].GetFloat());
-		pWolfSprite->SetYPos(144);
+		pWolfSprite->SetYPos(YPosData["wolfUp"].GetInt());
 		break;
 	case 'S':
 		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
-		pSealSprite->SetYPos(YPosData["sealUp"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealUp"].GetInt());
 		break;
 	}
 	direction = u;
@@ -663,23 +685,23 @@ Game::MovePlayerDown(char u)
 	{
 	case 'N' :
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
-		playerSprite->SetYPos(YPosData["normalDown"].GetFloat());
+		playerSprite->SetYPos(YPosData["normalDown"].GetInt());
 		break;
 	case 'B' :
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
-		pBatSprite->SetYPos(0);
+		pBatSprite->SetYPos(YPosData["batDown"].GetInt());
 		break;
 	case 'C':
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
-		pCatSprite->SetYPos(0);
+		pCatSprite->SetYPos(YPosData["catDown"].GetInt());
 		break;
 	case 'W':
 		pPlayer->SetVerticalVelocity(YPosData["wolfspeed"].GetFloat());
-		pWolfSprite->SetYPos(0);
+		pWolfSprite->SetYPos(YPosData["wolfDown"].GetInt());
 		break;
 	case 'S':
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
-		pSealSprite->SetYPos(YPosData["sealDown"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealDown"].GetInt());
 		break;
 	}
 	direction = u;
@@ -694,23 +716,23 @@ Game::MovePlayerLeft(char u)
 	{
 	case 'N' :
 		pPlayer->SetHorizontalVelocity(-(YPosData["speed"].GetFloat()));
-		playerSprite->SetYPos(YPosData["normalLeft"].GetFloat());
+		playerSprite->SetYPos(YPosData["normalLeft"].GetInt());
 		break;
 	case 'B' :
 		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
-		pBatSprite->SetYPos(48);
+		pBatSprite->SetYPos(YPosData["batLeft"].GetInt());
 		break;
 	case 'C':
 		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
-		pCatSprite->SetYPos(32);
+		pCatSprite->SetYPos(YPosData["catLeft"].GetInt());
 		break;
 	case 'W':
 		pPlayer->SetHorizontalVelocity(-YPosData["wolfspeed"].GetFloat());
-		pWolfSprite->SetYPos(48);
+		pWolfSprite->SetYPos(YPosData["wolfLeft"].GetInt());
 		break;
 	case 'S':
 		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
-		pSealSprite->SetYPos(YPosData["sealLeft"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealLeft"].GetInt());
 		break;
 	}
 	direction = u;
@@ -725,23 +747,23 @@ Game::MovePlayerRight(char u)
 	{
 	case 'N':
 		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
-		playerSprite->SetYPos(YPosData["normalRight"].GetFloat());
+		playerSprite->SetYPos(YPosData["normalRight"].GetInt());
 		break;
 	case 'B':
 		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
-		pBatSprite->SetYPos(96);
+		pBatSprite->SetYPos(YPosData["batRight"].GetInt());
 		break;
 	case 'C':
 		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
-		pCatSprite->SetYPos(64);
+		pCatSprite->SetYPos(YPosData["catRight"].GetInt());
 		break;
 	case 'W':
 		pPlayer->SetHorizontalVelocity(YPosData["wolfspeed"].GetFloat());
-		pWolfSprite->SetYPos(96);
+		pWolfSprite->SetYPos(YPosData["wolfRight"].GetInt());
 		break;
 	case 'S':
 		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
-		pSealSprite->SetYPos(YPosData["sealRight"].GetFloat());
+		pSealSprite->SetYPos(YPosData["sealRight"].GetInt());
 		break;
 	}
 	direction = u;
@@ -814,55 +836,52 @@ Game::SpawnExplosion(float x, float y)
 void 
 Game::BatForm()
 {
-	pPlayer->SetMask('B');
-	mask = 'B';
-	pBatSprite = m_pBackBuffer->CreateAnimSprite("assets\\pinkbat.png");
+	const Value& batData = Parser::GetInstance().document["bat"];
+	pBatSprite = m_pBackBuffer->CreateAnimSprite(batData["sprite_location"].GetString());
+	pPlayer->SetMask(toChar(batData["Mask"].GetString()));
 	pPlayer->Initialise(pBatSprite);
 	pPlayer->PauseAnimatedSprite();
-	pBatSprite->SetFrameSpeed(0.1f);
-	pBatSprite->SetFrameWidth(32);
-	pBatSprite->SetFrameHeight(48);
-	pBatSprite->SetNumOfFrames(3);
-	pBatSprite->SetYPos(0);
-	pBatSprite->SetLooping(true);
-	pBatSprite->SetX(pPlayer->GetPositionX());
-	pBatSprite->SetY(pPlayer->GetPositionY());
+	pBatSprite->SetFrameSpeed(batData["frame_speed"].GetFloat());
+	pBatSprite->SetFrameWidth(batData["frame_width"].GetInt());
+	pBatSprite->SetFrameHeight(batData["frame_height"].GetInt());
+	pBatSprite->SetNumOfFrames(batData["num_frames"].GetInt());
+	pBatSprite->SetYPos(batData["YPosition"].GetInt());
+	mask = toChar(batData["Mask"].GetString());
+	pBatSprite->SetLooping(batData["looping"].GetBool());
 }
 
 void
 Game::CatForm()
 {
-	pPlayer->SetMask('C');
-	mask = 'C';
-	pCatSprite = m_pBackBuffer->CreateAnimSprite("assets\\cat.png");
+	const Value& catData = Parser::GetInstance().document["cat"];
+	pCatSprite = m_pBackBuffer->CreateAnimSprite(catData["sprite_location"].GetString());
+	pPlayer->SetMask(toChar(catData["Mask"].GetString()));
 	pPlayer->Initialise(pCatSprite);
 	pPlayer->PauseAnimatedSprite();
-	pCatSprite->SetFrameSpeed(0.2f);
-	pCatSprite->SetFrameWidth(32);
-	pCatSprite->SetFrameHeight(32);
-	pCatSprite->SetNumOfFrames(3);
-	pCatSprite->SetYPos(0);
-	pCatSprite->SetLooping(true);
-	pCatSprite->SetX(pPlayer->GetPositionX());
-	pCatSprite->SetY(pPlayer->GetPositionY());
+	pCatSprite->SetFrameSpeed(catData["frame_speed"].GetFloat());
+	pCatSprite->SetFrameWidth(catData["frame_width"].GetInt());
+	pCatSprite->SetFrameHeight(catData["frame_height"].GetInt());
+	pCatSprite->SetNumOfFrames(catData["num_frames"].GetInt());
+	pCatSprite->SetYPos(catData["YPosition"].GetInt());
+	mask = toChar(catData["Mask"].GetString());
+	pCatSprite->SetLooping(catData["looping"].GetBool());
 }
 
 void
 Game::WolfForm()
 {
-	pPlayer->SetMask('W');
-	mask = 'W';
-	pWolfSprite = m_pBackBuffer->CreateAnimSprite("assets\\wolf.png");
+	const Value& wolfData = Parser::GetInstance().document["wolf"];
+	pWolfSprite = m_pBackBuffer->CreateAnimSprite(wolfData["sprite_location"].GetString());
+	pPlayer->SetMask(toChar(wolfData["Mask"].GetString()));
 	pPlayer->Initialise(pWolfSprite);
 	pPlayer->PauseAnimatedSprite();
-	pWolfSprite->SetFrameSpeed(0.1f);
-	pWolfSprite->SetFrameWidth(48);
-	pWolfSprite->SetFrameHeight(48);
-	pWolfSprite->SetNumOfFrames(3);
-	pWolfSprite->SetYPos(0);
-	pWolfSprite->SetLooping(true);
-	pWolfSprite->SetX(pPlayer->GetPositionX());
-	pWolfSprite->SetY(pPlayer->GetPositionY());
+	pWolfSprite->SetFrameSpeed(wolfData["frame_speed"].GetFloat());
+	pWolfSprite->SetFrameWidth(wolfData["frame_width"].GetInt());
+	pWolfSprite->SetFrameHeight(wolfData["frame_height"].GetInt());
+	pWolfSprite->SetNumOfFrames(wolfData["num_frames"].GetInt());
+	pWolfSprite->SetYPos(wolfData["YPosition"].GetInt());
+	mask = toChar(wolfData["Mask"].GetString());
+	pWolfSprite->SetLooping(wolfData["looping"].GetBool());
 }
 
 void

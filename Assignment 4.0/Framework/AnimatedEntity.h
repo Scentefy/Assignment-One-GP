@@ -29,7 +29,8 @@ public:
 	void PauseAnimatedSprite();
 	void StartAnimation();
 
-	int GetCollide();
+	float GetCollide();
+	int GetRadius(Entity& e);
 protected:
 private:
 public:
@@ -39,5 +40,6 @@ protected:
 	bool walkableWater, walkableNarrow, walkableLow;
 	bool collide;
 	int fakeCollide;
+	float actualDistance;
 };
 #endif

@@ -35,8 +35,8 @@ AnimatedEntity::Process(float deltaTime)
 		m_velocityX = 0;
 	}
 
-	if (m_y > 600 - 20) {
-		m_y = 600 - 20;
+	if (m_y > 600) {
+		m_y = 600;
 		m_velocityY = 0;
 	}
 	else if (m_y < 0 + 32) {
@@ -133,12 +133,12 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 			return false;
 		}
 	}
-	auto r12nd = m_pAnimSprite->GetFrameWidth();
+	auto r12nd = m_pAnimSprite->GetFrameWidth() / 2 + 20;
 	float x1 = GetPositionX();
 	float y1 = GetPositionY();
 	float x2 = e.GetPositionX();
 	float y2 = e.GetPositionY();
-	auto r2 = e.GetSpriteWidth() / 2;
+	auto r2 = e.GetSpriteWidth() / 2 - 5;
 	collide = false;
 	fakeCollide = r12nd + r2;
 	auto collision = r1 + r2;
@@ -215,8 +215,14 @@ AnimatedEntity::StartAnimation()
 	m_pAnimSprite->Pause(false);
 }
 
-int
+float
 AnimatedEntity::GetCollide()
 {
-	return fakeCollide;
+	return actualDistance;
+}
+
+int
+AnimatedEntity::GetRadius(Entity& e)
+{
+	return e.GetSpriteWidth();
 }
