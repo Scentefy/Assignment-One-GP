@@ -6,5 +6,6 @@ class Enemy : public AnimatedEntity
 	{
 	public:
 		Enemy();
+		void AlgorithmA();
 	};
 	#endif

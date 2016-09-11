@@ -217,6 +217,7 @@ Game::Initialise()
 	//	enemyY += 50.0f;
 	//	enemyX = 20.0f;
 	//}
+		SpawnEnemy(73.0f, 105.0f);
 
 	//auto tileX = 0.0f;
 	//auto tileY = 9.0f;
@@ -545,21 +546,9 @@ Game::Process(float deltaTime)
 			IterationDeath++;
 	}
 
-	//Enemies Move Down
-	for (size_t i = 0; i < enemyContainer.size(); i++)
-	{
-		if (enemyContainer[i]->GetPositionY() > 600 - 33)
-		{
-			enemyContainer[i]->SetVerticalVelocity(-1.0f);
-			enemyContainer[i]->SetYPos(144);
-		}
-		//Enemies Move Up
-		else if (enemyContainer[i]->GetPositionY() < 33)
-		{
-			enemyContainer[i]->SetVerticalVelocity(1.0f);
-			enemyContainer[i]->SetYPos(0);
-		}
-	}
+	const Value& YPosData = Parser::GetInstance().document["YPos"];
+	//Enemies Move Up
+	pEnemy->AlgorithmA();
 	// W02.3: Remove any dead enemy aliens from the container...
 
 	// W02.3: Remove any dead explosions from the container...
@@ -799,19 +788,20 @@ void
 Game::SpawnEnemy(float x, float y)
 {
 	// W02.2: Load the alien enemy sprite file.
-	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\darkknight.png");
+	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\enemy.png");
 	pEnemy = new Enemy();
 	pEnemy->Initialise(enemySprite);
 	enemySprite->SetFrameSpeed(0.3f);
-	enemySprite->SetFrameWidth(32);
-	enemySprite->SetFrameHeight(48);
+	enemySprite->SetFrameWidth(16);
+	enemySprite->SetFrameHeight(24);
 	enemySprite->SetNumOfFrames(3);
 	enemySprite->SetYPos(0);
 	enemySprite->SetLooping(true);
 	pEnemy->SetPositionX(x);
 	pEnemy->SetPositionY(y);
 	pEnemy->SetHorizontalVelocity(0.0f);
-	pEnemy->SetVerticalVelocity(1.0f);
+	pEnemy->SetVerticalVelocity(0.0f);
+	pEnemy->AlgorithmA();
 	pEnemy->SetDead(false);
 
 	// W02.2: Add the new Enemy to the enemy container.
