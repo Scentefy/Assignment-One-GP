@@ -20,6 +20,7 @@
 #include "Enemy.h"
 #include "Narrow.h"
 #include "Parser.h"
+#include "EndTile.h"
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -33,6 +34,7 @@ Tiles* pWall = 0;
 LavaTile* pLava = 0;
 Narrow* pNarrow = 0;
 LowWall* pLow = 0;
+EndTile* pEnd = 0;
 
 //Sprites
 AnimatedSprite* playerSprite;
@@ -48,22 +50,23 @@ Sprite* pWallSprite;
 Sprite* pLavaSprite;
 Sprite* pNarrowSprite;
 Sprite* pLowWallSprite;
+Sprite* pEndSprite;
 
 //Deletion Iterators
 std::vector<Enemy*>::iterator IterationEnemy;
-std::vector <Blood*>::iterator IterationDeath;
-std::vector <Tiles*>::iterator IterationTile;
-std::vector <WaterTile*>::iterator IterationWaterTile;
-std::vector <Tiles*>::iterator IterationWall;
-std::vector <LavaTile*>::iterator IterationLavaTile;
-std::vector <Narrow*>::iterator IterationNarrow;
-std::vector <LowWall*>::iterator IterationLowWall;
+std::vector<Blood*>::iterator IterationDeath;
+std::vector<Tiles*>::iterator IterationTile;
+std::vector<WaterTile*>::iterator IterationWaterTile;
+std::vector<Tiles*>::iterator IterationWall;
+std::vector<LavaTile*>::iterator IterationLavaTile;
+std::vector<Narrow*>::iterator IterationNarrow;
+std::vector<LowWall*>::iterator IterationLowWall;
 
 Game&
 Game::GetInstance()
 {
 	if (sm_pInstance == 0)
-	{ 
+	{
 		sm_pInstance = new Game();
 	}
 
@@ -72,26 +75,25 @@ Game::GetInstance()
 	return (*sm_pInstance);
 }
 
-void 
+void
 Game::DestroyInstance()
 {
-	delete sm_pInstance; 
+	delete sm_pInstance;
 	sm_pInstance = 0;
 }
 
 Game::Game()
-: m_pBackBuffer(0)
-, m_pInputHandler(0)
-, m_looping(true)
-, m_executionTime(0)
-, m_elapsedSeconds(0)
-, m_frameCount(0)
-, m_FPS(0)
-, m_numUpdates(0)
-, m_lastTime(0)
-, m_lag(0)
+	: m_pBackBuffer(0)
+	  , m_pInputHandler(0)
+	  , m_looping(true)
+	  , m_executionTime(0)
+	  , m_elapsedSeconds(0)
+	  , m_frameCount(0)
+	  , m_FPS(0)
+	  , m_numUpdates(0)
+	  , m_lastTime(0)
+	  , m_lag(0)
 {
-	
 }
 
 Game::~Game()
@@ -100,7 +102,7 @@ Game::~Game()
 	m_pBackBuffer = 0;
 }
 
-bool 
+bool
 Game::Initialise()
 {
 	Parser::GetInstance().loadInFile("data.ini");
@@ -120,9 +122,9 @@ Game::Initialise()
 		LogManager::GetInstance().Log("InputHandler Init Fail!");
 		return (false);
 	}
-	else {
+	else
+	{
 		LogManager::GetInstance().Log("InputHandler Init Success!");
-
 	}
 
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
@@ -150,7 +152,7 @@ Game::Initialise()
 
 	const Value& mapData = Parser::GetInstance().document["map"];
 	string map = mapData["mapcreation"].GetString();
-	std::vector<char> data(map.begin(), map.end()); 
+	std::vector<char> data(map.begin(), map.end());
 
 	float x = 32.0f;
 	float y = 41.0f;
@@ -161,7 +163,7 @@ Game::Initialise()
 		//Normal Tile
 		if (data[i] == 'N')
 		{
-			CreateTile(x,y);
+			CreateTile(x, y);
 			tile++;
 		}
 		else if (data[i] == 'W')
@@ -187,6 +189,11 @@ Game::Initialise()
 		else if (data[i] == 'U')
 		{
 			CreateWaterTile(x, y);
+			tile++;
+		}
+		else if (data[i] == 'V')
+		{
+			CreateEndTile(x, y);
 			tile++;
 		}
 		x += 32.0f;
@@ -228,14 +235,14 @@ Game::Initialise()
 	return (true);
 }
 
-bool 
+bool
 Game::DoGameLoop()
 {
 	const float stepSize = 1.0f / 60.0f;
 
 	assert(m_pInputHandler);
 	m_pInputHandler->ProcessInput(*this);
-	
+
 	if (m_looping)
 	{
 		int current = SDL_GetTicks();
@@ -254,7 +261,7 @@ Game::DoGameLoop()
 
 			++m_numUpdates;
 		}
-		
+
 		Draw(*m_pBackBuffer);
 	}
 
@@ -263,7 +270,7 @@ Game::DoGameLoop()
 	return (m_looping);
 }
 
-void 
+void
 Game::Process(float deltaTime)
 {
 	// Count total simulation time elapsed:
@@ -322,6 +329,8 @@ Game::Process(float deltaTime)
 		lavaTileContainer[i]->Process(deltaTime);
 	}
 
+	pEnd->Process(deltaTime);
+
 	//Player Process
 	pPlayer->Process(deltaTime);
 
@@ -329,7 +338,8 @@ Game::Process(float deltaTime)
 	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end();)
 	{
 		ene = *IterationEnemy;
-		if (pPlayer->IsCollidingWithAnim(**IterationEnemy)) {
+		if (pPlayer->IsCollidingWithAnim(**IterationEnemy))
+		{
 			float eneX = ene->GetPositionX();
 			float eneY = ene->GetPositionY();
 			if (ene->IsCollidingWithAnim(*pPlayer))
@@ -350,181 +360,171 @@ Game::Process(float deltaTime)
 			IterationEnemy++;
 		}
 	}
-			
-			//Collision with Water
-			for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end();)
-			{
-				wat = *IterationWaterTile;
-				if (pPlayer->IsCollidingWithEnt(**IterationWaterTile)) 
-				{
-					pPlayer->SetWalkableWater(true);
-					if (mask == 'S' && pPlayer->GetWalkableWater())
-					{
 
-					}
-					else if (pPlayer->IsCollidingWithEnt(**IterationWaterTile))
-					{
-						SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
-						sound.playSound(soundBlood, false);
-						pPlayer->SetPositionX(32.0f);
-						pPlayer->SetPositionY(41.0f);
-						pPlayer->SetLives(pPlayer->GetLives() - 1);
-						if (pPlayer->GetLives() == 0)
-							pPlayer->SetDead(true);
-					}
-				}
-				else
+	//Collision with Water
+	for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end();)
+	{
+		wat = *IterationWaterTile;
+		if (pPlayer->IsCollidingWithEnt(**IterationWaterTile))
+		{
+			pPlayer->SetWalkableWater(true);
+			if (mask == 'S' && pPlayer->GetWalkableWater())
+			{
+			}
+			else if (pPlayer->IsCollidingWithEnt(**IterationWaterTile))
+			{
+				SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+				sound.playSound(soundBlood, false);
+				pPlayer->SetPositionX(32.0f);
+				pPlayer->SetPositionY(41.0f);
+				pPlayer->SetLives(pPlayer->GetLives() - 1);
+				if (pPlayer->GetLives() == 0)
+					pPlayer->SetDead(true);
+			}
+		}
+		else
+		{
+			IterationWaterTile++;
+		}
+	}
+	pPlayer->SetWalkableWater(false);
+
+	//Collision with Lava
+	for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end();)
+	{
+		lav = *IterationLavaTile;
+		if (pPlayer->IsCollidingWithEnt(**IterationLavaTile))
+		{
+			SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+			sound.playSound(soundBlood, false);
+			pPlayer->SetPositionX(32.0f);
+			pPlayer->SetPositionY(41.0f);;
+			pPlayer->SetLives(pPlayer->GetLives() - 1);
+			if (pPlayer->GetLives() == 0)
+				pPlayer->SetDead(true);
+		}
+		else
+		{
+			IterationLavaTile++;
+		}
+	}
+
+	//Collision with wall
+	for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end();)
+	{
+		wal = *IterationWall;
+		if (pPlayer->IsCollidingWithEnt(**IterationWall))
+		{
+			pPlayer->SetPositionX(oldPositionX);
+			pPlayer->SetPositionY(oldPositionY);
+		}
+		else
+		{
+			IterationWall++;
+		}
+	}
+
+	//Collision with NarrowWall
+	for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end();)
+	{
+		nar = *IterationNarrow;
+		if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
+		{
+			pPlayer->SetWalkableNarrow(true);
+			if (mask == 'C' && pPlayer->GetWalkableNarrow())
+			{
+			}
+			else if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
+			{
+				if (direction == 'U')
 				{
-					IterationWaterTile++;
+					pPlayer->SetPositionX(oldPositionX);
+					pPlayer->SetPositionY(pPlayer->GetPositionY() + nar->GetSpriteWidth() / 2 - 15);
+				}
+				if (direction == 'D')
+				{
+					pPlayer->SetPositionX(oldPositionX);
+					pPlayer->SetPositionY(pPlayer->GetPositionY() - nar->GetSpriteWidth() / 2 + 15);
+				}
+				if (direction == 'R')
+				{
+					pPlayer->SetPositionX(oldPositionX - nar->GetSpriteWidth() / 2 + 15);
+					pPlayer->SetPositionY(pPlayer->GetPositionY());
+				}
+				if (direction == 'L')
+				{
+					pPlayer->SetPositionX(oldPositionX + nar->GetSpriteWidth() / 2 - 15);
+					pPlayer->SetPositionY(pPlayer->GetPositionY());
+				}
+				else if (pPlayer->GetCollide() < -1.0f && pPlayer->GetMask() != 'C')
+				{
+					SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+					sound.playSound(soundBlood, false);
+					pPlayer->SetPositionX(32.0f);
+					pPlayer->SetPositionY(41.0f);
+					pPlayer->SetLives(pPlayer->GetLives() - 1);
+					if (pPlayer->GetLives() == 0)
+						pPlayer->SetDead(true);
 				}
 			}
-			pPlayer->SetWalkableWater(false);
+		}
+		else
+		{
+			IterationNarrow++;
+		}
+	}
+	pPlayer->SetWalkableNarrow(false);
 
-			//Collision with Lava
-			for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end();)
+	//Collision with Low Wall
+	for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end();)
+	{
+		low = *IterationLowWall;
+		if (pPlayer->IsCollidingWithEnt(**IterationLowWall))
+		{
+			pPlayer->SetWalkableLow(true);
+			if (mask == 'B' && pPlayer->GetWalkableLow())
 			{
-				lav = *IterationLavaTile;
-					if (pPlayer->IsCollidingWithEnt(**IterationLavaTile))
-					{
-						SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
-						sound.playSound(soundBlood, false);
-						pPlayer->SetPositionX(32.0f);
-						pPlayer->SetPositionY(41.0f);;
-						pPlayer->SetLives(pPlayer->GetLives() - 1);
-						if (pPlayer->GetLives() == 0)
-							pPlayer->SetDead(true);
-					}
-				else
+			}
+			else
+			{
+				if (direction == 'U')
 				{
-					IterationLavaTile++;
+					pPlayer->SetPositionX(oldPositionX);
+					pPlayer->SetPositionY(pPlayer->GetPositionY() + low->GetSpriteWidth() / 2 - 15);
+				}
+				if (direction == 'D')
+				{
+					pPlayer->SetPositionX(oldPositionX);
+					pPlayer->SetPositionY(pPlayer->GetPositionY() - low->GetSpriteWidth() / 2 + 15);
+				}
+				if (direction == 'R')
+				{
+					pPlayer->SetPositionX(oldPositionX - low->GetSpriteWidth() / 2 + 15);
+					pPlayer->SetPositionY(pPlayer->GetPositionY());
+				}
+				if (direction == 'L')
+				{
+					pPlayer->SetPositionX(oldPositionX + low->GetSpriteWidth() / 2 - 15);
+					pPlayer->SetPositionY(pPlayer->GetPositionY());
+				}
+				else if (pPlayer->GetCollide() < -1.0f && pPlayer->GetMask() != 'B')
+				{
+					SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
+					sound.playSound(soundBlood, false);
+					pPlayer->SetPositionX(32.0f);
+					pPlayer->SetPositionY(41.0f);
+					pPlayer->SetLives(pPlayer->GetLives() - 1);
+					if (pPlayer->GetLives() == 0)
+						pPlayer->SetDead(true);
 				}
 			}
-
-			//Collision with wall
-			for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end();)
-			{
-				wal = *IterationWall;
-				if (pPlayer->IsCollidingWithEnt(**IterationWall))
-				{
-						pPlayer->SetPositionX(oldPositionX);
-						pPlayer->SetPositionY(oldPositionY);
-				}
-				else
-				{
-					IterationWall++;
-				}
-			}
-
-			//Collision with NarrowWall
-			for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end();)
-			{
-				nar = *IterationNarrow;
-				if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
-				{
-					pPlayer->SetWalkableNarrow(true);
-					if (mask == 'C' && pPlayer->GetWalkableNarrow())
-					{
-
-					}
-					else if (pPlayer->IsCollidingWithEnt(**IterationNarrow))
-					{
-						if (direction == 'U')
-						{
-							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() + nar->GetSpriteWidth() / 2 - 15);
-						}
-						if (direction == 'D')
-						{
-							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() - nar->GetSpriteWidth() / 2 + 15);
-						}
-						if (direction == 'R')
-						{
-							pPlayer->SetPositionX(oldPositionX - nar->GetSpriteWidth() / 2 + 15);
-							pPlayer->SetPositionY(pPlayer->GetPositionY());
-						}
-						if (direction == 'L')
-						{
-							pPlayer->SetPositionX(oldPositionX + nar->GetSpriteWidth() / 2 - 15);
-							pPlayer->SetPositionY(pPlayer->GetPositionY());
-						}
-						else if (pPlayer->GetCollide() < -1.0f && pPlayer->GetMask() != 'C')
-						{
-							SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
-							sound.playSound(soundBlood, false);
-							pPlayer->SetPositionX(32.0f);
-							pPlayer->SetPositionY(41.0f);
-							pPlayer->SetLives(pPlayer->GetLives() - 1);
-							if (pPlayer->GetLives() == 0)
-								pPlayer->SetDead(true);
-						}
-					}
-				}
-				else
-				{
-					IterationNarrow++;
-				}
-			}
-			pPlayer->SetWalkableNarrow(false);
-
-			//Collision with Low Wall
-			for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end();)
-			{
-				low = *IterationLowWall;
-				if (pPlayer->IsCollidingWithEnt(**IterationLowWall))
-				{
-
-					pPlayer->SetWalkableLow(true);
-					if (pPlayer->GetWalkableLow())
-					{
-						float oldoldX = oldPositionX;
-						float oldoldY = oldPositionY;
-					}
-					if (mask == 'B' && pPlayer->GetWalkableLow())
-					{
-
-					}
-					else
-					{
-						if (direction == 'U')
-						{
-							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() + low->GetSpriteWidth() / 2 - 15);
-						}
-						if (direction == 'D')
-						{
-							pPlayer->SetPositionX(oldPositionX);
-							pPlayer->SetPositionY(pPlayer->GetPositionY() - low->GetSpriteWidth() / 2 + 15);
-						}
-						if (direction == 'R')
-						{
-							pPlayer->SetPositionX(oldPositionX - low->GetSpriteWidth() / 2 + 15);
-							pPlayer->SetPositionY(pPlayer->GetPositionY());
-						}
-						if (direction == 'L')
-						{
-							pPlayer->SetPositionX(oldPositionX + low->GetSpriteWidth()/2 -15);
-							pPlayer->SetPositionY(pPlayer->GetPositionY());
-						}
-						else if (pPlayer->GetCollide() < -1.0f && pPlayer->GetMask() != 'B')
-						{
-							SpawnExplosion(pPlayer->GetPositionX(), pPlayer->GetPositionY());
-							sound.playSound(soundBlood, false);
-							pPlayer->SetPositionX(32.0f);
-							pPlayer->SetPositionY(41.0f);
-							pPlayer->SetLives(pPlayer->GetLives() - 1);
-							if (pPlayer->GetLives() == 0)
-								pPlayer->SetDead(true);
-						}
-					}
-
-				}
-				else
-				{
-					IterationLowWall++;
-				}
-			}
-			pPlayer->SetWalkableLow(false);
+		}
+		else
+		{
+			IterationLowWall++;
+		}
+	}
+	pPlayer->SetWalkableLow(false);
 
 
 	for (size_t i = 0; i < explosionContainer.size(); i++)
@@ -544,7 +544,6 @@ Game::Process(float deltaTime)
 		else
 			IterationDeath++;
 	}
-
 
 	//Enemies Move Down
 	for (size_t i = 0; i < enemyContainer.size(); i++)
@@ -566,80 +565,83 @@ Game::Process(float deltaTime)
 	// W02.3: Remove any dead explosions from the container...
 }
 
-void 
+void
 Game::Draw(BackBuffer& backBuffer)
 {
 	++m_frameCount;
-	
+
 	//backBuffer.SetClearColour(255, 0, 0);
 	backBuffer.Clear();
 
 	int j = 0;
-	for (IterationTile = tileContainer.begin(); IterationTile < tileContainer.end(); IterationTile++, j++)
+	for (IterationTile = tileContainer.begin(); IterationTile < tileContainer.end(); IterationTile++ , j++)
 	{
 		tileContainer[j]->Draw(backBuffer);
 	}
 
 	int x = 0;
-	for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end(); IterationWaterTile++, x++)
+	for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end(); IterationWaterTile++ , x++)
 	{
 		waterTileContainer[x]->Draw(backBuffer);
 	}
 
 	int l = 0;
-	for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end(); IterationLavaTile++, l++)
+	for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end(); IterationLavaTile++ , l++)
 	{
 		lavaTileContainer[l]->Draw(backBuffer);
 	}
 
 	int w = 0;
-	for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end(); IterationWall++, w++)
+	for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end(); IterationWall++ , w++)
 	{
 		wallContainer[w]->Draw(backBuffer);
 	}
 
 	int n = 0;
-	for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end(); IterationNarrow++, n++)
+	for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end(); IterationNarrow++ , n++)
 	{
 		NarrowTileContainer[n]->Draw(backBuffer);
 	}
 
 	int z = 0;
-	for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end(); IterationLowWall++, z++)
+	for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end(); IterationLowWall++ , z++)
 	{
 		LowWallTileContainer[z]->Draw(backBuffer);
 	}
 
+	pEnd->Draw(backBuffer);
+
 	// W02.2: Draw all enemy aliens in container...
 	int i = 0;
-	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end(); IterationEnemy++, i++)
+	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end(); IterationEnemy++ , i++)
 	{
 		enemyContainer[i]->Draw(backBuffer);
 	}
-	
-	for (size_t i = 0; i < explosionContainer.size(); i++) {
+
+	for (size_t i = 0; i < explosionContainer.size(); i++)
+	{
 		explosionContainer[i]->Draw(backBuffer);
 	}
 
-	SDL_Color colour = { 255, 0, 0, 255 };
+	SDL_Color colour = {255, 0, 0, 255};
 	char fps[5];
 	sprintf(fps, "%d", m_FPS);
 	m_pBackBuffer->DrawText(colour, "Chiller.ttf", "FPS :", 25, 920, 5);
-	m_pBackBuffer->DrawText(colour, "Chiller.ttf", fps , 25, 960, 5);
+	m_pBackBuffer->DrawText(colour, "Chiller.ttf", fps, 25, 960, 5);
 
 	// W02.1: Draw the player ship...
 	if (pPlayer->IsDead() == false)
-	pPlayer->Draw(backBuffer);
+		pPlayer->Draw(backBuffer);
 	else
 	{
-		SDL_Color colour = { 255, 0, 0, 255 };
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Game Over", 100, 350,250);
+		SDL_Color colour = {255, 0, 0, 255};
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Game Over", 100, 350, 250);
 	}
 
 	backBuffer.Present();
 }
 
-void 
+void
 Game::Quit()
 {
 	m_looping = false;
@@ -652,7 +654,7 @@ Game::MovePlayerUp(char u)
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
-	case 'N' :
+	case 'N':
 		pPlayer->SetVerticalVelocity(-(YPosData["speed"].GetFloat()));
 		playerSprite->SetYPos(YPosData["normalUp"].GetInt());
 		break;
@@ -683,11 +685,11 @@ Game::MovePlayerDown(char u)
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
-	case 'N' :
+	case 'N':
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
 		playerSprite->SetYPos(YPosData["normalDown"].GetInt());
 		break;
-	case 'B' :
+	case 'B':
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
 		pBatSprite->SetYPos(YPosData["batDown"].GetInt());
 		break;
@@ -714,11 +716,11 @@ Game::MovePlayerLeft(char u)
 	pPlayer->StartAnimation();
 	switch (mask)
 	{
-	case 'N' :
+	case 'N':
 		pPlayer->SetHorizontalVelocity(-(YPosData["speed"].GetFloat()));
 		playerSprite->SetYPos(YPosData["normalLeft"].GetInt());
 		break;
-	case 'B' :
+	case 'B':
 		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
 		pBatSprite->SetYPos(YPosData["batLeft"].GetInt());
 		break;
@@ -769,7 +771,7 @@ Game::MovePlayerRight(char u)
 	direction = u;
 }
 
-void 
+void
 Game::StopHorizontalMovement()
 {
 	pPlayer->SetHorizontalVelocity(0.0f);
@@ -793,7 +795,7 @@ Game::PauseAnimation()
 }
 
 // W02.2: Spawn a Enemy in game.
-void 
+void
 Game::SpawnEnemy(float x, float y)
 {
 	// W02.2: Load the alien enemy sprite file.
@@ -833,7 +835,7 @@ Game::SpawnExplosion(float x, float y)
 	explosionContainer.push_back(pExplosive);
 }
 
-void 
+void
 Game::BatForm()
 {
 	const Value& batData = Parser::GetInstance().document["bat"];
@@ -919,15 +921,14 @@ Game::HumanForm()
 void
 Game::CreateTile(float x, float y)
 {
-	// W02.2: Load the alien enemy sprite file.
-	pTileSprite = m_pBackBuffer->CreateSprite("assets\\Grass.png");
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pTileSprite = m_pBackBuffer->CreateSprite(tileData["sprite_location"].GetString());
 	pTile = new Tiles();
 	pTile->Initialise(pTileSprite);
-	pTile->SetCharType('N');
 	pTile->SetPositionX(x);
 	pTile->SetPositionY(y);
-	pTile->SetHorizontalVelocity(0.0f);
-	pTile->SetVerticalVelocity(0.0f);
+	pTile->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pTile->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
 	pTile->SetDead(false);
 
 	// W02.2: Add the new Enemy to the enemy container.
@@ -937,14 +938,14 @@ Game::CreateTile(float x, float y)
 void
 Game::CreateWaterTile(float x, float y)
 {
-	pTileWaterSprite = m_pBackBuffer->CreateSprite("assets\\Water.png");
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pTileWaterSprite = m_pBackBuffer->CreateSprite(tileData["sprite_water"].GetString());
 	pWaterTile = new WaterTile();
 	pWaterTile->Initialise(pTileWaterSprite);
-	pWaterTile->SetCharType('W');
 	pWaterTile->SetPositionX(x);
 	pWaterTile->SetPositionY(y);
-	pWaterTile->SetHorizontalVelocity(0.0f);
-	pWaterTile->SetVerticalVelocity(0.0f);
+	pWaterTile->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pWaterTile->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
 	pWaterTile->SetDead(false);
 
 	waterTileContainer.push_back(pWaterTile);
@@ -953,14 +954,14 @@ Game::CreateWaterTile(float x, float y)
 void
 Game::CreateWall(float x, float y)
 {
-	pWallSprite = m_pBackBuffer->CreateSprite("assets\\Tree.png");
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pWallSprite = m_pBackBuffer->CreateSprite(tileData["sprite_tree"].GetString());
 	pWall = new Tiles();
 	pWall->Initialise(pWallSprite);
-	pWall->SetCharType('B');
 	pWall->SetPositionX(x);
 	pWall->SetPositionY(y);
-	pWall->SetHorizontalVelocity(0.0f);
-	pWall->SetVerticalVelocity(0.0f);
+	pWall->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pWall->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
 	pWall->SetDead(false);
 
 	wallContainer.push_back(pWall);
@@ -969,15 +970,14 @@ Game::CreateWall(float x, float y)
 void
 Game::CreateLavaTile(float x, float y)
 {
-
-	pLavaSprite = m_pBackBuffer->CreateSprite("assets\\Lava.png");
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pLavaSprite = m_pBackBuffer->CreateSprite(tileData["sprite_lava"].GetString());
 	pLava = new LavaTile();
 	pLava->Initialise(pLavaSprite);
-	pLava->SetCharType('L');
 	pLava->SetPositionX(x);
 	pLava->SetPositionY(y);
-	pLava->SetHorizontalVelocity(0.0f);
-	pLava->SetVerticalVelocity(0.0f);
+	pLava->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pLava->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
 	pLava->SetDead(false);
 
 	lavaTileContainer.push_back(pLava);
@@ -986,15 +986,14 @@ Game::CreateLavaTile(float x, float y)
 void
 Game::CreateNarrow(float x, float y)
 {
-
-	pNarrowSprite = m_pBackBuffer->CreateSprite("assets\\Narrow.png");
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pNarrowSprite = m_pBackBuffer->CreateSprite(tileData["sprite_narrow"].GetString());
 	pNarrow = new Narrow();
 	pNarrow->Initialise(pNarrowSprite);
-	pNarrow->SetCharType('L');
 	pNarrow->SetPositionX(x);
 	pNarrow->SetPositionY(y);
-	pNarrow->SetHorizontalVelocity(0.0f);
-	pNarrow->SetVerticalVelocity(0.0f);
+	pNarrow->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pNarrow->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
 	pNarrow->SetDead(false);
 
 	NarrowTileContainer.push_back(pNarrow);
@@ -1003,21 +1002,35 @@ Game::CreateNarrow(float x, float y)
 void
 Game::CreateLowWall(float x, float y)
 {
-	pLowWallSprite = m_pBackBuffer->CreateSprite("assets\\low.png");
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pLowWallSprite = m_pBackBuffer->CreateSprite(tileData["sprite_low"].GetString());
 	pLow = new LowWall();
 	pLow->Initialise(pLowWallSprite);
-	pLow->SetCharType('Z');
 	pLow->SetPositionX(x);
 	pLow->SetPositionY(y);
-	pLow->SetHorizontalVelocity(0.0f);
-	pLow->SetVerticalVelocity(0.0f);
+	pLow->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pLow->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
 	pLow->SetDead(false);
 
 	LowWallTileContainer.push_back(pLow);
 }
 
+void
+Game::CreateEndTile(float x, float y)
+{
+	const Value& tileData = Parser::GetInstance().document["tile"];
+	pEndSprite = m_pBackBuffer->CreateSprite(tileData["sprite_end"].GetString());
+	pEnd = new EndTile();
+	pEnd->Initialise(pEndSprite);
+	pEnd->SetPositionX(x);
+	pEnd->SetPositionY(y);
+	pEnd->SetHorizontalVelocity(tileData["HorizontalVelo"].GetFloat());
+	pEnd->SetVerticalVelocity(tileData["VerticalVelo"].GetFloat());
+	pEnd->SetDead(false);
+}
+
 char
 Game::toChar(string temp)
 {
-		return temp.at(0);
+	return temp.at(0);
 }

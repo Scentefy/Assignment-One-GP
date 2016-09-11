@@ -84,6 +84,7 @@
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="backbuffer.h" />
     <ClInclude Include="Blood.h" />
+    <ClInclude Include="EndTile.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="AnimatedEntity.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="backbuffer.cpp" />
     <ClCompile Include="Blood.cpp" />
+    <ClCompile Include="EndTile.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="AnimatedEntity.cpp" />

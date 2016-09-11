@@ -40,9 +40,6 @@ public:
 	float GetVerticalVelocity();
 	void SetVerticalVelocity(float y);
 
-	char GetTileType();
-	void SetCharType(char t);
-
 protected:
 
 private:
@@ -62,7 +59,6 @@ protected:
 	float m_velocityY;
 
 	char m_mask;
-	char m_type;
 
 	bool m_dead;
 

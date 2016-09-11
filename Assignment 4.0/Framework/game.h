@@ -2,7 +2,6 @@
 #ifndef __GAME_H__
 #define __GAME_H__
 #include <vector>
-#include "AnimatedEntity.h"
 #include "SoundSys.h"
 #include "Enemy.h"
 #include "Blood.h"
@@ -53,9 +52,10 @@ public:
 	void CreateLavaTile(float x, float y);
 	void CreateNarrow(float x, float y);
 	void CreateLowWall(float x, float y);
+	void CreateEndTile(float x, float y);
 
 	char toChar(std::string temp);
-	
+
 protected:
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backBuffer);
@@ -63,7 +63,7 @@ protected:
 private:
 	Game(const Game& game);
 	Game& operator=(const Game& game);
-	
+
 	Game();
 
 	//Member Data:
@@ -109,11 +109,9 @@ protected:
 	Narrow* nar;
 	LowWall* low;
 
-	//FMO
+	//FMOD
 	SoundSys sound;
 	SoundClass soundBlood;
-
-private:
 
 };
 

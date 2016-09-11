@@ -20,7 +20,6 @@ Entity::Entity()
 , m_velocityX(0.0f)
 , m_velocityY(0.0f)
 , m_mask(0)
-, m_type(0)
 , m_dead(false)
 {
 
@@ -169,16 +168,4 @@ void
 Entity::SetVerticalVelocity(float y)
 {
 	m_velocityY = y;
-}
-
-char
-Entity::GetTileType()
-{
-	return m_type;
-}
-
-void 
-Entity::SetCharType(char t)
-{
-	m_type = t;
 }
