@@ -217,8 +217,8 @@ Game::Initialise()
 	//	enemyY += 50.0f;
 	//	enemyX = 20.0f;
 	//}
-		SpawnEnemy(73.0f, 105.0f);
-
+	SpawnEnemy(pEnemy->getTileX(1), pEnemy->getTileY(2), 'A');
+	SpawnEnemy(pEnemy->getTileX(1), pEnemy->getTileY(5), 'A');
 	//auto tileX = 0.0f;
 	//auto tileY = 9.0f;
 	//for (float i = 1; i <= 19; i++) {
@@ -548,7 +548,6 @@ Game::Process(float deltaTime)
 
 	const Value& YPosData = Parser::GetInstance().document["YPos"];
 	//Enemies Move Up
-	pEnemy->AlgorithmA();
 	// W02.3: Remove any dead enemy aliens from the container...
 
 	// W02.3: Remove any dead explosions from the container...
@@ -785,7 +784,7 @@ Game::PauseAnimation()
 
 // W02.2: Spawn a Enemy in game.
 void
-Game::SpawnEnemy(float x, float y)
+Game::SpawnEnemy(float x, float y, char algorithm)
 {
 	// W02.2: Load the alien enemy sprite file.
 	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\enemy.png");
@@ -801,7 +800,7 @@ Game::SpawnEnemy(float x, float y)
 	pEnemy->SetPositionY(y);
 	pEnemy->SetHorizontalVelocity(0.0f);
 	pEnemy->SetVerticalVelocity(0.0f);
-	pEnemy->AlgorithmA();
+	pEnemy->SetAlgorithm(algorithm);
 	pEnemy->SetDead(false);
 
 	// W02.2: Add the new Enemy to the enemy container.

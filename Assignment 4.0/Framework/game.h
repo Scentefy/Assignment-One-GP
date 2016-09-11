@@ -38,7 +38,7 @@ public:
 	void StopVerticalMovement();
 	void PauseAnimation();
 
-	void SpawnEnemy(float x, float y);
+	void SpawnEnemy(float x, float y, char algorithm);
 	void SpawnExplosion(float x, float y);
 	void BatForm();
 	void CatForm();
@@ -55,6 +55,7 @@ public:
 	void CreateEndTile(float x, float y);
 
 	char toChar(std::string temp);
+
 
 protected:
 	void Process(float deltaTime);
