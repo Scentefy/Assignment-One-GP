@@ -125,6 +125,7 @@ protected:
 	SoundSys sound;
 	SoundClass soundBlood;
 	SoundClass backgroundMusic;
+	SoundClass transform;
 
 };
 

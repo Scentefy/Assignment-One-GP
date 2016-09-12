@@ -36,7 +36,7 @@ Narrow* pNarrow = 0;
 LowWall* pLow = 0;
 EndTile* pEnd = 0;
 
-//Sprites
+//Animal Sprites
 AnimatedSprite* playerSprite;
 AnimatedSprite* enemySprite;
 AnimatedSprite* pBatSprite;
@@ -44,6 +44,7 @@ AnimatedSprite* pCatSprite;
 AnimatedSprite* pWolfSprite;
 AnimatedSprite* pSealSprite;
 
+//Tile Sprites
 Sprite* pTileSprite;
 Sprite* pTileWaterSprite;
 Sprite* pWallSprite;
@@ -51,6 +52,9 @@ Sprite* pLavaSprite;
 Sprite* pNarrowSprite;
 Sprite* pLowWallSprite;
 Sprite* pEndSprite;
+
+//Background Sprites
+Sprite* pCadeBackground;
 
 //Deletion Iterators
 std::vector<Enemy*>::iterator IterationEnemy;
@@ -128,8 +132,15 @@ Game::Initialise()
 		m_running = true;
 	}
 
+	pCadeBackground = m_pBackBuffer->CreateSprite("assets\\cade.png");
+	pCadeBackground->SetX(0);
+	pCadeBackground->SetY(0);
+
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
 	sound.createSound(&backgroundMusic, "assets\\snowfall.mp3");
+	sound.createSound(&transform, "assets\\transform.aiff");
+
+
 
 	const Value& playerData = Parser::GetInstance().document["player"];
 	// W02.1: Load the player ship sprite.
@@ -633,30 +644,33 @@ Game::Draw(BackBuffer& backBuffer)
 
 	if (m_gamestate == GameState::win)
 	{
+		pCadeBackground->Draw(backBuffer);
 		SDL_Color colour = {255, 0, 0, 255};
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Congratulations, you beat my game", 75, 100, 250);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press Any Key to go to menu", 50, 100, 350);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Congratulations, you beat my game", 75, 100, 250);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Press Any Key to go to menu(not spacebar)", 50, 100, 350);
 	}
 
 	if (m_gamestate == GameState::lost)
 	{
+		pCadeBackground->Draw(backBuffer);
 		SDL_Color colour = {255, 0, 0, 255};
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Game Over", 75, 350, 250);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press space to restart", 50, 350, 300);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Game Over", 75, 350, 250);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Press space to restart", 50, 350, 300);
 	}
 
 	if (m_gamestate == GameState::menu)
 	{
+		pCadeBackground->Draw(backBuffer);
 		SDL_Color colour = {255, 0, 0, 255};
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", " Spirit Animal", 75, 350, 200);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press Space to Start", 40, 380, 280);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Arrow Keys to Move", 40, 380, 320);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "1 = Bat Form", 40, 380, 360);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "2 = Cat Form", 40, 380, 400);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "3 = Wolf Form", 40, 380, 440);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "4 = Seal Form", 40, 380, 480);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "5 = Human Form", 40, 380, 520);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press P anytime to quit", 40, 380, 560);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", " Spirit Animal", 75, 350, 200);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Press Space to Start", 40, 380, 280);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Arrow Keys to Move", 40, 380, 320);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "1 = Bat Form", 40, 380, 360);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "2 = Cat Form", 40, 380, 400);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "3 = Wolf Form", 40, 380, 440);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "4 = Seal Form", 40, 380, 480);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "5 = Human Form", 40, 380, 520);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Press P anytime to quit", 40, 380, 560);
 	}
 
 	if (m_gamestate == GameState::playing)
@@ -714,13 +728,13 @@ Game::Draw(BackBuffer& backBuffer)
 		SDL_Color colour = {255, 0, 0, 255};
 		char fps[5];
 		sprintf(fps, "%d", m_FPS);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "FPS :", 25, 920, 5);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", fps, 25, 960, 5);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "FPS :", 25, 920, 5);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", fps, 25, 960, 5);
 		
 		char lives[5];
 		sprintf(lives, "%d", pPlayer->GetLives());
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Lives :", 25, 0, 5);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", lives, 25, 60, 5);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", "Lives :", 25, 0, 5);
+		m_pBackBuffer->DrawText(colour, "assets\\butterfly.ttf", lives, 25, 60, 5);
 
 		// W02.1: Draw the player ship...
 		if (pPlayer->IsDead() == false)
@@ -965,6 +979,7 @@ Game::BatForm()
 	pBatSprite->SetYPos(batData["YPosition"].GetInt());
 	mask = toChar(batData["Mask"].GetString());
 	pBatSprite->SetLooping(batData["looping"].GetBool());
+	sound.playSound(transform, false);
 }
 
 void
@@ -982,6 +997,7 @@ Game::CatForm()
 	pCatSprite->SetYPos(catData["YPosition"].GetInt());
 	mask = toChar(catData["Mask"].GetString());
 	pCatSprite->SetLooping(catData["looping"].GetBool());
+	sound.playSound(transform, false);
 }
 
 void
@@ -999,6 +1015,7 @@ Game::WolfForm()
 	pWolfSprite->SetYPos(wolfData["YPosition"].GetInt());
 	mask = toChar(wolfData["Mask"].GetString());
 	pWolfSprite->SetLooping(wolfData["looping"].GetBool());
+	sound.playSound(transform, false);
 }
 
 void
@@ -1016,6 +1033,7 @@ Game::SealForm()
 	pSealSprite->SetYPos(sealData["YPosition"].GetInt());
 	mask = toChar(sealData["Mask"].GetString());
 	pSealSprite->SetLooping(sealData["looping"].GetBool());
+	sound.playSound(transform, false);
 }
 
 void
@@ -1033,6 +1051,7 @@ Game::GodForm()
 	pSealSprite->SetYPos(godData["YPosition"].GetInt());
 	mask = toChar(godData["Mask"].GetString());
 	pSealSprite->SetLooping(godData["looping"].GetBool());
+	sound.playSound(transform, false);
 }
 
 void
@@ -1048,6 +1067,7 @@ Game::HumanForm()
 	playerSprite->SetNumOfFrames(playerData["num_frames"].GetInt());
 	playerSprite->SetYPos(playerData["YPosition"].GetInt());
 	mask = toChar(playerData["Mask"].GetString());
+	sound.playSound(transform, false);
 }
 
 void
@@ -1218,6 +1238,8 @@ Game::Restart()
 	}
 
 	sound.releaseSound(backgroundMusic);
+	sound.releaseSound(soundBlood);
+	sound.releaseSound(transform);
 	m_gamestate = GameState::menu;
 	Initialise();
 }
