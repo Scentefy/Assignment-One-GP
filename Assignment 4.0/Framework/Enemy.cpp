@@ -3,54 +3,154 @@
 using namespace std;
 
 Enemy::Enemy()
-	:algorithm(0)
+	: m_algorithm(0)
+	, m_maxDistance(0)
+	, m_direction(0)
+	, m_iniX(0)
+	, m_iniY(0)
 {
 }
-// Spawn, Move Distance, Move back
+
+char
+Enemy::GetAlgorithm()
+{
+	return m_algorithm;
+}
+
 void
 Enemy::SetAlgorithm(char a)
 {
-	algorithm = a;
-	if (algorithm == 'A')
+	m_algorithm = a;
+}
+
+void
+Enemy::StartAlgorithm()
+{
+	if (m_algorithm == 'A')
 	{
-		AlgorithmA();
+		AlgorithmPatrolDirection();
 	}
-	if (algorithm == 'B')
+	if (m_algorithm == 'B')
 	{
 		AlgorithmB();
 	}
 }
 
+char
+Enemy::GetDirection()
+{
+	return m_direction;
+}
+
 void
-Enemy::AlgorithmA()
+Enemy::SetDirection(char d)
+{
+	m_direction = d;
+}
+
+float
+Enemy::GetMaxDistance()
+{
+	return m_maxDistance;
+}
+
+void
+Enemy::SetMaxDistance(float m)
+{
+	m_maxDistance = m;
+}
+
+float 
+Enemy::GetIniX()
+{
+	return m_iniX;
+}
+
+void
+Enemy::SetIniX(float x)
+{
+	m_iniX = x;
+}
+
+float
+Enemy::GetIniY()
+{
+	return m_iniY;
+}
+
+void 
+Enemy::SetIniY(float y)
+{
+	m_iniY = y;
+}
+
+void
+Enemy::AlgorithmPatrolDirection()
 {
 	const Value& enemyData = Parser::GetInstance().document["YPos"];
-		if (GetPositionX() == 57.0f && GetPositionY() == 105.0f)
+	// get distance
+	if (m_direction == 'R')
+	{
+		if (GetPositionX() == getTileX(GetIniX()))
 		{
 			//WalkingRight
-			this->SetHorizontalVelocity(2.5f);
+			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
 			this->SetYPos(enemyData["enemyRight"].GetInt());
+			// set m_direction
 		}
-		if (GetPositionX() == 169.0f && GetPositionY() == 105.0f)
+		if (GetPositionX() > getTileX(GetIniX() + GetMaxDistance()))
 		{
-			this->SetHorizontalVelocity(-2.5f);
+			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
 			this->SetYPos(enemyData["enemyLeft"].GetInt());
+			// set m_direction
 		}
+	}
+	if (m_direction == 'L')
+	{
+		if (GetPositionX() == getTileX(GetIniX()))
+		{
+			//WalkingRight
+			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyLeft"].GetInt());
+
+		}
+		if (GetPositionX() < getTileX(GetIniX() < -(GetMaxDistance())))
+		{
+			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyRight"].GetInt());
+			// set m_direction
+		}
+	}
+	if (m_direction == 'U')
+	{
+		if (GetPositionY() == getTileY(GetIniX()))
+		{
+			//WalkingUp
+			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyUp"].GetInt());
+		}
+			//Walking Down
+		if (GetPositionY() < getTileX(GetIniY() < -(GetMaxDistance())))
+		{
+			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyDown"].GetInt());
+		}
+	}
 }
 
 void
 Enemy::AlgorithmB()
 {
 	const Value& enemyData = Parser::GetInstance().document["YPos"];
-	if (GetPositionX() == 57.0f && GetPositionY() == 105.0f)
+	if (GetPositionX() == getTileX(1) && GetPositionY() == getTileY(5))
 	{
 		//WalkingRight
-		this->SetHorizontalVelocity(2.0f);
+		this->SetHorizontalVelocity(2.5f);
 		this->SetYPos(enemyData["enemyRight"].GetInt());
 	}
-	if (GetPositionX() == 169.0f && GetPositionY() == 201.0f)
+	if (GetPositionX() == getTileX(4) && GetPositionY() == getTileY(5))
 	{
-		this->SetHorizontalVelocity(-2.0f);
+		this->SetHorizontalVelocity(-2.5f);
 		this->SetYPos(enemyData["enemyLeft"].GetInt());
 	}
 }
@@ -58,12 +158,14 @@ Enemy::AlgorithmB()
 float
 Enemy::getTileX(float x)
 {
+	// returns 0 x position on grid
 	return 32.0f + 32.0f * x;
 }
 
 float
 Enemy::getTileY(float y)
 {
+	// returns 0 y position on grid
 	return 41.0f + 32.0f * y;
 }
 

@@ -38,7 +38,7 @@ public:
 	void StopVerticalMovement();
 	void PauseAnimation();
 
-	void SpawnEnemy(float x, float y, char algorithm);
+	void SpawnEnemy(float x, float y, char algorithm, char direction, float maxdistance);
 	void SpawnExplosion(float x, float y);
 	void BatForm();
 	void CatForm();

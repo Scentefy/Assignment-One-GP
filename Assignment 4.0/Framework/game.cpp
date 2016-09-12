@@ -217,8 +217,11 @@ Game::Initialise()
 	//	enemyY += 50.0f;
 	//	enemyX = 20.0f;
 	//}
-	SpawnEnemy(pEnemy->getTileX(1), pEnemy->getTileY(2), 'A');
-	SpawnEnemy(pEnemy->getTileX(1), pEnemy->getTileY(5), 'A');
+	SpawnEnemy(1, 2, 'A', 'R', 3);
+	SpawnEnemy(1, 5, 'A', 'R', 3);
+	SpawnEnemy(0, 9, 'A', 'R', 5);
+	SpawnEnemy(5, 10, 'A', 'L', 5);
+	SpawnEnemy(4, 14, 'A', 'L', 4);
 	//auto tileX = 0.0f;
 	//auto tileY = 9.0f;
 	//for (float i = 1; i <= 19; i++) {
@@ -298,6 +301,7 @@ Game::Process(float deltaTime)
 	for (size_t i = 0; i < enemyContainer.size(); i++)
 	{
 		enemyContainer[i]->Process(deltaTime);
+		enemyContainer[i]->StartAlgorithm();
 	}
 
 	for (size_t i = 0; i < tileContainer.size(); i++)
@@ -784,7 +788,7 @@ Game::PauseAnimation()
 
 // W02.2: Spawn a Enemy in game.
 void
-Game::SpawnEnemy(float x, float y, char algorithm)
+Game::SpawnEnemy(float x, float y, char algorithm, char direction, float maxdistance)
 {
 	// W02.2: Load the alien enemy sprite file.
 	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\enemy.png");
@@ -796,10 +800,14 @@ Game::SpawnEnemy(float x, float y, char algorithm)
 	enemySprite->SetNumOfFrames(3);
 	enemySprite->SetYPos(0);
 	enemySprite->SetLooping(true);
-	pEnemy->SetPositionX(x);
-	pEnemy->SetPositionY(y);
+	pEnemy->SetPositionX(pEnemy->getTileX(x));
+	pEnemy->SetPositionY(pEnemy->getTileY(y));
 	pEnemy->SetHorizontalVelocity(0.0f);
 	pEnemy->SetVerticalVelocity(0.0f);
+	pEnemy->SetIniX(x);
+	pEnemy->SetIniY(y);
+	pEnemy->SetDirection(direction);
+	pEnemy->SetMaxDistance(maxdistance);
 	pEnemy->SetAlgorithm(algorithm);
 	pEnemy->SetDead(false);
 

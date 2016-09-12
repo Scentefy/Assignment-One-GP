@@ -6,17 +6,32 @@ class Enemy : public AnimatedEntity
 	{
 	public:
 		Enemy();
+		char GetAlgorithm();
 		void SetAlgorithm(char a);
-		void AlgorithmA();
+		void StartAlgorithm();
+
+		char GetDirection();
+		void SetDirection(char d);
+
+		float GetMaxDistance();
+		void SetMaxDistance(float m);
+
+		float GetIniX();
+		void SetIniX(float x);
+
+		float GetIniY();
+		void SetIniY(float y);
+
+		void AlgorithmPatrolDirection();
 		void AlgorithmB();
-		void AlgorithmC();
-		void AlgorithmD();
-		void AlgorithmE();
-		void AlgorithmF();
 
 		float getTileX(float x);
 		float getTileY(float y);
 
-		char algorithm;
+		char m_algorithm;
+		char m_direction;
+		float m_maxDistance;
+		float m_iniX;
+		float m_iniY;
 	};
 	#endif
