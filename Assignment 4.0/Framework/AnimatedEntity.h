@@ -26,6 +26,9 @@ public:
 	bool GetWalkableLow();
 	void SetWalkableLow(bool l);
 
+	bool GetWalkableWall();
+	void SetWalkableWall(bool z);
+
 	void PauseAnimatedSprite();
 	void StartAnimation();
 
@@ -37,7 +40,7 @@ public:
 protected:
 	AnimatedSprite* m_pAnimSprite;
 	int yPos;
-	bool walkableWater, walkableNarrow, walkableLow;
+	bool walkableWater, walkableNarrow, walkableLow, walkableWall;
 	bool collide;
 	int fakeCollide;
 	float actualDistance;

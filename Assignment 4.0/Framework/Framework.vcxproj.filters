@@ -99,6 +99,9 @@
     <ClInclude Include="EndTile.h">
       <Filter>Header Files\Tiles</Filter>
     </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="backbuffer.cpp">
@@ -168,6 +171,9 @@
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="EndTile.cpp">
+      <Filter>Source Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
       <Filter>Source Files\Tiles</Filter>
     </ClCompile>
   </ItemGroup>

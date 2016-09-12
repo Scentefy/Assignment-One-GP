@@ -104,6 +104,7 @@
     <ClInclude Include="texturemanager.h" />
     <ClInclude Include="Tiles.h" />
     <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="Wall.h" />
     <ClInclude Include="WaterTile.h" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +130,7 @@
     <ClCompile Include="texturemanager.cpp" />
     <ClCompile Include="Tiles.cpp" />
     <ClCompile Include="Vector2D.cpp" />
+    <ClCompile Include="Wall.cpp" />
     <ClCompile Include="WaterTile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

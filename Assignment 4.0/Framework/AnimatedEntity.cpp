@@ -20,8 +20,8 @@ AnimatedEntity::~AnimatedEntity()
 void 
 AnimatedEntity::Process(float deltaTime)
 {
-	m_pAnimSprite->SetX(static_cast<int>(m_x));
-	m_pAnimSprite->SetY(static_cast<int>(m_y));
+	m_pAnimSprite->SetX(m_x);
+	m_pAnimSprite->SetY(m_y);
 	m_pAnimSprite->Process(deltaTime);
 	m_x += m_velocityX;
 	m_y += m_velocityY;
@@ -116,10 +116,6 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 		r1 = 0;
 		return false;
 	}
-	if (this->GetMask() == 'G')
-	{
-			return false;
-	}
 	if (this->GetMask() == 'S')
 	{
 		if (walkableWater == true)
@@ -140,6 +136,10 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 		{
 			return false;
 		}
+	}
+	if (this->GetMask() == 'G')
+	{
+			return false;
 	}
 	auto r12nd = m_pAnimSprite->GetFrameWidth() / 2 + 20;
 	float x1 = GetPositionX();
@@ -208,6 +208,18 @@ void
 AnimatedEntity::SetWalkableLow(bool l)
 {
 	walkableLow = l;
+}
+
+bool
+AnimatedEntity::GetWalkableWall()
+{
+	return walkableWall;
+}
+
+void
+AnimatedEntity::SetWalkableWall(bool z)
+{
+	walkableWall = z;
 }
 
 void

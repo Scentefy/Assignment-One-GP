@@ -10,6 +10,7 @@
 #include "Lava.h"
 #include "Narrow.h"
 #include "LowWall.h"
+#include "Wall.h"
 
 // Forward Declarations
 class BackBuffer;
@@ -107,7 +108,7 @@ protected:
 	std::vector<Blood*> explosionContainer;
 	std::vector<Tiles*> tileContainer;
 	std::vector<WaterTile*> waterTileContainer;
-	std::vector<Tiles*> wallContainer;
+	std::vector<Wall*> wallContainer;
 	std::vector<LavaTile*> lavaTileContainer;
 	std::vector<Narrow*> NarrowTileContainer;
 	std::vector<LowWall*> LowWallTileContainer;
@@ -115,7 +116,7 @@ protected:
 	Enemy* ene;
 	Blood* exp;
 	WaterTile* wat;
-	Tiles* wal;
+	Wall* wal;
 	LavaTile* lav;
 	Narrow* nar;
 	LowWall* low;
