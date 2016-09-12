@@ -128,6 +128,7 @@ Game::Initialise()
 	}
 
 	sound.createSound(&soundBlood, "assets\\blood.mp3");
+	sound.createSound(&backgroundMusic, "assets\\snowfall.mp3");
 
 	const Value& playerData = Parser::GetInstance().document["player"];
 	// W02.1: Load the player ship sprite.
@@ -149,6 +150,8 @@ Game::Initialise()
 	pPlayer->SetHorizontalVelocity(playerData["HorizontalVelo"].GetFloat());
 	pPlayer->SetVerticalVelocity(playerData["VerticalVelo"].GetFloat());
 	pPlayer->SetDead(playerData["Dead"].GetBool());
+
+	sound.playSound(backgroundMusic, true);
 
 	const Value& mapData = Parser::GetInstance().document["map"];
 	string map = mapData["mapcreation"].GetString();
@@ -310,10 +313,6 @@ Game::Process(float deltaTime)
 		m_elapsedSeconds -= 1;
 		m_FPS = m_frameCount;
 		m_frameCount = 0;
-	}
-	if (m_gamestate == GameState::menu)
-	{
-		
 	}
 
 	if (m_gamestate == GameState::playing)
@@ -579,6 +578,11 @@ Game::Process(float deltaTime)
 			else
 				IterationDeath++;
 		}
+
+		if (pPlayer->IsCollidingWithEnt(*pEnd))
+		{
+			m_gamestate = GameState::win;
+		}
 	}
 }
 
@@ -590,24 +594,32 @@ Game::Draw(BackBuffer& backBuffer)
 	//backBuffer.SetClearColour(255, 0, 0);
 	backBuffer.Clear();
 
+	if (m_gamestate == GameState::win)
+	{
+		SDL_Color colour = { 255, 0, 0, 255 };
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Congratulations, you beat my game", 75, 100, 250);
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press Any Key to go to menu", 50, 100, 350);
+	}
+
 	if (m_gamestate == GameState::lost)
 	{
 		SDL_Color colour = { 255, 0, 0, 255 };
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Game Over", 75, 350, 250);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press space to go to menu", 50, 350, 300);
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press space to restart", 50, 350, 300);
 	}
 
 	if (m_gamestate == GameState::menu)
 	{
 		SDL_Color colour = { 255, 0, 0, 255 };
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", " Spirit Animal", 75, 350, 200);
-		m_pBackBuffer->DrawText(colour, "Chiller.ttf", " Press Space to Start", 40, 380, 280);
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press Space to Start", 40, 380, 280);
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Arrow Keys to Move", 40, 380, 320);
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "1 = Bat Form", 40, 380, 360);
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "2 = Cat Form", 40, 380, 400);
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "3 = Wolf Form", 40, 380, 440);
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "4 = Seal Form", 40, 380, 480);
 		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "5 = Human Form", 40, 380, 520);
+		m_pBackBuffer->DrawText(colour, "Chiller.ttf", "Press P anytime to quit", 40, 380, 560);
 	}
 
 	if (m_gamestate == GameState::playing)
@@ -714,6 +726,10 @@ Game::MovePlayerUp(char u)
 		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
 		pSealSprite->SetYPos(YPosData["sealUp"].GetInt());
 		break;
+	case 'G':
+		pPlayer->SetVerticalVelocity(-YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["godUp"].GetInt());
+		break;
 	}
 	direction = u;
 }
@@ -744,6 +760,10 @@ Game::MovePlayerDown(char u)
 	case 'S':
 		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
 		pSealSprite->SetYPos(YPosData["sealDown"].GetInt());
+		break;	
+	case 'G':
+		pPlayer->SetVerticalVelocity(YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["godDown"].GetInt());
 		break;
 	}
 	direction = u;
@@ -776,6 +796,10 @@ Game::MovePlayerLeft(char u)
 		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
 		pSealSprite->SetYPos(YPosData["sealLeft"].GetInt());
 		break;
+	case 'G':
+		pPlayer->SetHorizontalVelocity(-YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["godLeft"].GetInt());
+		break;
 	}
 	direction = u;
 }
@@ -806,6 +830,10 @@ Game::MovePlayerRight(char u)
 	case 'S':
 		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
 		pSealSprite->SetYPos(YPosData["sealRight"].GetInt());
+		break;
+	case 'G':
+		pPlayer->SetHorizontalVelocity(YPosData["speed"].GetFloat());
+		pSealSprite->SetYPos(YPosData["godRight"].GetInt());
 		break;
 	}
 	direction = u;
@@ -947,6 +975,23 @@ Game::SealForm()
 	pSealSprite->SetYPos(sealData["YPosition"].GetInt());
 	mask = toChar(sealData["Mask"].GetString());
 	pSealSprite->SetLooping(sealData["looping"].GetBool());
+}
+
+void
+Game::GodForm()
+{
+	const Value& godData = Parser::GetInstance().document["god"];
+	pSealSprite = m_pBackBuffer->CreateAnimSprite(godData["sprite_location"].GetString());
+	pPlayer->SetMask(toChar(godData["Mask"].GetString()));
+	pPlayer->Initialise(pSealSprite);
+	pPlayer->PauseAnimatedSprite();
+	pSealSprite->SetFrameSpeed(godData["frame_speed"].GetFloat());
+	pSealSprite->SetFrameWidth(godData["frame_width"].GetInt());
+	pSealSprite->SetFrameHeight(godData["frame_height"].GetInt());
+	pSealSprite->SetNumOfFrames(godData["num_frames"].GetInt());
+	pSealSprite->SetYPos(godData["YPosition"].GetInt());
+	mask = toChar(godData["Mask"].GetString());
+	pSealSprite->SetLooping(godData["looping"].GetBool());
 }
 
 void
@@ -1130,8 +1175,8 @@ Game::Restart()
 		delete *IterationLowWall;
 		IterationLowWall = LowWallTileContainer.erase(IterationLowWall);
 	}
-	Initialise();
 	m_gamestate = GameState::menu;
+	Initialise();
 }
 
 std::string
@@ -1140,5 +1185,17 @@ Game::GetGameState()
 	if (m_gamestate == GameState::lost)
 	{
 		return "lost";
+	}
+	if (m_gamestate == GameState::playing)
+	{
+		return "playing";
+	}
+	if (m_gamestate == GameState::menu)
+	{
+		return "menu";
+	}
+	if (m_gamestate == GameState::win)
+	{
+		return "win";
 	}
 }

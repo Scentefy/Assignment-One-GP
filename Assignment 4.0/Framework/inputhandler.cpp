@@ -6,8 +6,6 @@
 // Local includes:
 #include "game.h"
 
-// Library includes:
-#include <cassert>
 
 InputHandler::InputHandler()
 	: m_pGameController(0)
@@ -54,11 +52,11 @@ InputHandler::ProcessInput(Game& game)
 		{
 
 			//****************************************************
-			if (e.key.keysym.sym == SDLK_SPACE && game.GetGameState() == "lost")
+			if (game.GetGameState() == "lost" || game.GetGameState() == "win")
 			{
 				game.Restart();
 			}
-			if (e.key.keysym.sym == SDLK_SPACE)
+			if (e.key.keysym.sym == SDLK_SPACE && game.GetGameState() == "menu")
 			{
 				game.SetGameState();
 			}
@@ -97,6 +95,14 @@ InputHandler::ProcessInput(Game& game)
 				if (e.key.keysym.sym == SDLK_5)
 				{
 					game.HumanForm();
+				}
+				if (e.key.keysym.sym == SDLK_g)
+				{
+					game.GodForm();
+				}
+				if (e.key.keysym.sym == SDLK_p)
+				{
+					game.DestroyInstance();
 				}
 		}
 

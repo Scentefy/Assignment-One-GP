@@ -80,6 +80,10 @@ AnimatedEntity::IsCollidingWithAnim(AnimatedEntity& e)
 		r1 = 0;
 		return false;
 	}
+	if (this->GetMask() == 'G')
+	{
+		return false;
+	}
 	float x1 = GetPositionX();;
 	float y1 = GetPositionY();
 	float x2 = e.GetPositionX();
@@ -111,6 +115,10 @@ AnimatedEntity::IsCollidingWithEnt(Entity& e)
 	{
 		r1 = 0;
 		return false;
+	}
+	if (this->GetMask() == 'G')
+	{
+			return false;
 	}
 	if (this->GetMask() == 'S')
 	{

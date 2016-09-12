@@ -24,7 +24,7 @@ class Game
 public:
 	enum GameState
 	{
-		playing, paused, menu, lost
+		playing, paused, menu, lost, win
 	};
 	static Game& GetInstance();
 	static void DestroyInstance();
@@ -48,6 +48,7 @@ public:
 	void CatForm();
 	void WolfForm();
 	void SealForm();
+	void GodForm();
 	void HumanForm();
 
 	void CreateTile(float x, float y);
@@ -122,6 +123,7 @@ protected:
 	//FMOD
 	SoundSys sound;
 	SoundClass soundBlood;
+	SoundClass backgroundMusic;
 
 };
 
