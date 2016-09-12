@@ -8,6 +8,10 @@ Enemy::Enemy()
 	, m_direction(0)
 	, m_iniX(0)
 	, m_iniY(0)
+	, maxdown(0)
+	, maxup(0)
+	, maxleft(0)
+	, maxright(0)
 {
 }
 
@@ -88,7 +92,7 @@ void
 Enemy::AlgorithmPatrolDirection()
 {
 	const Value& enemyData = Parser::GetInstance().document["YPos"];
-	// get distance
+	//Right Patrol
 	if (m_direction == 'R')
 	{
 		if (GetPositionX() == getTileX(GetIniX()))
@@ -96,15 +100,15 @@ Enemy::AlgorithmPatrolDirection()
 			//WalkingRight
 			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
 			this->SetYPos(enemyData["enemyRight"].GetInt());
-			// set m_direction
 		}
 		if (GetPositionX() > getTileX(GetIniX() + GetMaxDistance()))
 		{
 			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
 			this->SetYPos(enemyData["enemyLeft"].GetInt());
-			// set m_direction
 		}
 	}
+
+	//Left Patrol
 	if (m_direction == 'L')
 	{
 		if (GetPositionX() == getTileX(GetIniX()))
@@ -114,26 +118,45 @@ Enemy::AlgorithmPatrolDirection()
 			this->SetYPos(enemyData["enemyLeft"].GetInt());
 
 		}
-		if (GetPositionX() < getTileX(GetIniX() < -(GetMaxDistance())))
+		if (GetPositionX() < getTileX(GetIniX() -GetMaxDistance()))
 		{
 			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
 			this->SetYPos(enemyData["enemyRight"].GetInt());
-			// set m_direction
+			//WalkingLeft
 		}
 	}
+
+	//Walking Up Patrol
 	if (m_direction == 'U')
 	{
-		if (GetPositionY() == getTileY(GetIniX()))
+		if (GetPositionY() == getTileY(GetIniY()))
 		{
 			//WalkingUp
-			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetVerticalVelocity(-(enemyData["speed"].GetFloat()));
 			this->SetYPos(enemyData["enemyUp"].GetInt());
 		}
 			//Walking Down
-		if (GetPositionY() < getTileX(GetIniY() < -(GetMaxDistance())))
+		if (GetPositionY() < getTileY(GetIniY() - (GetMaxDistance())))
 		{
-			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
+			this->SetVerticalVelocity(enemyData["speed"].GetFloat());
 			this->SetYPos(enemyData["enemyDown"].GetInt());
+		}
+	}
+
+	//Walking Down Patrol
+	if (m_direction == 'D')
+	{
+		//WalkingDown
+		if (GetPositionY() == getTileY(GetIniY()))
+		{
+			this->SetVerticalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyDown"].GetInt());
+		}
+		//Walking Down
+		if (GetPositionY() > getTileY(GetIniY() + (GetMaxDistance())))
+		{
+			this->SetVerticalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyUp"].GetInt());
 		}
 	}
 }
@@ -142,16 +165,69 @@ void
 Enemy::AlgorithmB()
 {
 	const Value& enemyData = Parser::GetInstance().document["YPos"];
-	if (GetPositionX() == getTileX(1) && GetPositionY() == getTileY(5))
+	//Right Patrol
+	if (m_direction == 'R')
 	{
-		//WalkingRight
-		this->SetHorizontalVelocity(2.5f);
-		this->SetYPos(enemyData["enemyRight"].GetInt());
+		if (GetPositionX() != getTileX(maxright))
+		{
+			//WalkingRight
+			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyRight"].GetInt());
+		}
+		if (GetPositionX() > getTileX(maxright))
+		{
+			m_direction = 'U';
+			SetHorizontalVelocity(0.0f);
+		}
 	}
-	if (GetPositionX() == getTileX(4) && GetPositionY() == getTileY(5))
+
+	//Left Patrol
+	if (m_direction == 'L')
 	{
-		this->SetHorizontalVelocity(-2.5f);
-		this->SetYPos(enemyData["enemyLeft"].GetInt());
+		if (GetPositionX() != getTileX(maxleft))
+		{
+			//WalkingRight
+			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyLeft"].GetInt());
+		}
+		if (GetPositionX() < getTileX(maxleft))
+		{
+			m_direction = 'D';
+			SetHorizontalVelocity(0.0f);
+		}
+	}
+
+	//Walking Up Patrol
+	if (m_direction == 'U')
+	{
+		if (GetPositionY() != getTileY(maxup))
+		{
+			//WalkingUp
+			this->SetVerticalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyUp"].GetInt());
+		}
+		if (GetPositionY() < getTileY(maxup))
+		{
+			m_direction = 'L';
+			SetVerticalVelocity(0.0f);
+		}
+	}
+
+	//Walking Down Patrol
+	if (m_direction == 'D')
+	{
+		//WalkingDown
+		if (GetPositionY() != getTileY(maxdown))
+		{
+			this->SetVerticalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyDown"].GetInt());
+
+			if (GetPositionY() > getTileY(maxdown))
+			{
+				m_direction = 'R';
+				SetVerticalVelocity(0.0f);
+			}
+		}
 	}
 }
 
@@ -168,6 +244,15 @@ Enemy::getTileY(float y)
 	// returns 0 y position on grid
 	return 41.0f + 32.0f * y;
 }
+
+void Enemy::SetPatrol(float maxd, float maxr, float maxu, float maxl)
+{
+	maxdown = maxd;
+	maxright = maxr;
+	maxup = maxu;
+	maxleft = maxl;
+}
+
 
 //for (size_t i = 0; i < enemyContainer.size(); i++)
 //{

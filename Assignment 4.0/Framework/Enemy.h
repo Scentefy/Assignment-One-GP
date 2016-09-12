@@ -28,10 +28,13 @@ class Enemy : public AnimatedEntity
 		float getTileX(float x);
 		float getTileY(float y);
 
+		void SetPatrol(float maxd, float maxr, float maxu, float maxl);
+
 		char m_algorithm;
 		char m_direction;
 		float m_maxDistance;
 		float m_iniX;
 		float m_iniY;
+		float maxdown, maxright, maxup, maxleft;
 	};
 	#endif

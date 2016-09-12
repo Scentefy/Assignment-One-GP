@@ -205,33 +205,47 @@ Game::Initialise()
 		}
 	}
 
-	// W02.2: Spawn four rows of 14 alien enemies.
-	//float enemyX = 400.0f;
-	//float enemyY = 32.0f;
+	//Most Left Passage
+	SpawnEnemy(1, 2, 'A', 'R', 3, NULL, NULL, NULL, NULL);
+	SpawnEnemy(1, 5, 'A', 'R', 3, NULL, NULL, NULL, NULL);
+	SpawnEnemy(0, 9, 'A', 'R', 5, NULL, NULL, NULL, NULL);
+	SpawnEnemy(5, 10, 'A', 'L', 5, NULL, NULL, NULL, NULL);
+	SpawnEnemy(4, 14, 'A', 'L', 3, NULL, NULL, NULL, NULL);
+	SpawnEnemy(4, 17, 'A', 'U', 3, NULL, NULL, NULL, NULL);
 
-	//for (float i = 1; i <= 5; i++) {
-	//	for (float j = 1; j <= 5; j++) {
-	//		SpawnEnemy(enemyX, enemyY);
-	//		enemyX += 55;
-	//	}
-	//	enemyY += 50.0f;
-	//	enemyX = 20.0f;
-	//}
-	SpawnEnemy(1, 2, 'A', 'R', 3);
-	SpawnEnemy(1, 5, 'A', 'R', 3);
-	SpawnEnemy(0, 9, 'A', 'R', 5);
-	SpawnEnemy(5, 10, 'A', 'L', 5);
-	SpawnEnemy(4, 14, 'A', 'L', 4);
-	//auto tileX = 0.0f;
-	//auto tileY = 9.0f;
-	//for (float i = 1; i <= 19; i++) {
-	//	for (float j = 1; j <= 32; j++) {
-	//		CreateTile(tileX, tileY);
-	//		tileX += 32;
-	//	}
-	//	tileY += 32.0f;
-	//	tileX = 0.0f;
-	//}
+	//Right Passage till Hall Way
+	SpawnEnemy(7, 14, 'A', 'R', 4, NULL, NULL, NULL, NULL);
+	SpawnEnemy(8, 14, 'A', 'D', 3, NULL, NULL, NULL, NULL);
+	SpawnEnemy(9, 12, 'A', 'R', 2, NULL, NULL, NULL, NULL);
+	SpawnEnemy(8, 8, 'A', 'D', 3, NULL, NULL, NULL, NULL);
+	SpawnEnemy(6, 8, 'A', 'R', 3, NULL, NULL, NULL, NULL);
+	SpawnEnemy(12, 6, 'A', 'L', 8, NULL, NULL, NULL, NULL);
+	SpawnEnemy(12, 4, 'A', 'L', 8, NULL, NULL, NULL, NULL);
+	SpawnEnemy(5, 2, 'A', 'R', 8, NULL, NULL, NULL, NULL);
+	SpawnEnemy(12, 3, 'A', 'U', 3, NULL, NULL, NULL, NULL);
+
+	//Patrol Unit On Long Hall Way
+	SpawnEnemy(14, 0, 'B', 'D', NULL, 17, 15, 0, 14);
+	SpawnEnemy(14, 5, 'B', 'D', NULL, 17, 15, 0, 14);
+	SpawnEnemy(14, 10, 'B', 'D', NULL, 17, 15, 0, 14);
+	SpawnEnemy(14, 15, 'B', 'D', NULL, 17, 15, 0, 14);
+	SpawnEnemy(15, 15, 'B', 'U', NULL, 17, 15, 0, 14);
+	SpawnEnemy(15, 10, 'B', 'U', NULL, 17, 15, 0, 14);
+	SpawnEnemy(15, 5, 'B', 'U', NULL, 17, 15, 0, 14);
+	// Big Area Spawn
+	SpawnEnemy(17, 17, 'A', 'U', 17, NULL, NULL, NULL, NULL);
+	SpawnEnemy(18, 16, 'A', 'U', 16, NULL, NULL, NULL, NULL);
+	SpawnEnemy(19, 15, 'A', 'U', 15, NULL, NULL, NULL, NULL);
+	SpawnEnemy(20, 14, 'A', 'U', 14, NULL, NULL, NULL, NULL);
+	SpawnEnemy(21, 13, 'A', 'U', 13, NULL, NULL, NULL, NULL);
+	SpawnEnemy(22, 12, 'A', 'U', 12, NULL, NULL, NULL, NULL);
+	//Middle of Train
+	SpawnEnemy(17, 0, 'A', 'D', 17, NULL, NULL, NULL, NULL);
+	SpawnEnemy(18, 1, 'A', 'D', 16, NULL, NULL, NULL, NULL);
+	SpawnEnemy(19, 2, 'A', 'D', 15, NULL, NULL, NULL, NULL);
+	SpawnEnemy(20, 3, 'A', 'D', 14, NULL, NULL, NULL, NULL);
+	SpawnEnemy(21, 4, 'A', 'D', 13, NULL, NULL, NULL, NULL);
+	SpawnEnemy(22, 5, 'A', 'D', 12, NULL, NULL, NULL, NULL);
 
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
@@ -788,7 +802,7 @@ Game::PauseAnimation()
 
 // W02.2: Spawn a Enemy in game.
 void
-Game::SpawnEnemy(float x, float y, char algorithm, char direction, float maxdistance)
+Game::SpawnEnemy(float x, float y, char algorithm, char direction, float maxdistance, float md, float mr, float mu, float ml)
 {
 	// W02.2: Load the alien enemy sprite file.
 	enemySprite = m_pBackBuffer->CreateAnimSprite("assets\\enemy.png");
@@ -809,6 +823,7 @@ Game::SpawnEnemy(float x, float y, char algorithm, char direction, float maxdist
 	pEnemy->SetDirection(direction);
 	pEnemy->SetMaxDistance(maxdistance);
 	pEnemy->SetAlgorithm(algorithm);
+	pEnemy->SetPatrol(md, mr, mu, ml);
 	pEnemy->SetDead(false);
 
 	// W02.2: Add the new Enemy to the enemy container.
