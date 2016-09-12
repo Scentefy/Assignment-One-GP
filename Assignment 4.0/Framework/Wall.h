@@ -1,6 +1,6 @@
 #ifndef WALL_H
 #define WALL_H
-#include "Tiles.h"
+#include "Entity.h"
 
 class Wall : public Entity
 {

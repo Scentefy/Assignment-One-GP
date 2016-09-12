@@ -1236,6 +1236,23 @@ Game::Restart()
 		delete *IterationLowWall;
 		IterationLowWall = LowWallTileContainer.erase(IterationLowWall);
 	}
+	delete pEnd;
+	//delete pPlayer;
+	delete playerSprite;
+	delete enemySprite;
+	delete pBatSprite;
+	delete pCatSprite;
+	delete pWolfSprite;
+	delete pSealSprite;
+	delete pCadeBackground;
+
+	delete pTileSprite;
+	delete pTileWaterSprite;
+	delete pWallSprite;
+	delete pLavaSprite;
+	delete pNarrowSprite;
+	delete pLowWallSprite;
+	delete pEndSprite;
 
 	sound.releaseSound(backgroundMusic);
 	sound.releaseSound(soundBlood);
@@ -1263,4 +1280,84 @@ Game::GetGameState()
 	{
 		return "win";
 	}
+}
+
+void
+Game::DestroyEverything()
+{
+	for (IterationDeath = explosionContainer.begin(); IterationDeath < explosionContainer.end();)
+	{
+		delete *IterationDeath;
+		IterationDeath = explosionContainer.erase(IterationDeath);
+	}
+	for (IterationEnemy = enemyContainer.begin(); IterationEnemy < enemyContainer.end();)
+	{
+		delete *IterationEnemy;
+		IterationEnemy = enemyContainer.erase(IterationEnemy);
+	}
+	for (IterationTile = tileContainer.begin(); IterationTile < tileContainer.end();)
+	{
+		delete *IterationTile;
+		IterationTile = tileContainer.erase(IterationTile);
+	}
+	for (IterationWaterTile = waterTileContainer.begin(); IterationWaterTile < waterTileContainer.end();)
+	{
+		delete *IterationWaterTile;
+		IterationWaterTile = waterTileContainer.erase(IterationWaterTile);
+	}
+	for (IterationWall = wallContainer.begin(); IterationWall < wallContainer.end();)
+	{
+		delete *IterationWall;
+		IterationWall = wallContainer.erase(IterationWall);
+	}
+	for (IterationLavaTile = lavaTileContainer.begin(); IterationLavaTile < lavaTileContainer.end();)
+	{
+		delete *IterationLavaTile;
+		IterationLavaTile = lavaTileContainer.erase(IterationLavaTile);
+	}
+	for (IterationNarrow = NarrowTileContainer.begin(); IterationNarrow < NarrowTileContainer.end();)
+	{
+		delete *IterationNarrow;
+		IterationNarrow = NarrowTileContainer.erase(IterationNarrow);
+	}
+	for (IterationLowWall = LowWallTileContainer.begin(); IterationLowWall < LowWallTileContainer.end();)
+	{
+		delete *IterationLowWall;
+		IterationLowWall = LowWallTileContainer.erase(IterationLowWall);
+	}
+
+	delete pEnd;
+	//delete pPlayer;
+	delete playerSprite;
+	delete enemySprite;
+	delete pBatSprite;
+	delete pCatSprite;
+	delete pWolfSprite;
+	delete pSealSprite;
+	delete pCadeBackground;
+
+	delete pTileSprite;
+	delete pTileWaterSprite;
+	delete pWallSprite;
+	delete pLavaSprite;
+	delete pNarrowSprite;
+	delete pLowWallSprite;
+	delete pEndSprite;
+
+	ene = 0;
+	exp = 0;
+	wat = 0;
+	wal = 0;
+	lav = 0;
+	nar = 0;
+	low = 0;
+
+	//delete m_pInputHandler;
+	//delete m_pBackBuffer;
+	sound.releaseSound(backgroundMusic);
+	sound.releaseSound(soundBlood);
+	sound.releaseSound(transform);
+
+	//DestroyInstance();
+	Quit();
 }

@@ -102,7 +102,7 @@ InputHandler::ProcessInput(Game& game)
 				}
 				if (e.key.keysym.sym == SDLK_p)
 				{
-					game.DestroyInstance();
+					game.DestroyEverything();
 				}
 		}
 

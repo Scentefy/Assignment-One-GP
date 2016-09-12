@@ -65,6 +65,7 @@ public:
 	std::string GetGameState();
 
 	void Restart();
+	void DestroyEverything();
 
 protected:
 	void Process(float deltaTime);
