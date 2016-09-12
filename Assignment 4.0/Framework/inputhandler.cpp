@@ -54,6 +54,14 @@ InputHandler::ProcessInput(Game& game)
 		{
 
 			//****************************************************
+			if (e.key.keysym.sym == SDLK_SPACE && game.GetGameState() == "lost")
+			{
+				game.Restart();
+			}
+			if (e.key.keysym.sym == SDLK_SPACE)
+			{
+				game.SetGameState();
+			}
 			if (e.key.keysym.sym == SDLK_UP)
 			{
 				up = true;

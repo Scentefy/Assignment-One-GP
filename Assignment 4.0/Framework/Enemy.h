@@ -23,7 +23,8 @@ class Enemy : public AnimatedEntity
 		void SetIniY(float y);
 
 		void AlgorithmPatrolDirection();
-		void AlgorithmB();
+		void AlgorithmPatrolAntiClockWise();
+		void AlgorithmPatrolClockWise();
 
 		float getTileX(float x);
 		float getTileY(float y);

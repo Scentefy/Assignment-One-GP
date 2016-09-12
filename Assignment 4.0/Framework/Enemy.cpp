@@ -36,7 +36,11 @@ Enemy::StartAlgorithm()
 	}
 	if (m_algorithm == 'B')
 	{
-		AlgorithmB();
+		AlgorithmPatrolAntiClockWise();
+	}
+	if (m_algorithm == 'C')
+	{
+		AlgorithmPatrolClockWise();
 	}
 }
 
@@ -162,7 +166,7 @@ Enemy::AlgorithmPatrolDirection()
 }
 
 void
-Enemy::AlgorithmB()
+Enemy::AlgorithmPatrolAntiClockWise()
 {
 	const Value& enemyData = Parser::GetInstance().document["YPos"];
 	//Right Patrol
@@ -225,6 +229,76 @@ Enemy::AlgorithmB()
 			if (GetPositionY() > getTileY(maxdown))
 			{
 				m_direction = 'R';
+				SetVerticalVelocity(0.0f);
+			}
+		}
+	}
+}
+
+void
+Enemy::AlgorithmPatrolClockWise()
+{
+	const Value& enemyData = Parser::GetInstance().document["YPos"];
+	//Right Patrol
+	if (m_direction == 'R')
+	{
+		if (GetPositionX() != getTileX(maxright))
+		{
+			//WalkingRight
+			this->SetHorizontalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyRight"].GetInt());
+		}
+		if (GetPositionX() > getTileX(maxright))
+		{
+			m_direction = 'D';
+			SetHorizontalVelocity(0.0f);
+		}
+	}
+
+	//Left Patrol
+	if (m_direction == 'L')
+	{
+		if (GetPositionX() != getTileX(maxleft))
+		{
+			//WalkingRight
+			this->SetHorizontalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyLeft"].GetInt());
+		}
+		if (GetPositionX() < getTileX(maxleft))
+		{
+			m_direction = 'U';
+			SetHorizontalVelocity(0.0f);
+		}
+	}
+
+	//Walking Up Patrol
+	if (m_direction == 'U')
+	{
+		if (GetPositionY() != getTileY(maxup))
+		{
+			//WalkingUp
+			this->SetVerticalVelocity(-(enemyData["speed"].GetFloat()));
+			this->SetYPos(enemyData["enemyUp"].GetInt());
+		}
+		if (GetPositionY() < getTileY(maxup))
+		{
+			m_direction = 'R';
+			SetVerticalVelocity(0.0f);
+		}
+	}
+
+	//Walking Down Patrol
+	if (m_direction == 'D')
+	{
+		//WalkingDown
+		if (GetPositionY() != getTileY(maxdown))
+		{
+			this->SetVerticalVelocity(enemyData["speed"].GetFloat());
+			this->SetYPos(enemyData["enemyDown"].GetInt());
+
+			if (GetPositionY() > getTileY(maxdown))
+			{
+				m_direction = 'L';
 				SetVerticalVelocity(0.0f);
 			}
 		}

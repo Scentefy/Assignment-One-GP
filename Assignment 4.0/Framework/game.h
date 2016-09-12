@@ -22,6 +22,10 @@ class Game
 {
 	//Member Methods:
 public:
+	enum GameState
+	{
+		playing, paused, menu, lost
+	};
 	static Game& GetInstance();
 	static void DestroyInstance();
 	~Game();
@@ -55,7 +59,10 @@ public:
 	void CreateEndTile(float x, float y);
 
 	char toChar(std::string temp);
+	void SetGameState();
+	std::string GetGameState();
 
+	void Restart();
 
 protected:
 	void Process(float deltaTime);
@@ -85,7 +92,9 @@ protected:
 	int m_frameCount;
 	int m_FPS;
 	int m_numUpdates;
+	int m_gamestate;
 	bool m_drawDebugInfo;
+	bool m_running = false;
 
 	// Game Entities:
 	char mask;

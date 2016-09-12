@@ -1,0 +1,38 @@
+﻿Build started 12/09/2016 6:32:54 p.m..
+     1>Project "C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Framework\Framework.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2-2.0.3\include\\" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2_image-2.0.0\include" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\FMOD\inc\\" /I"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL2_ttf-2.0.14\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
+         game.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Release\Spirit Animal.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2-2.0.3\lib\x86" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL\SDL2_image-2.0.0\lib\x86" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\FMOD\lib\\" /LIBPATH:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\\SDL2_ttf-2.0.14\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib fmodl_vc.lib SDL2_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Release\Spirit Animal.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Release\Spirit Animal.lib" /MACHINE:X86 /SAFESEH Release\AnimatedSprite.obj
+         Release\backbuffer.obj
+         Release\Blood.obj
+         Release\EndTile.obj
+         Release\Enemy.obj
+         Release\entity.obj
+         Release\AnimatedEntity.obj
+         Release\game.obj
+         Release\inputhandler.obj
+         Release\LavaTile.obj
+         Release\logmanager.obj
+         Release\LowWall.obj
+         Release\main.obj
+         Release\Narrow.obj
+         Release\Parser.obj
+         Release\Player.obj
+         Release\SoundSys.obj
+         Release\sprite.obj
+         Release\texture.obj
+         Release\texturemanager.obj
+         Release\Tiles.obj
+         Release\Vector2D.obj
+         Release\WaterTile.obj
+         Generating code
+     1>c:\users\user\documents\github\assignment-one-gp\assignment 4.0\framework\game.cpp(1144): warning C4715: 'Game::GetGameState' : not all control paths return a value
+         Finished generating code
+         Framework.vcxproj -> C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Release\Spirit Animal.exe
+     1>Done Building Project "C:\Users\USER\Documents\GitHub\Assignment-One-GP\Assignment 4.0\Framework\Framework.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.78
